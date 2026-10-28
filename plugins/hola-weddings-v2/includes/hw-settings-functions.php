@@ -29,6 +29,16 @@ function hw_get_additional_notes_label(){
 }
 
 /**
+ * return additional notes description
+ *
+ * @return string
+ */
+function hw_get_additional_notes_description(){
+
+    return hw_get_option('hw_additional_notes_description', '' );
+}
+
+/**
  * return whether additional notes field is required
  *
  * @return boolean
@@ -85,7 +95,7 @@ function hw_forced_quote_status(){
  */
 function hw_get_default_availability(){
 
-    return hw_get_option( 'hw_default_quote_availability', true );
+    return  hw_evaluate_string_to_boolean( hw_get_option( 'hw_default_quote_availability', true ) );
 }
 
 /**
@@ -106,6 +116,16 @@ function hw_get_dress_code(){
 function hw_hide_form_login_cta(){
 
     return hw_get_option( 'hw_booking_form_hide_login_cta', false );
+}
+
+/**
+ * returns if the booking form create account box is hidden
+ *
+ * @return boolean
+ */
+function hw_booking_form_hide_create_account(){
+
+    return hw_get_option( 'hw_booking_form_hide_create_account', false );
 }
 
 /**
@@ -262,4 +282,55 @@ function hw_guest_wants_transfer(){
         return true;
     }
     return !isset($_POST['transfer_opt_in']) || $_POST['transfer_opt_in'] === '1';
+}
+
+/*
+ * Login / Sign Up — Google
+ *
+ * Site-level options live in Wedding Settings → Login/Sign Up.
+ * The OAuth credentials are network-level (Network Settings → Google) so one
+ * Google client covers every wedding site, and can be overridden by the
+ * HW_GOOGLE_CLIENT_ID / HW_GOOGLE_CLIENT_SECRET constants in wp-config.php.
+ */
+
+/**
+ * return whether the Google button is toggled on for this site
+ *
+ * On by default: sites that never touched the setting get the button, while an
+ * explicit opt-out is still respected ( the saved option wins over the default ).
+ * Credentials are checked separately by hw_is_google_login_configured().
+ *
+ * @return boolean
+ */
+function hw_is_google_login_enabled(){
+
+    return (bool) hw_get_option( 'hw_enable_google_login', 1 );
+}
+
+/**
+ * return the Google button label
+ *
+ * @return string
+ */
+function hw_get_google_login_button_label(){
+
+    $value = hw_get_option( 'hw_google_login_button_label', '' );
+
+    if( empty( trim( (string) $value ) ) ){
+
+        $value = __( 'Continue with Google', 'hola-weddings' );
+    }
+
+    return $value;
+}
+
+/**
+ * return whether Google may create brand new accounts, as opposed to only
+ * signing in people who already have one
+ *
+ * @return boolean
+ */
+function hw_google_signup_allowed(){
+
+    return (bool) hw_get_option( 'hw_google_allow_signup', 1 );
 }

@@ -1,10 +1,5 @@
 :root{
     /* General */
-    --hw-primary-color: #284a70;
-    --hw-primary-darker-color: #112031;
-    --hw-text-color: #222;
-    --hw-accent-color: #284a70;
-    --hw-secondary-color: #edf3f8;
     --hw-bg-color: #edf3f8;
     --hw-bg-color-contrast: var(--hw-primary-color);
     --hw-hero-overlay: var(--hw-primary-color);
@@ -21,7 +16,12 @@
     --hw-header-font-family: 'Poppins';
     --hw-header-font-size: 14px;
     --hw-header-line-height: 85px;
-    --hw-header-color: var(--hw-text-color);
+    --hw-header-text-color: var(--hw-text-color);
+    --hw-header-bg-color: #fff;
+
+    /* Main Nav */
+    --hw-main-nav-text-color: var(--hw-header-text-color);
+    --hw-main-nav-text-active-color: var(--hw-primary-color);
 
     /* Logo */
     --hw-logo-font-family: 'Corinthia';

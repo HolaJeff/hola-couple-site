@@ -54,6 +54,7 @@ class Settings extends Resource{
         'hw_transfer_multiplier',
         'hw_enable_additional_notes',
         'hw_additional_notes_label',
+        'hw_additional_notes_description',
         'hw_additional_notes_required',
         'hw_label_rates_disclosure',
         'hw_service_fee_child',
@@ -75,7 +76,13 @@ class Settings extends Resource{
         'hw_extra_checkboxes',
         'hw_insurance_decline_text',
         'hw_bed_preferences',
-        'hw_transfer_optional'
+        'hw_transfer_optional',
+        'hw_enable_signup',
+        'hw_enable_google_login',
+        'hw_google_login_button_label',
+        'hw_google_allow_signup',
+        'hw_google_login_redirect_to',
+        'hw_booking_form_hide_create_account'
     ];
     
     /**
@@ -119,14 +126,12 @@ class Settings extends Resource{
             wp_enqueue_style('hw-jquery-ui', '//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.min.css');
             wp_enqueue_style('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css');
             wp_enqueue_style('hw-settings', HW_URL . 'assets/style/admin-settings.css');
-            wp_enqueue_style('hw-fontawesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
             
             wp_enqueue_script('hw-jquery-ui', 'https://code.jquery.com/ui/1.13.1/jquery-ui.min.js', ['jquery']);
             wp_enqueue_script('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js',['jquery'], true );
             wp_enqueue_script('js-cookie', 'https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js',null, true );
             wp_enqueue_script('hw-settings', HW_URL . 'assets/js/admin-settings.js', ['jquery','hw-jquery-ui', 'bootstrap', 'js-cookie', 'blockui'], true );
             SortableJS::import();
-            wp_enqueue_script('hw-alpinejs', HW_URL . 'assets/vendor/alpinejs/alpinejs.min.js', null, true, ['strategy' => 'defer'] );
         }
     }
 	
@@ -242,7 +247,7 @@ class Settings extends Resource{
                 'callback' => [ $this, 'display_tab' ]
             ],
             'booking' => [
-                'label' => 'Booking',
+                'label' => 'Booking Form',
                 'icon' => '<i class="fas fa-calendar-alt"></i>',
                 'callback' => [ $this, 'display_tab' ]
             ],
@@ -259,6 +264,11 @@ class Settings extends Resource{
             'pos' => [
                 'label' => 'Point of Sale (PoS)',
                 'icon' => '<i class="fas fa-cash-register"></i>',
+                'callback' => [ $this, 'display_tab' ]
+            ],
+            'loginsignup' => [
+                'label' => 'Login/Sign Up',
+                'icon' => '<i class="fas fa-sign-in-alt"></i>',
                 'callback' => [ $this, 'display_tab' ]
             ]
         ];

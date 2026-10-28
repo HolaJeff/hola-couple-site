@@ -6,34 +6,14 @@
     font-family: "Pinyon";
     src: url("../../fonts/pinyon/PinyonScript-Regular.ttf") format("TrueType");
 }
-:root{
-    --hw-primary-color: #284A70;
+body{
+    max-width: 100%
 }
 .dancing-font{
     font-family: "Dancing";
 }
 .pinyon-font{
     font-family: "Pinyon";
-}
-.alert{
-    svg{
-        height: 24px;
-        width: 24px;
-    }
-    &.alert-warning{
-        background-color: #fff3cd4a;
-        svg{
-            fill: #856404;
-        }
-        .btn{
-            background-color: #fff;
-            color: #856404;
-            border-color: #856404;
-        }
-    }
-    &.alert-danger{
-        background-color: #f8d7da2b;
-    }
 }
 #signature-wrapper{
     .font{
@@ -87,7 +67,6 @@
 .section{
     padding: 50px 0;
     position: relative;
-    overflow-x: hidden;
     .bg-overlay{
         position: absolute;
         width: 100%;
@@ -166,7 +145,35 @@
         transform: translateY(-50%);
         left: 0;
         color: #fff!important;
-        text-align: center;
+    }
+    .hero-columns{
+        .hero-col--search{
+            margin-top: 30px;
+            @media (min-width: 992px) {
+                margin-top: 0;
+            }
+            // The search bar carries its own light UI, so reset the inherited
+            // hero text colour/alignment inside it.
+            .hw-search-bar{
+                max-width: 420px;
+                margin-left: auto;
+                margin-right: auto;
+                color: initial;
+                text-align: left;
+            }
+        }
+    }
+    // Search bar rendered at the end of the content in the full-width layout.
+    // It lives inside the flex-column content, so it aligns per justify_content.
+    .hero-content-search{
+        .hw-search-bar{
+            color: initial;
+            text-align: left;
+        }
+        &.hero-content-search--vertical{
+            width: 100%;
+            max-width: 420px;
+        }
     }
 }
 #story{
@@ -824,4 +831,20 @@
             font-size: 0.9em;
         }
     }
+}
+
+/* ── Spinner ──────────────────────────────────────────────────
+   Owned here rather than in the booking form bundle, so the two
+   share one definition — same arrangement as .btn and
+   .hw-google-btn. Applied to any icon marking a loading state.
+   ============================================================= */
+
+@keyframes hw-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+.hw-spin {
+    animation: hw-spin 1s linear infinite;
+    transform-origin: center;
 }

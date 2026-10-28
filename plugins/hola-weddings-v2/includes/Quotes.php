@@ -2,11 +2,11 @@
 
 namespace HW;
 
-use HW\API\Operations\HotelRooms;
 use HW\API\Operations\Insurance;
 use HW\Booking\Managers\PersonTypeManager;
+use HW\Email\EmailSender;
+use HW\Email\Templates\NewQuoteAdminNotification;
 use \HW\Fields\AgeSelector;
-use \HW\Helpers\Countries;
 use HW\Models\Booking\PersonType;
 
 class Quotes{
@@ -184,48 +184,16 @@ class Quotes{
             }
 
             /**
-             * Let's check the user. register if not created
+             * Ownership of a reservation comes from being signed in, never from
+             * the contact email on the form.
+             *
+             * This block used to create a WordPress account for any unrecognised
+             * email and log the visitor straight in, and to authenticate against
+             * an existing account when the address matched. Both are gone: an
+             * anonymous submission now stays anonymous and the reservation is
+             * stored ownerless, to be claimed once the person registers and
+             * confirms that address (see hw_claim_guest_quotes).
              */
-            if(!is_user_logged_in()){
-
-                // check if user email exists already
-                if(!email_exists($customer['email'])){
-
-                    $username = hw_get_unique_username($customer['first_name'][0] . $customer['last_name']);
-                    $password = trim($_POST['password']);
-                    
-                    $user_id = wp_insert_user([
-                        'user_login' => $username,
-                        'user_pass' => $password,
-                        'user_email' => $customer['email'],
-                        'first_name' => $customer['first_name'],
-                        'last_name' => $customer['last_name']
-                    ]);
-
-                    // check if this is an error
-                    if(is_wp_error($user_id)){
-
-                        $this->add_error('new_user', __('There was a problem creating the user. Contact us.', 'hola-weddings'));
-                        $this->redirect_to_cart($data);
-                    }
-
-                    // log in new user
-                    wp_set_current_user( $user_id );
-	                wp_set_auth_cookie( $user_id );
-                }else{
-
-                    $password = trim($_POST['password']);
-
-                    if (!is_a($user = wp_authenticate($customer['email'], $password), 'WP_User')) {
-
-                        $this->add_error('user_exists', __('Looks like you already signed up. Please login before proceeding.'));
-                        $this->redirect_to_cart($data);
-                    }
-
-                    wp_set_current_user( $user->ID );
-                    wp_set_auth_cookie( $user->ID, false );
-                }
-            }
             
             $total = 0;
             $nights = hw_get_mode() == 'room' ? getNights($data['ci'], $data['co']) : 1;
@@ -391,7 +359,7 @@ class Quotes{
                                     $cost =  $rates['amount'];
                                     break;
                                 case 'percentage':
-                                    $cost = $room_total * ( $rates['amount'] / 100 );
+                                    $cost = round( $room_total * ( $rates['amount'] / 100 ), 0, PHP_ROUND_HALF_UP );
                                     break;
                             }
 
@@ -451,6 +419,37 @@ class Quotes{
                 $iv = openssl_random_pseudo_bytes($ivlen);
                 $card_info = openssl_encrypt( json_encode($payment_to_store), self::$cipher, self::$key, $options=0, $iv);
             }
+            
+            // ── Saved billing default ─────────────────────────────────────────
+            // Persist the user's saved billing (user meta) only on explicit consent.
+            // Identity (email/name) lives on the WP user and is not touched here.
+
+            $user_id = get_current_user_id();
+
+            // Opt-in account creation. validate_quote_data() has already checked
+            // the address is unused and the password pair is sound. The account
+            // starts unverified, so the reservation only surfaces under My
+            // Reservations once they click the link.
+            if ( ! $user_id && $this->is_creating_account() ) {
+
+                $new_user_id = ( new \HW\Auth\RegistrationService() )->register( [
+                    'first_name' => $customer['first_name'] ?? '',
+                    'last_name'  => $customer['last_name'] ?? '',
+                    'email'      => $customer['email'] ?? '',
+                    'password'   => (string) ( $_POST['password'] ?? '' ),
+                ] );
+
+                // A failure here must not lose the booking: fall through and
+                // store it as a guest reservation, which they can still claim
+                // later by registering with the same address.
+                if ( ! is_wp_error( $new_user_id ) ) {
+                    $user_id = $new_user_id;
+                }
+            }
+
+            if ( ! empty( $_POST['update_customer_data'] ) && $user_id ) {
+                hw_update_user_billing_information( $user_id, new \HW\Models\CRM\BillingInformation( $customer ) );
+            }
 
             $post_data = [
                 'post_type' => 'quote',
@@ -458,13 +457,20 @@ class Quotes{
                 'post_status' => 'publish',
                 'meta_input' => [
                     'hw_mode' => $data['mode'],
+                    // 0, never null - see QuoteController; SQL NULL hides the
+                    // quote from the guest-claim query.
+                    'hw_owner_user_id' => $user_id ?: 0,
+                    // Snapshot of the original submission; never updated after this.
                     'hw_customer_data' => $customer,
                     'hw_first_name' => $customer['first_name'],
                     'hw_last_name' => $customer['last_name'],
                     'hw_email' => $customer['email'],
                     'hw_phone' => $customer['phone_number'],
+                    'hw_address' => $customer['address'] ?? '',
+                    'hw_city' => $customer['city'] ?? '',
                     'hw_state' => $customer['state'],
                     'hw_country' => $customer['country'],
+                    'hw_zip' => $customer['zip'] ?? '',
                     'hw_package_id' => $data['package_id'] ?: null,
                     'hw_room_block_id' => $data['room_block_id'],
                     'hw_room_id' => $data['room_id'],
@@ -552,6 +558,26 @@ class Quotes{
      * @param array $data
      * @return bool
      */
+    /**
+     * Whether this submission asks for a user account to be created.
+     *
+     * Account creation is optional: it happens only when a logged-out visitor
+     * fills in a password, and never when the site hides that box
+     * ( hw_booking_form_hide_login_cta ). Mirrors
+     * QuoteController::isCreatingAccount() for the REST booking form.
+     *
+     * @return bool
+     */
+    protected function is_creating_account(){
+
+        if( is_user_logged_in() || hw_hide_form_login_cta() ){
+            return false;
+        }
+
+        return trim( $_POST['password'] ?? '' ) !== ''
+            || trim( $_POST['confirm-password'] ?? '' ) !== '';
+    }
+
     public function validate_quote_data(&$data, $room_block){
         
         $hotel = (object)hw_get_hotel();
@@ -623,7 +649,7 @@ class Quotes{
             $date = AgeSelector::format_data_to_date($data['guests'][$i]['date']);
             $dateObj = new \DateTime($date);
             $checkoutDateObj = new \DateTime($data['co']);
-            $age = ea_calc_guest_age($dateObj, $checkoutDateObj);
+            $age = hw_calc_guest_age($dateObj, $checkoutDateObj);
             $person_type = PersonTypeManager::getInstance()->get($data['guests'][$i]['person_type']);
             $min_age = $person_type->getMinAge();
             $max_age = $person_type->getMaxAge();
@@ -706,24 +732,38 @@ class Quotes{
             $errors = true;
         }
 
-        // User login info
-        if(!is_user_logged_in() && !hw_hide_form_login_cta()){
+        // the plan is not part of $data yet, it is resolved later from the raw POST
+        if(($data['customer']['country'] ?? '') == 'US' && !hw_is_insurance_plan_allowed(hw_get_insurance_id(), $_POST['insurance_plan'] ?? 0, $data['customer']['state'] ?? '')){
+            $this->add_error('state', __('The selected insurance plan is not available in your state. Please choose a different plan.', 'hola-weddings'));
+            $errors = true;
+        }
 
-            $password = trim($_POST['password']);
-            $confirmation = trim($_POST['confirm-password']);
+        // ── Optional account creation ─────────────────────────────────────────
+        // Opt-in, matching the REST booking form: leaving both password fields
+        // blank books as a guest and creates no WordPress user. Once one of them
+        // is typed into, the whole set has to be coherent, so a half-filled pair
+        // still fails loudly rather than silently dropping the account.
+        if( $this->is_creating_account() ){
 
-            if(empty($password)){
-                $this->add_error('password', __('Please insert a valid password', 'hola-weddings'));
+            $password     = trim( $_POST['password'] ?? '' );
+            $confirmation = trim( $_POST['confirm-password'] ?? '' );
+            $account_email = sanitize_email( $data['customer']['email'] ?? '' );
+
+            if( strlen($password) < 8 ){
+                $this->add_error('password', __('Password must be at least 8 characters.', 'hola-weddings'));
                 $errors = true;
             }
 
-            if(empty($confirmation)){
-                $this->add_error('confirm-password', __('Please insert a valid confirmation password', 'hola-weddings'));
+            if( $confirmation !== $password ){
+                $this->add_error('confirm-password', __('Passwords do not match.', 'hola-weddings'));
                 $errors = true;
             }
 
-            if($confirmation != $password){
-                $this->add_error('confirm-password', __('Confirmation passowrd doesn\'t match', 'hola-weddings'));
+            // Stop rather than adopting the existing account: typing an address
+            // proves nothing about owning it. Nothing has been stored or charged
+            // yet, so they can sign in and resubmit, or book as a guest.
+            if( $account_email && email_exists( $account_email ) ){
+                $this->add_error('email', __('An account already exists for this email address. Please sign in first, or book without creating an account.', 'hola-weddings'));
                 $errors = true;
             }
         }
@@ -926,7 +966,7 @@ class Quotes{
             $data['guests'][$i]['date'] = AgeSelector::format_data_to_date($data['guests'][$i]['date']);
             $dateObj = new \DateTime($data['guests'][$i]['date']);
             $checkoutDateObj = new \DateTime($data['co']);
-            $data['guests'][$i]['age'] = ea_calc_guest_age( $dateObj, $checkoutDateObj);
+            $data['guests'][$i]['age'] = hw_calc_guest_age( $dateObj, $checkoutDateObj);
         }
 
         $data['deposit']['ip_address'] = hw_get_the_user_ip();
@@ -953,201 +993,33 @@ class Quotes{
     }
     
     /**
-     * send email confirmation for a new quote to damin
+     * send email confirmation for a new quote to admin
+     *
+     * $post_meta is whatever the hw_after_create_quote hook happened to pass and
+     * is ignored: the quote is re-read through the model instead, so a resend
+     * (see `wp hw test-quote-email`) renders exactly the same message as the
+     * original, and so fields the hook never carried - the resolved insurance
+     * plan, the room behind the room block - are actually present.
      *
      * @param int $post_id
-     * @param array $post_meta
+     * @param array $post_meta Deprecated, kept for hook compatibility.
      * @return void
      */
-    public function send_email_to_admin( $post_id, $post_meta ){
-        
-        $hotel = (object) hw_get_hotel();
-        $wedding_name = hw_get_option('hw_his_name', '' ) . ' & ' . hw_get_option('hw_her_name', '' );
-        $alt_emails = hw_get_option('hw_alternative_email', '');
+    public function send_email_to_admin( $post_id, $post_meta = [] ){
 
-        $room = HotelRooms::getRoom($post_meta['hw_room_id']);
-        
-        $recipients = (function_exists('hw_agency_ops_email') ? hw_agency_ops_email() : get_option('admin_email')) . ( !empty($alt_emails) ? ',' . $alt_emails : '' ); // phase4-ops-email
-        
-        $subject = sprintf('New quote for wedding %s,from %s %s - <%s>', $wedding_name, $post_meta['hw_first_name'], $post_meta['hw_last_name'], $post_meta['hw_email'] );
-        $from = function_exists('hw_email_from_header') ? hw_email_from_header() : '';
-        $headers = [
-            'Content-Type: text/html; charset=UTF-8',
-            'Reply-To: '. $post_meta['hw_first_name'] . ' ' . $post_meta['hw_last_name'] .' <'.$post_meta['hw_email'].'>',
-            $from ?: (function_exists('hw_agency_ops_from') ? hw_agency_ops_from() : 'From: ' . get_bloginfo('name') . ' <' . get_option('admin_email') . '>')
-        ];
-        
-        $nights = $post_meta['hw_nights'];
-        
-        if(hw_get_mode() == 'package'){
-            
-            $nights = hw_calc_package_nights($post_meta['package_id']);
+        $quote = hw_get_quote( $post_id );
+
+        if( ! $quote->exists() ){
+
+            hw_write_log( sprintf( 'Cannot send the new quote email: quote %s not found', $post_id ) );
+            return;
         }
-        
-        ob_start();
-        ?>
-        <p>You have received a new quote request for wedding <?= $wedding_name ?>, here's the information:</p>
-        <table>
-            <tbody>
-                <tr>
-                    <td>Mode</td>
-                    <td><?= $post_meta['hw_mode'] == 'room' ? 'Room' : 'Package' ?></td>
-                </tr>
-                <tr>
-                    <td>Status</td>
-                    <td><?= hw_get_quote_statuses()[$post_meta['hw_quote_status']] ?></td>
-                </tr>
-                <?php if(hw_get_mode() == 'package'): ?>
-                    <tr>
-                        <td>Package Title</td>
-                        <td><?= get_the_title($post_meta['package_id']) ?></td>
-                    </tr>
-                <?php endif; ?>
-                <tr>
-                    <td>Full Name</td>
-                    <td><?= $post_meta['hw_first_name'] . ' ' . $post_meta['hw_last_name'] ?></td>
-                </tr>
-                <tr>
-                    <td>Email</td>
-                    <td><?= $post_meta['hw_email'] ?></td>
-                </tr>
-                <tr>
-                    <td>Phone</td>
-                    <td><?= $post_meta['hw_phone'] ?></td>
-                </tr>
-                <tr>
-                    <td>Address</td>
-                    <td><?= $post_meta['hw_customer_data']['address'] ?: '--' ?></td>
-                </tr>
-                <tr>
-                    <td>City</td>
-                    <td><?= $post_meta['hw_customer_data']['city'] ?: '--' ?></td>
-                </tr>
-                <tr>
-                    <td>ZIP Code</td>
-                    <td><?= $post_meta['hw_customer_data']['zip'] ?: '--' ?></td>
-                </tr>
-                <tr>
-                    <td>State</td>
-                    <td><?= $post_meta['hw_customer_data']['state'] ?></td>
-                </tr>
-                <tr>
-                    <td>Country</td>
-                    <td><?= sprintf('%s (%s)', Countries::getList(true)[$post_meta['hw_customer_data']['country']], $post_meta['hw_customer_data']['country']) ?></td>
-                </tr>
-                <tr>
-                    <td>Checkin</td>
-                    <td><?= ( new \DateTime($post_meta['hw_checkin']))->format('l dS, F Y') ?></td>
-                </tr>
-                <tr>
-                    <td>Checkout</td>
-                    <td><?= ( new \DateTime($post_meta['hw_checkout']))->format('l dS, F Y') ?></td>
-                </tr>
-                <tr>
-                    <td>Nights</td>
-                    <td><?= $nights ?></td>
-                </tr>
-                <tr>
-                    <td>Adults</td>
-                    <td><?= $post_meta['hw_adults'] ?></td>
-                </tr>
-                <?php if(hw_is_teen_enabled()): ?>
-                    <tr>
-                        <td>Teen</td>
-                        <td><?= $post_meta['hw_teen'] ?></td>
-                    </tr>
-                <?php endif; ?>
-                <tr>
-                    <td>Children</td>
-                    <td><?= $post_meta['hw_children'] ?></td>
-                </tr>
-                <tr>
-                    <td>Infants</td>
-                    <td><?= $post_meta['hw_infants'] ?></td>
-                </tr>
-                <tr>
-                    <td>Hotel</td>
-                    <td><?= $hotel->name ?></td>
-                </tr>
-                <tr>
-                    <td>Room</td>
-                    <td><?= $room['name'] ?></td>
-                </tr>
-                <tr>
-                    <td>Rate Type</td>
-                    <td><?= get_the_title($post_meta['rate_type']['rate']['id']) ?></td>
-                </tr>
-                <tr>
-                    <td>Room Total</td>
-                    <td><?= hw_format_price($post_meta['hw_room_total']) ?></td>
-                </tr>
-                <tr>
-                    <td>Guests</td>
-                    <td>
-                        <?php foreach( $post_meta['hw_guests'] as $guest ): ?>
-                            <p>Name: <?= $guest['title'] ?> <?= $guest['name'] ?> <?= $guest['lastname'] ?> - Date of birth: <?= $guest['date'] ?> - Age: <?= $guest['age'] ?></p>
-                        <?php endforeach; ?>
-                    </td>
-                </tr>
-                <?php if(!empty($post_meta['hw_insurance_id'])): 
-                    $plan = Insurance::getPlan($post_meta['hw_insurance_plan_id']);
-                    ?>
-                    <tr>
-                        <td>Insurance</td>
-                        <td><?= $plan['name'] ?></td>
-                    </tr>
-                    <tr>
-                        <td>Insurance Total</td>
-                        <td><?= $post_meta['hw_insurance_total'] ?> USD</td>
-                    </tr>
-                <?php else: ?>
-                    <tr>
-                        <td>Insurance</td>
-                        <td>No</td>
-                    </tr>
-                <?php endif; ?>
-                <tr>
-                    <td>Service Fee</td>
-                    <td><?= $post_meta['hw_service_fee'] ? $post_meta['hw_service_fee'] : '--' ?> USD</td>
-                </tr>
-                <tr>
-                    <td>Total</td>
-                    <td><?= $post_meta['hw_total'] ?> USD</td>
-                </tr>
-                <?php if($post_meta['hw_deposit']): ?>
-                    <tr>
-                        <td>
-                            <strong>Deposit</strong>
-                            <p><?= hw_get_deposit_label($post_meta['hw_deposit']['amount']); ?></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <strong>Custom Amount</strong>
-                            <p><?= hw_format_price($post_meta['hw_deposit']['custom_amount']); ?></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <strong>Charge accepted on</strong>
-                            <p><?= date('m/d/Y H:i:s', $post_meta['hw_deposit']['accepted_on']); ?></p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <strong>IP Address</strong>
-                            <p><?= $post_meta['hw_deposit']['ip_address']; ?></p>
-                        </td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-        <?php
-        $message = ob_get_clean();
-        
-        if( !wp_mail( $recipients, $subject, $message, $headers )){
-            
-            hw_write_log('There was a problem sending out the quote email');
+
+        $result = ( new EmailSender() )->send( new NewQuoteAdminNotification( $quote ) );
+
+        if( is_wp_error( $result ) || ! $result ){
+
+            hw_write_log( 'There was a problem sending out the quote email' );
         }
     }
 

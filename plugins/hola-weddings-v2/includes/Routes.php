@@ -18,6 +18,7 @@ class Routes{
         'booking',
         'account',
         'booking-confirmation',
+        'verify-email',
         'pos',
         'invoice-payment-confirmation'
     ];
@@ -53,6 +54,10 @@ class Routes{
         add_rewrite_rule( 'account/reservations[/]?', 'index.php?hw_template=account&hw_view=reservations', 'top' );
         
         // account
+        // Deliberately not hw_template=account: this one is a plain centred card
+        // on the site's own layout, not the dashboard shell. The view name is kept
+        // so EmailVerificationController's Routes::get_view() checks still match.
+        add_rewrite_rule( 'account/verify-email[/]?', 'index.php?hw_template=verify-email&hw_view=verify-email', 'top' );
         add_rewrite_rule( 'account/profile[/]?', 'index.php?hw_template=account&hw_view=profile', 'top' );
         add_rewrite_rule( 'account[/]?', 'index.php?hw_template=account&hw_view=dashboard', 'top' );
 
@@ -115,6 +120,9 @@ class Routes{
                     break;
                 case 'booking-confirmation':
                     $template = hw_locate_template('templates/booking-confirmation.php');
+                    break;
+                case 'verify-email':
+                    $template = hw_locate_template('templates/verify-email.php');
                     break;
                 case 'pos':
                     $template = hw_locate_template('templates/pos.php');

@@ -70,6 +70,42 @@ function hw_add_body_classes($classes){
 add_filter('body_class', 'hw_add_body_classes');
 
 /**
+ * render the Google sign-in button in the login modal
+ *
+ * hw_google_login_button() decides whether there is anything to show, so there
+ * is no condition to duplicate here.
+ *
+ * @return void
+ */
+function hw_render_login_modal_google_button(){
+
+    hw_google_login_button( [ 'divider' => __( 'or', 'hola-weddings' ) ] );
+}
+add_action('hw_login_modal_after_form', 'hw_render_login_modal_google_button', 10 );
+
+/**
+ * render the Google button in the sign-up pane
+ *
+ * The same button serves both purposes — Google creates the account when it does
+ * not recognise the address — so the sign-up pane gets one too. Bound to the
+ * pane-aware hook and filtered to 'signup' only, because the sign-in pane is
+ * already served by hw_login_modal_after_form above and would otherwise render
+ * the button twice.
+ *
+ * @param string $pane 'signin' | 'signup' | 'reset'
+ * @return void
+ */
+function hw_render_signup_google_button( $pane ){
+
+    if ( $pane !== 'signup' ) {
+        return;
+    }
+
+    hw_google_login_button( [ 'divider' => __( 'or', 'hola-weddings' ) ] );
+}
+add_action('hw_auth_after_form', 'hw_render_signup_google_button', 10, 1 );
+
+/**
  * render the invoice payment custom message modal
  *
  * @return void

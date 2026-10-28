@@ -1,7 +1,11 @@
 <?php
 
-$him = hw_get_option('hw_his_name', '' );
-$her = hw_get_option('hw_her_name', '' );
+use HW\App;
+
+$wedding = App::getInstance()->getWedding();
+$him = $wedding->getHisName();
+$her = $wedding->getHerName();
+
 $customer = $transaction->getBillingInformation();
 ?>
 <?= hw_get_template('template-parts/pdf/partials/style') ?>

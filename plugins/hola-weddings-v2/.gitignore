@@ -1,0 +1,5 @@
+.vscode
+/node_modules
+includes/Integrations/ClassicVacations/node_modules
+includes/Integrations/ClassicVacations/logs
+/logs

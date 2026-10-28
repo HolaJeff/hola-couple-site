@@ -2,6 +2,7 @@
 
 namespace HW;
 
+use HW\RestApi\BookingEndpoints;
 use HW\Booking\BookingServiceProvider;
 use HW\Controllers\InvoicePaymentConfirmation;
 use HW\Controllers\POS;
@@ -54,6 +55,15 @@ class App extends HWObject{
 		Scripts::getInstance();
 		Template::getInstance();
 		Elementor::getInstance();
+
+		// REST API
+		BookingEndpoints::getInstance();
+		\HW\Feedback\FeedbackEndpoint::getInstance();
+
+		// Authentication
+		\HW\Auth\Google\Controller::getInstance();
+		\HW\Auth\EmailVerificationController::getInstance();
+		\HW\Auth\RegistrationController::getInstance();
 
 		// Service Providers
 		BookingServiceProvider::getInstance()->init();
@@ -118,7 +128,8 @@ class App extends HWObject{
 	 */
 	public function add_cpt(){
 		
-		register_post_type( 'packages', [
+		// Let's leave this out
+		/* register_post_type( 'packages', [
 			'labels' => [
 				'name' => __( 'Packages' ),
 				'singular_name' => __( 'Package' )
@@ -127,7 +138,7 @@ class App extends HWObject{
 			'has_archive' => false,
 			'menu_icon'   => 'dashicons-products',
 			'supports' => [ 'title', 'page-attributes', 'custom-fields', 'editor' ]
-		]);
+		]); */
 		
 		
 		register_post_type( 'dynamic_prices', [

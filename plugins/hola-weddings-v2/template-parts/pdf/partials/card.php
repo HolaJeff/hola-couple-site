@@ -29,7 +29,7 @@ if($card): ?>
                 <img src="<?= $signature ?>" />
             </div>
             <div style="text-align: center;">
-                <p style="font-size: 11px"><?= sprintf(__('Signature: %s %s', 'hola-weddings'), $customer['first_name'], $customer['last_name'] ) ?></p>
+                <p style="font-size: 11px"><?= sprintf(__('Signature: %s %s', 'hola-weddings'), $customer->getFirstName(), $customer->getLastName() ) ?></p>
             </div>
         </div>
     <?php endif; ?>

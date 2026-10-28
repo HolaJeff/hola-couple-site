@@ -1,0 +1,71 @@
+// ── Skeleton wave ─────────────────────────────────────────────────────────────
+
+@keyframes skeleton-wave {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX( 100%); }
+}
+
+.skeleton-block {
+    background-color: #eaecef;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+.skeleton-block::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.55) 50%,
+        transparent 100%
+    );
+    animation: skeleton-wave 1.5s infinite ease-in-out;
+}
+
+.skeleton-line {
+    height: 14px;
+    margin-bottom: 10px;
+}
+
+.skeleton-line--title { width: 55%; height: 16px; }
+.skeleton-line--sub   { width: 30%; height: 12px; margin-bottom: 0; }
+
+.room-card--skeleton {
+    pointer-events: none;
+}
+
+.room-card--skeleton .room-card__image.skeleton-block {
+    background-color: #eaecef;
+}
+
+.room-card-skeleton__tag {
+    width: 90px;
+    height: 22px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    margin-right: 10px;
+}
+
+.room-card-skeleton__btn {
+    width: 140px;
+    height: 22px;
+    border-radius: 20px;
+}
+
+.room-card-skeleton__price-label {
+    width: 80px;
+    height: 11px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    margin-left: auto;
+}
+
+.room-card-skeleton__price-amount {
+    width: 70px;
+    height: 20px;
+    border-radius: 4px;
+    margin-left: auto;
+}

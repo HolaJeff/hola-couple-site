@@ -54,7 +54,7 @@ class POS{
             'classic-vacations', 
             [ $this, 'display_pos' ],
             CLASSICV_URL . '/assets/images/classic.png',
-            35
+            4
         );
 		
         /** POS 

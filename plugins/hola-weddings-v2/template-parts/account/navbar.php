@@ -1,56 +1,48 @@
-<div class="navbar-custom">
-    <div class="topbar container-fluid">
-        <div class="d-md-flex align-items-center gap-lg-2 gap-1">
+<?php
+/**
+ * Account topbar (sticky header)
+ */
 
-            <!-- Topbar Brand Logo -->
-            <div class="logo-topbar">
-                <!-- Logo here -->
-            </div>
+$user  = wp_get_current_user();
+$first = $user->first_name ?: $user->display_name;
+$last  = $user->last_name;
 
-            <!-- Sidebar Menu Toggle Button -->
-            <button id="leftside-menu-btn" class="button-toggle-menu d-inline-block d-lg-none">
-                <i class="mdi mdi-menu"></i>
-            </button>
-        </div>
+$initials = strtoupper( mb_substr( (string) $first, 0, 1 ) . mb_substr( (string) $last, 0, 1 ) );
+if ( trim( $initials ) === '' ) {
+    $initials = strtoupper( mb_substr( (string) $user->display_name, 0, 1 ) );
+}
+?>
+<header class="account-topbar">
 
-        <div id="navbar-logo">
-            <a href="<?= home_url() ?>" class="logo text-center d-block d-lg-none">
-                <img src="<?= HW_ASSETS_URL ?>/img/logo.png" alt="logo" style="height: 35px">
-            </a>
-        </div>
+    <div class="account-topbar__left">
+        <button type="button" class="account-topbar__toggle" @click="$store.accountSidebar.toggle()" aria-label="<?= esc_attr__( 'Toggle menu', 'hola-weddings' ) ?>">
+            <i class="fas fa-bars"></i>
+        </button>
 
-        <ul class="topbar-menu d-flex align-items-center gap-3">
+        <a href="<?= home_url() ?>" class="account-action__btn d-none d-lg-flex" aria-label="<?= esc_attr__( 'Go to Homepage', 'hola-weddings' ) ?>" title="<?= esc_attr__( 'Go to Homepage', 'hola-weddings' ) ?>">
+            <i class="fas fa-globe-americas"></i>
+            <span class="d-none d-md-block"><?= __('Go to Homepage', 'hola-weddings') ?> </span>
+        </a>
 
-            <li class="dropdown">
-                <a class="nav-link dropdown-toggle arrow-none nav-user px-2" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
-                    <!--<span class="account-user-avatar">
-                        <img src="assets/images/users/avatar-1.jpg" alt="user-image" width="32" class="rounded-circle">
-                    </span>-->
-                    <span class="d-md-flex flex-column gap-1 d-none">
-                        <span class="my-0"><?= sprintf(__('Hello <strong>%s</strong>', 'hola-weddings'), wp_get_current_user()->display_name) ?></span>
-                    </span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-animated profile-dropdown shadow-sm rounded-0 border-0">
-
-                    <!-- item-->
-                    <a href="<?= hw_get_account_profile_url() ?>" class="dropdown-item">
-                        <i class="mdi mdi-account-circle"></i>
-                        <span><?= __('My Profile', 'hola-weddings') ?></span>
-                    </a>
-
-                    <!-- item-->
-                    <!--<a href="javascript:void(0);" class="dropdown-item">
-                        <i class="mdi mdi-lifebuoy"></i>
-                        <span>Support</span>
-                    </a>-->
-
-                    <!-- item-->
-                    <a href="<?= wp_logout_url( home_url() ); ?>" class="dropdown-item">
-                        <i class="mdi mdi-logout"></i>
-                        <span><?= __('Logout', 'hola-weddings') ?></span>
-                    </a>
-                </div>
-            </li>
-        </ul>
+        <a href="<?= home_url() ?>" class="account-topbar__logo">
+            <img src="<?= HW_ASSETS_URL ?>/img/logo.png" alt="Hola Weddings">
+        </a>
     </div>
-</div>
+
+    <div class="account-topbar__right">
+        <div class="account-user">
+            <a href="<?= home_url() ?>" class="account-action__btn d-lg-none" aria-label="<?= esc_attr__( 'Go to Homepage', 'hola-weddings' ) ?>" title="<?= esc_attr__( 'Go to Homepage', 'hola-weddings' ) ?>">
+                <i class="fas fa-globe-americas"></i>
+                <span class="d-none d-md-block"><?= __('Go to Homepage', 'hola-weddings') ?> </span>
+            </a>
+            <a href="<?= wp_logout_url( home_url() ) ?>" class="account-action__btn account-user__logout" aria-label="<?= esc_attr__( 'Logout', 'hola-weddings' ) ?>" title="<?= esc_attr__( 'Logout', 'hola-weddings' ) ?>">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+            <span class="account-user__avatar"><?= esc_html( $initials ) ?></span>
+            <span class="account-user__meta">
+                <span class="account-user__hello"><?= __( 'Hello', 'hola-weddings' ) ?></span>
+                <span class="account-user__name"><?= esc_html( $first ) ?></span>
+            </span>
+        </div>
+    </div>
+</header>

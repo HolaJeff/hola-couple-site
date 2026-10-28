@@ -1,75 +1,66 @@
 <?php
 use \HW\Helpers\Countries;
 
-$customer_data = hw_get_quote_customer();
-$country = isset($customer_data['country']) ? $customer_data['country'] : '';
-$is_US = $country == 'US';
-$state = isset($customer_data['state']) ? $customer_data['state'] : '';
+$billing = $quote->getBillingInformation();
+$is_US = $billing->getCountry() == 'US';
 ?>
-<div class="panel">
-    <div class="title"><?= __('Customer Information', 'hola-weddings') ?></div>     
-    <div class="body">   
-        <table style="width: 100%">
-            <tbody>
-                <tr>
-                    <td>
-                        <strong><?= __('First Name') ?></strong>
-                        <p><?= hw_get_quote_meta('hw_first_name') ?></p>
-                    </td>
-                    <td>
-                        <strong><?= __('Last Name') ?></strong>
-                        <p><?= hw_get_quote_meta( 'hw_last_name') ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <?php $email = hw_get_quote_meta('hw_email') ?>
-                        <strong><?= __('Email') ?></strong>
-                        <p><?= $email ?></p>
-                    </td>
-                    <td>
-                        <?php $phone = hw_get_quote_meta('hw_phone') ?>
-                        <strong><?= __('Phone') ?></strong>
-                        <p><?= $phone ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong><?= __('Address') ?></strong>
-                        <p><?= isset($customer_data['address']) ? $customer_data['address'] : '--' ?></p>
-                    </td>
-                    <td>
-                        <strong><?= __('City') ?></strong>
-                        <p><?= isset($customer_data['city']) ? $customer_data['city'] : '--' ?></p>
-                    </td>
-                    <td>
-                        <strong><?= __('ZIP code') ?></strong>
-                        <p><?= isset($customer_data['zip']) ? $customer_data['zip'] : '--' ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <strong><?= __('State') ?></strong>
-                        <p><?=  $is_US ? hw_get_state_name($state) : $state ?></p>
-                    </td>
-                    <td>
-                        <strong><?= __('Country') ?></strong>
-                        <p>
-                            <?php
-                            if($is_US){
-                                $countries = Countries::getList(true);
-                                echo $countries[$country]['name'];
-                            }else{
-                                echo $country;
-                            }
-                            ?>
-                        </p>
-                    </td>
-                    <td>
-                        
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+<table style="width: 100%">
+    <tbody>
+        <tr>
+            <td>
+                <strong><?= __('First Name') ?></strong>
+                <p><?= $billing->getFirstName(); ?></p>
+            </td>
+            <td>
+                <strong><?= __('Last Name') ?></strong>
+                <p><?= $billing->getLastName(); ?></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong><?= __('Email') ?></strong>
+                <p><?= $billing->getEmail() ?></p>
+            </td>
+            <td>
+                <strong><?= __('Phone') ?></strong>
+                <p><?= $billing->getPhone() ?></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong><?= __('Address') ?></strong>
+                <p><?= $billing->getAddress() ?></p>
+            </td>
+            <td>
+                <strong><?= __('City') ?></strong>
+                <p><?= $billing->getCity() ?></p>
+            </td>
+            <td>
+                <strong><?= __('ZIP code') ?></strong>
+                <p><?= $billing->getPostalCode() ?></p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <strong><?= __('State') ?></strong>
+                <p><?= $is_US ? hw_get_state_name($billing->getState()) : $billing->getState() ?></p>
+            </td>
+            <td>
+                <strong><?= __('Country') ?></strong>
+                <p>
+                    <?php
+                    if($is_US){
+                        $countries = Countries::getList(true);
+                        echo $countries[$billing->getCountry()]['name'];
+                    }else{
+                        echo $billing->getCountry();
+                    }
+                    ?>
+                </p>
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+    </tbody>
+</table>

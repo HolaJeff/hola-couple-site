@@ -1,0 +1,70 @@
+@use 'variables' as *;
+
+// ── Form Controls ─────────────────────────────────────────────────────────────
+
+.form-group label,
+label.form-label {
+    font-size: fs(0.73);
+    font-weight: 600;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-control {
+    border: 1.5px solid #dee2e6;
+    border-radius: 8px;
+    padding: .5rem .8rem;
+    font-size: fs(0.9);
+    color: #1a1a2e;
+    background-color: #fff;
+    height: auto;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.form-control::placeholder {
+    color: #b8bfc9;
+    font-style: normal;
+}
+
+.form-control:focus {
+    border-color: var(--hw-primary-color, #17a2b8);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--hw-primary-color, #17a2b8) 15%, transparent);
+    outline: none;
+    background-color: #fff;
+    color: #1a1a2e;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+    background-image: none;
+}
+.form-control.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, .15);
+}
+
+.form-control.is-valid {
+    border-color: #28a745;
+    background-image: none;
+}
+.form-control.is-valid:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, .15);
+}
+
+select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236c757d'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right .85rem center;
+    padding-right: 2.25rem;
+    cursor: pointer;
+}
+
+textarea.form-control {
+    min-height: 90px;
+    resize: vertical;
+    line-height: 1.6;
+}

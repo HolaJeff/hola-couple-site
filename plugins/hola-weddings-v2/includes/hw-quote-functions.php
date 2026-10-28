@@ -32,7 +32,7 @@ function hw_quote_status_label($value){
  *
  * @param int $key
  * @param int $id
- * @return void
+ * @return mixed
  */
 function hw_get_quote_meta($key, $id = null){
 
@@ -44,8 +44,10 @@ function hw_get_quote_meta($key, $id = null){
 }
 
 /**
- * return the customer
+ * return the quote billing snapshot
+ * DEPRECATED: use $quote->getBillingInformation() instead
  *
+ * @deprecated 2.5.0
  * @param int $id
  * @return string|bool
  */
@@ -181,7 +183,7 @@ function hw_get_quote_infants($id = null){
  */
 function hw_get_quote_room_id($id = null){
 
-    return hw_get_quote_meta('hw_room_id', $id);
+    return intval( hw_get_quote_meta('hw_room_id', $id) );
 }
 
 /**

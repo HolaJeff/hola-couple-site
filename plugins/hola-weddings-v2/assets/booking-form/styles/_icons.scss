@@ -1,0 +1,12 @@
+// ── Icon utilities ────────────────────────────────────────────────────────────
+//
+// .hw-spin is NOT defined here. It lives in the plugin's stylesheet
+// (assets/src/style/_plugin.scss, shipped as `hw-main`) and is shared with the
+// verification screen, so a theme restyling it reaches both. Restating it here
+// would shadow that at equal specificity, since this bundle loads last.
+
+// Lucide SVGs sit on the text baseline; nudge them the way an icon font used to
+// so icon + text lines keep their rhythm. No-op inside flex/grid containers.
+#hw-booking-form-root svg {
+    vertical-align: -0.125em;
+}

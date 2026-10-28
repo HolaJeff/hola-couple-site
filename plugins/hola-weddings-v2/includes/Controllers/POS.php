@@ -37,6 +37,50 @@ class POS extends BaseController{
 
         // Confirmation landing page
         add_action('wp_ajax_hw_confirmation_transaction_ticker', [ $this, 'transaction_pending_ticket' ]);
+
+        // Email auth (AJAX)
+        add_action( 'wp_ajax_hw_pos_invoice_verify_email', [ $this, 'ajax_verify_email' ] );
+        add_action( 'wp_ajax_nopriv_hw_pos_invoice_verify_email', [ $this, 'ajax_verify_email' ] );
+    }
+
+    /**
+     * Verify the reservation email and grant temporary invoice access (AJAX).
+     *
+     * Mirrors the no-JS handler in init(), but returns JSON so the auth form
+     * can be handled client-side with proper loading / error feedback.
+     *
+     * @return void
+     */
+    public function ajax_verify_email(){
+
+        $invoiceID = isset( $_POST['invoice_id'] ) ? sanitize_text_field( $_POST['invoice_id'] ) : '';
+        $email     = isset( $_POST['email'] ) ? sanitize_email( $_POST['email'] ) : '';
+
+        if( empty( $invoiceID ) || ! check_ajax_referer( 'hw-pos-verify-email-' . $invoiceID, '_wpnonce', false ) ){
+            wp_send_json( [ 'success' => false, 'message' => __( 'Your session expired. Please refresh the page and try again.', 'hola-weddings' ) ] );
+        }
+
+        if( empty( $email ) || ! filter_var( $email, FILTER_VALIDATE_EMAIL ) ){
+            wp_send_json( [ 'success' => false, 'message' => __( 'Please enter a valid email address.', 'hola-weddings' ) ] );
+        }
+
+        $invoice = hw_get_invoice( $invoiceID );
+
+        if( ! $invoice->exists() ){
+            wp_send_json( [ 'success' => false, 'message' => __( 'Invoice not found.', 'hola-weddings' ) ] );
+        }
+
+        $billing_information = $invoice->getQuote()->getBillingInformation();
+
+        // HC-434 - fix: lowercase comparison for people who use uppercase emails when booking.
+        if( strtolower( $billing_information->getEmail() ) === strtolower( $email ) ){
+
+            Session::getInstance()->set( 'hw_pos_can_view_invoice_' . $invoice->getID(), true );
+
+            wp_send_json( [ 'success' => true, 'redirect' => hw_get_invoice_payment_permalink( $invoice ) ] );
+        }
+
+        wp_send_json( [ 'success' => false, 'message' => __( 'This email does not match the one used for the reservation. Please try again.', 'hola-weddings' ) ] );
     }
 
     /**
@@ -46,7 +90,7 @@ class POS extends BaseController{
      */
     public function init(){
 
-        if(isset($_POST['action']) && $_POST['action'] == 'hw_pos_invoice_verify_email'){
+        if( !wp_doing_ajax() && isset($_POST['action']) && $_POST['action'] == 'hw_pos_invoice_verify_email'){
             
             if((!isset($_GET['invoiceID']) || empty($_GET['invoiceID']))
              || (!isset($_POST['email']) || empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))){
@@ -60,7 +104,7 @@ class POS extends BaseController{
             $invoice = hw_get_invoice($invoiceID);
             $quote = $invoice->getQuote();
             $billing_information = $quote->getBillingInformation();
-
+
 
 // phase4-email-gate: throttle guessing (per invoice + IP), constant-time compare, case-insensitive
 
@@ -100,6 +144,7 @@ if(hash_equals(strtolower(trim((string) $billing_information->getEmail())), strt
         Noty::import();
         BlockUI::importFrontEnd();
 
+        wp_enqueue_script( 'hw-alpinejs', HW_URL . 'assets/vendor/alpinejs/alpinejs.min.js', null, true, [ 'strategy' => 'defer' ] );
         wp_enqueue_script('hw-pos', HW_ASSET_DIST_URL . 'js/standalone/POS.js', ['jquery', 'jquery-validate', 'noty', 'blockui']);
         wp_localize_script('hw-pos', 'billing_information', $invoice->getBillingInformation() );
         wp_localize_script('hw-pos', 'hw_pos', [

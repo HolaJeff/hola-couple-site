@@ -56,7 +56,7 @@ class Hotels extends AbstractOperation
      *
      * @return array|\WP_Error
      */
-    public static function getHotel($id)
+    public static function getHotel(int|string $id)
     {
         if (empty($id)) {
             return false;
@@ -78,7 +78,7 @@ class Hotels extends AbstractOperation
      *
      * @return array|\WP_Error
      */
-    public static function getAmenities($id)
+    public static function getAmenities(int|string $id)
     {
         if (empty($id)) {
             return false;

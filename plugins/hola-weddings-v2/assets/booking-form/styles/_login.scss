@@ -1,0 +1,57 @@
+@use 'variables' as *;
+
+// ── Login CTA Card ────────────────────────────────────────────────────────────
+
+.login-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: #fff;
+    border: 1.5px solid #e0e3e8;
+    border-left: 4px solid var(--hw-primary-color, #17a2b8);
+    border-radius: 10px;
+    padding: 16px 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
+
+    &__icon-wrap {
+        display: flex;
+        color: var(--hw-primary-color, #17a2b8);
+        flex-shrink: 0;
+        line-height: 1;
+    }
+
+    &__body {
+        flex: 1;
+        min-width: 0;
+    }
+
+    &__heading {
+        font-size: fs(0.9);
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 2px;
+    }
+
+    &__sub {
+        font-size: fs(0.8);
+        margin: 0;
+    }
+
+    &__btn {
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 575.98px) {
+        flex-wrap: wrap;
+
+        &__btn { width: 100%; text-align: center; }
+    }
+}
+
+// ── Login Modal ───────────────────────────────────────────────────────────────
+//
+// Deliberately empty. There is one login modal on the site: PHP renders it into
+// every page footer and window.hw.loginModal drives it, so its styles live with
+// it in assets/src/style/_login-modal.scss. This bundle no longer ships a
+// second implementation to fall out of step with it.

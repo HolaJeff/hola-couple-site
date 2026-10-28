@@ -1,9 +1,8 @@
  #header{
     z-index: 99;
-    background-color: #fff;
+    background-color: var(--hw-header-bg-color);
     box-shadow: 0 0 10px rgba(0,0,0,0.2);
     position: relative;
-    height: 80px;
     font-family: var(--hw-header-font-family);
     .logo{
         display: block;
@@ -14,12 +13,28 @@
             padding: 10px 0;
 
             & > a{
-                display: block;
+
+                display: flex;
+                align-items: center;
+                gap: 10px;
                 color: var(--hw-primary-color);
                 font-size: var(--hw-logo-font-size);
                 font-family: var(--hw-logo-font-family);
+
                 &:hover{
                     text-decoration: none;
+                }
+
+                .logo-decoration{
+                    display: inline-block;
+                    height: 40px;
+                    width: auto;
+                    vertical-align: middle;
+                    margin-right: 10px;
+                }
+
+                @media (min-width:768px) {
+                    gap: 15px;
                 }
             }
         }

@@ -1,5 +1,12 @@
 :root {
-  --hw-primary-color: #5880a2;
+  --hw-primary-color: #284a70;
+  --hw-primary-contrast-color: #fff;
+  --hw-primary-darker-color: #112031;
+  --hw-primary-darker-contrast-color: #fff;
+  --hw-accent-color: var(--hw-primary-color);
+  --hw-accent-color-contrast: var(--hw-primary-contrast-color);
+  --hw-accent-hover: var(--hw-primary-darker-color);
+  --hw-accent-hover-contrast: var(--hw-primary-darker-contrast-color);
   --hw-secondary-color: #b0c7d9;
   --hw-text-color: #525252;
 }
@@ -75,21 +82,10 @@
 #header .logo-wrapper a {
   position: relative;
 }
-#header .logo-wrapper a::before {
-  display: inline-block;
-  content: "";
-  height: 50px;
-  width: 50px;
-  background-image: url("../../images/section-title.png");
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  vertical-align: middle;
-}
 
 .page-template-home #hero .content .inner {
   position: relative;
-  max-width: 550px;
+  max-width: 992px;
   margin-left: auto;
   margin-right: auto;
   padding: 100px 30px;
@@ -178,10 +174,12 @@
 
 .couple-section .image-wrapper {
   position: relative;
+  margin-bottom: 100px;
+  margin-top: 50px;
 }
 .couple-section .image-wrapper .image {
-  height: 650px;
-  max-width: 470px;
+  height: 50vh;
+  max-width: 80%;
   margin: 0 auto;
   display: block;
   background-position: center;
@@ -189,12 +187,28 @@
   background-size: cover;
   border-radius: 230px;
 }
+@media (min-width: 576px) {
+  .couple-section .image-wrapper .image {
+    height: 570px;
+  }
+}
+@media (min-width: 768px) {
+  .couple-section .image-wrapper .image {
+    height: 650px;
+    max-width: 470px;
+  }
+}
 .couple-section .image-wrapper .frame {
   content: "";
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translateX(-50%) translateY(-50%) scale(1.04);
+}
+@media (min-width: 992px) {
+  .couple-section .image-wrapper {
+    margin: 0;
+  }
 }
 .couple-section .person {
   text-align: center;
@@ -432,14 +446,12 @@
   width: 98%;
   height: 92%;
 }
-#footer .upper-footer .footer-logo::before {
+#footer .upper-footer .footer-logo .logo-decoration {
   margin-bottom: 20px;
-  content: "";
   display: block;
-  background-image: url("../../images/section-title.png");
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: 40% center;
   height: 60px;
+  width: auto;
   opacity: 0.8;
+  margin-left: auto;
+  margin-right: auto;
 }

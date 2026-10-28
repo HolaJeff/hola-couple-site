@@ -3,6 +3,7 @@
 namespace HW\Models;
 
 use DateTime;
+use HW\Enums\InvoiceStatus;
 use HW\Traits\hasACFFields;
 
 class Invoice extends DecoratorModel{
@@ -136,7 +137,7 @@ class Invoice extends DecoratorModel{
         
         $value = $this->getACFField('hw_invoice_status');
         
-        return is_array($value) ? $value['value'] : $value;
+        return is_array($value) ? $value['value'] : hw_slugify( $value );
     }
 
     /**
@@ -227,7 +228,7 @@ class Invoice extends DecoratorModel{
     /**
      * return billing information
      *
-     * @return HW\Models\CRM\BillingInformation
+     * @return \HW\Models\CRM\BillingInformation
      */
     public function getBillingInformation(){
 
@@ -253,6 +254,16 @@ class Invoice extends DecoratorModel{
     public function setPaidDate(DateTime $date){
 
         $this->setACFField('hw_paid_date', $date->format('Ymd'));
+    }
+
+    /**
+     * return true if the invoice status is paid
+     *
+     * @return boolean
+     */
+    public function isPaid(){
+
+        return $this->getStatus() == InvoiceStatus::PAID->value;
     }
 
     /**

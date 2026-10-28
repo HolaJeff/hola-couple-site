@@ -10,6 +10,7 @@ function hw_acf_register_option_pages() {
 	acf_add_options_page( [
         'page_title' => 'Love Story Timeline',
         'menu_slug' => 'hw-lovestory-timeline',
+        'parent_slug' => 'holaweddings',
         'position' => 2,
         'redirect' => false,
         'menu_icon' => [

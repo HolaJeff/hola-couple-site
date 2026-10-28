@@ -11,18 +11,42 @@ use HW\Utils\RoomOccupancy;
 
 class Quote extends DecoratorModel{
 
-    protected $checkin;
+    protected DateTime $checkin;
 
-    protected $checkout;
+    protected DateTime $checkout;
 
     protected $guests;
 
     public static $post_type = 'quote';
 
     /**
+     * Where a quote's billing details live, field by field.
+     *
+     * These fields ARE the billing details. hw_customer_data is not — it is a
+     * snapshot of what was submitted when the booking was made, written once and
+     * never touched again. Anything that wants the current details reads these.
+     *
+     * Kept on the model rather than as a global constant so it sits with the
+     * thing it describes, matching how the rest of the newer code stores its meta
+     * keys (EmailVerificationService::META_VERIFIED_AT, UserResolver::META_*).
+     * The user-side equivalent is a global only because there is no User model.
+     */
+    const BILLING_META = [
+        'first_name' => 'hw_first_name',
+        'last_name'  => 'hw_last_name',
+        'email'      => 'hw_email',
+        'phone'      => 'hw_phone',
+        'address'    => 'hw_address',
+        'city'       => 'hw_city',
+        'state'      => 'hw_state',
+        'country'    => 'hw_country',
+        'zip'        => 'hw_zip',
+    ];
+
+    /**
      * billing information object
      *
-     * @var HW\Models\CRM\BillingInformation
+     * @var \HW\Models\CRM\BillingInformation
      */
     protected $_billing_information;
 
@@ -35,8 +59,10 @@ class Quote extends DecoratorModel{
     {
         parent::__construct($post);
 
-        $billing_information_data = $this->get('hw_customer_data');
-        $this->_billing_information = new BillingInformation($billing_information_data);
+        // Built from the quote's own billing meta fields. hw_customer_data is a
+        // snapshot of the original submission and is never updated, so reading it
+        // here would hand back stale details after any edit.
+        $this->_billing_information = $this->readBilling();
 
         $checkin = $this->get('hw_checkin') ?? '';
         $checkout = $this->get('hw_checkout') ?? '';
@@ -79,7 +105,10 @@ class Quote extends DecoratorModel{
         // billing
         if(isset($data['billing']) && !empty($data['billing'])){
 
-            $this->set('hw_customer_data', $data['billing']);
+            // Writes the billing meta fields only — hw_customer_data keeps the
+            // original submission untouched.
+            $this->setBillingInformation(new BillingInformation($data['billing']));
+
             unset($data['billing']);
         }
 
@@ -184,7 +213,14 @@ class Quote extends DecoratorModel{
      */
     public function getGuests(){
 
-        return $this->get('hw_guests') ?: [];
+        $guests = $this->get('hw_guests');
+
+        // guests may be stored as a JSON string
+        if(is_string($guests)){
+            $guests = json_decode($guests, true);
+        }
+
+        return is_array($guests) ? $guests : [];
     }
 
     /**
@@ -329,8 +365,92 @@ class Quote extends DecoratorModel{
      * @return HW\Models\CRM\BillingInformation;
      */
     public function getBillingInformation(){
-        
+
         return $this->_billing_information;
+    }
+
+    /**
+     * Replace this quote's billing details.
+     *
+     * The only supported way to change them. hw_customer_data is deliberately
+     * left alone: it records the original submission, so correcting a typo in an
+     * address must not rewrite history.
+     *
+     * Takes the model rather than a raw array on purpose: the two shapes in the
+     * wild disagree — the booking form submits phone_number/zip, the admin editor
+     * phone/postal_code — and BillingInformation is what reconciles them.
+     *
+     * @param \HW\Models\CRM\BillingInformation $billing
+     * @return $this
+     */
+    public function setBillingInformation( BillingInformation $billing ){
+
+        $values = [
+            'first_name' => $billing->getFirstName(),
+            'last_name'  => $billing->getLastName(),
+            'email'      => $billing->getEmail(),
+            'phone'      => $billing->getPhone(),
+            'address'    => $billing->getAddress(),
+            'city'       => $billing->getCity(),
+            'state'      => $billing->getState(),
+            'country'    => $billing->getCountry(),
+            'zip'        => $billing->getPostalCode(),
+        ];
+
+        foreach ( $values as $property => $value ) {
+
+            // set() rather than update_post_meta() so these writes go through the
+            // model like every other one, and fire hw_model_metadata_updated.
+            $this->set( self::BILLING_META[ $property ], is_string( $value ) ? $value : '' );
+        }
+
+        $this->_billing_information = $billing;
+
+        /**
+         * Fires after a quote's billing details have been written.
+         *
+         * @param int                                $quote_id
+         * @param \HW\Models\CRM\BillingInformation $billing
+         */
+        do_action( 'hw_quote_billing_updated', $this->getID(), $billing );
+
+        return $this;
+    }
+
+    /**
+     * Build a BillingInformation from this quote's meta fields.
+     *
+     * Reads through get(), so it resolves the same way as every other field on
+     * the model. Called from the constructor, which is safe: the post is already
+     * attached by then.
+     *
+     * @return \HW\Models\CRM\BillingInformation
+     */
+    protected function readBilling(){
+
+        $values = [];
+
+        foreach ( self::BILLING_META as $property => $meta_key ) {
+
+            // Cast: get() answers null when the post is missing, and
+            // BillingInformation maps phone/postal_code with isset(), which skips
+            // nulls — leaving an undeclared property warning behind it.
+            $values[ $property ] = (string) $this->get( $meta_key );
+        }
+
+        return new BillingInformation( $values );
+    }
+
+    /**
+     * Return the WP user ID that owns this quote.
+     * Ownership lives on the hw_owner_user_id meta; 0 means a guest booking
+     * made without an account.
+     *
+     * @return int
+     */
+    public function getOwnerID(): int {
+        $owner = (int) get_post_meta( $this->getID(), 'hw_owner_user_id', true );
+        return $owner;
     }
 
     /**
@@ -436,11 +556,11 @@ class Quote extends DecoratorModel{
     /**
      * return room
      *
-     * @return array
+     * @return array|null
      */
     public function getRoom(){
 
-        return hw_get_room($this->get('hw_room_id'));
+        return $this->getRoomBlock()?->getRoom();
     }
 
     /**
@@ -506,7 +626,61 @@ class Quote extends DecoratorModel{
      */
     public function getOwner(){
 
-        return (int)$this->post->post_author;
+        return $this->getOwnerID();
+    }
+
+    /**
+     * return the cart mode this quote was booked under ( room | package )
+     *
+     * @return string
+     */
+    public function getMode(){
+
+        return $this->get('hw_mode') ?: hw_get_mode();
+    }
+
+    /**
+     * return the package id, when the quote was booked in package mode
+     *
+     * @return int
+     */
+    public function getPackageID(){
+
+        return intval($this->get('hw_package_id'));
+    }
+
+    /**
+     * return the rate type resolved at booking time
+     *
+     * @return array
+     */
+    public function getRateType(){
+
+        return $this->get('hw_rate_type') ?: [];
+    }
+
+    /**
+     * return the post id of the rate behind the rate type
+     *
+     * @return int
+     */
+    public function getRateID(){
+
+        return intval($this->getRateType()['rate']['id'] ?? 0);
+    }
+
+    /**
+     * return the API room id booked
+     *
+     * Read off the room block, which is the only source of truth here. The
+     * quote's own hw_room_id is a copy taken at booking time and goes stale the
+     * moment the block is re-pointed at a different room.
+     *
+     * @return int
+     */
+    public function getRoomID(){
+
+        return intval($this->getRoomBlock()?->getRoomId());
     }
 
     /**
@@ -522,12 +696,36 @@ class Quote extends DecoratorModel{
     /**
      * return the insurance plan
      *
-     * @return Insurance|false
+     * @return array|false
      */
     public function getInsurancePlan(){
 
         $insurance_plan_id = $this->getInsurancePlanID();
-        return $insurance_plan_id ? Insurance::getPlan($insurance_plan_id) : false;
+
+        if ( ! $insurance_plan_id ) {
+            return false;
+        }
+
+        $plan = Insurance::getPlan( $insurance_plan_id );
+
+        // getPlan() answers false for an unknown id and a WP_Error when the API
+        // is unreachable; callers only ever want the plan array or nothing.
+        return is_array( $plan ) ? $plan : false;
+    }
+
+    /**
+     * Whether this quote was booked with insurance.
+     *
+     * Answered from the plan id, not hw_insurance_id: the latter is the id of
+     * the insurance *product* the plan belongs to, and quotes exist in the wild
+     * where it was never written even though a plan was bought and charged for.
+     * The plan id and the total are what the booking flow always stores.
+     *
+     * @return bool
+     */
+    public function hasInsurance(){
+
+        return $this->getInsurancePlanID() > 0 || $this->getInsuranceTotal() > 0;
     }
 
     /**
@@ -605,7 +803,9 @@ class Quote extends DecoratorModel{
         $invoices = $this->getInvoices();
         
         foreach($invoices as $invoice){
-            $paid_amount += $invoice->getPaidAmount();
+            if($invoice->isPaid()){
+                $paid_amount += $invoice->getAmount();
+            }
         }
 
         return $paid_amount;

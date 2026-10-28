@@ -1,5 +1,8 @@
 <?php
-$quote = hw_get_quote($id);
+
+/** @var int                     $id */
+/** @var HW\models\Quote|null $quote */
+
 $paid_amount = $quote->getPaidAmount();
 $quote_total = hw_get_quote_total($id);
 ?>
@@ -12,7 +15,7 @@ $quote_total = hw_get_quote_total($id);
                 <?= __('Room Total', 'hola-weddings' ) ?>
             </td>
             <td class="align-right" style="width:30%;">
-                <?= hw_format_price( hw_get_quote_room_total($id) ) ?>
+                <?= hw_format_price( $quote->getRoomTotal() ) ?>
             </td>
         </tr>
         <tr>
@@ -20,7 +23,7 @@ $quote_total = hw_get_quote_total($id);
                 <?= __('Insurance Total', 'hola-weddings' ) ?>
             </td>
             <td class="align-right">
-                <?= hw_format_price( hw_get_quote_insurance_total($id) ) ?>
+                <?= hw_format_price( $quote->getInsuranceTotal() ) ?>
             </td>
         </tr>
         <?php if($transfer = hw_get_quote_transfer_fee($id)): ?>
@@ -43,7 +46,7 @@ $quote_total = hw_get_quote_total($id);
         </tr>
         <tr>
             <td>
-                <?= __('Paid Amount', 'hola-weddings' ) ?>
+                <?= __('Amount Due', 'hola-weddings' ) ?>
             </td>
             <td class="align-right">
                 <?= hw_format_price( $paid_amount ); ?>
@@ -51,7 +54,7 @@ $quote_total = hw_get_quote_total($id);
         </tr>
         <tr>
             <td style="border-bottom: 0;">
-                <?= __('Due Amount', 'hola-weddings' ) ?>
+                <?= __('Remaining Balance', 'hola-weddings' ) ?>
             </td>
             <td class="align-right" style="border-bottom: 0;">
                 <?= hw_format_price( $quote_total - $paid_amount ); ?>

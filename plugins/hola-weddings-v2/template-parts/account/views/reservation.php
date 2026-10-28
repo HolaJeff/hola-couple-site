@@ -2,63 +2,107 @@
 
 global $post;
 
-$reservation = hw_get_quote(get_the_ID());
-$status = hw_get_quote_status();
+$reservation      = hw_get_quote(get_the_ID());
+$status           = $reservation->getStatus();
 $is_administrator = hw_user_has_role('administrator');
-$tabs = hw_get_single_reservation_tabs();
-?>
-<div id="reservation-<?= get_the_ID() ?>" class="reservation">
+$tabs             = hw_get_single_reservation_tabs();
 
-    <div class="d-flex flex-wrap flex-lg-nowrap mb-3">
-        <div>
-            <h2 class="mb-0 d-flex flex-column-reverse flex-md-row">
-                <?= get_the_title() //sprintf(__('Reservation #%s', 'hola-weddings'), get_the_ID()) ?>
-                <div class="align-center mb-2 mb-md-0 ml-md-3">
-                    <span class="status <?= $status ?>"><?= hw_quote_status_label($status) ?></span>
+$upcoming_invoice = hw_get_quote_upcoming_invoice($reservation->getID());
+$room   = $reservation->getRoom();
+$guests = $reservation->getGuests();
+$ci_dt     = $reservation->getCheckin();
+$co_dt     = $reservation->getCheckout();
+?>
+<div id="reservation-<?= $reservation->getID() ?>" class="reservation">
+
+
+    <!-- Upcoming Payment -->
+    <?php hw_get_template('template-parts/account/partials/upcoming-payment-alert', ['invoice' => $upcoming_invoice, 'classes' => 'bg-white mb-4 p-md-3']); ?>
+    
+    <!-- Overview -->
+    <div class="card card__reservation-overview">
+        <div class="card__body d-flex flex-column flex-md-row align-items-md-start">
+
+            <!-- Thumb -->
+            <div class="reservation__thumb position-relative" style="background-image:url(<?= esc_url($room['main_image']) ?>)">
+                <!-- Mobile status -->
+                <span class="absolute mt-2 ml-2 d-md-none reservation__status <?= esc_attr($status) ?>"><?= hw_quote_status_label($status) ?></span>
+            </div>
+
+            <!-- Overview information -->
+            <div class="position-relative flex-grow-1">
+                <!-- Desktop status -->
+                <span class="d-none d-md-inline-flex reservation__status <?= esc_attr($status) ?>"><?= hw_quote_status_label($status) ?></span>
+
+                <h3 class="reservation__title"><?= get_the_title() ?></h3>
+
+                <div class="reservation__facts flex-column flex-md-wrap flex-md-row mt-3">
+                    <div class="reservation__fact">
+                        <span class="reservation__fact-icon"><i class="fas fa-bed"></i></span>
+                        <span class="reservation__fact-text">
+                            <span class="reservation__fact-label"><?= __('Room Type', 'hola-weddings') ?></span>
+                            <span class="reservation__fact-value"><?= esc_html($room['name']) ?></span>
+                        </span>
+                    </div>
+                    <div class="reservation__fact">
+                        <span class="reservation__fact-icon"><i class="far fa-calendar-check"></i></span>
+                        <span class="reservation__fact-text">
+                            <span class="reservation__fact-label"><?= __('Travel Dates', 'hola-weddings') ?></span>
+                            <span class="reservation__fact-value"><?= $ci_dt ? $ci_dt->format('M j, Y') : '—' ?> → <?= $co_dt ? $co_dt->format('M j, Y') : '—' ?></span>
+                        </span>
+                    </div>
+                    <div class="reservation__fact">
+                        <span class="reservation__fact-icon"><i class="fas fa-users"></i></span>
+                        <span class="reservation__fact-text">
+                            <span class="reservation__fact-label"><?= __('Occupation', 'hola-weddings') ?></span>
+                            <span class="reservation__fact-value">
+                                <?= sprintf( __('Adults: %s', 'hola-wedding'), $reservation->getAdults() ) ?>
+                                <?= sprintf( __('Teens: %s', 'hola-wedding'), $reservation->getTeen() ) ?>
+                                <?= sprintf( __('Children: %s', 'hola-wedding'), $reservation->getChildren() ) ?>
+                                <?= sprintf( __('Infants: %s', 'hola-wedding'), $reservation->getInfants() ) ?>
+                            </span>
+                        </span>
+                    </div>
                 </div>
-            </h2>
-            
-            <?php do_action('hw_account_reservation_after_title') ?>
-            
-        </div>
-        <div class="actions text-md-right flex-fill">
-            <?php if($is_administrator): ?>
-                <span class="d-inline-block p-md-3 mr-2 mt-2 mt-md-0">
-                    <i class="far fa-user-circle"></i>
-                    <?= sprintf(__('Owner: %s'), get_the_author_meta('display_name', $post->post_author)) ?>
-                </span>
-            <?php endif; ?>
-            <!-- <a class="btn btn-light" target="_blank" href="<?= hw_get_reservation_pdf_permalink(get_the_ID()) ?>">
-                <i class="mdi mdi-file-pdf-box"></i>
-                <?= __('View PDF', 'hola-weddings') ?>
-            </a> -->
+
+                <?php do_action('hw_account_reservation_after_title') ?>
+
+                <?php if($is_administrator): ?>
+                    <!-- Owner -->
+                    <span class="reservation__owner">
+                        <i class="far fa-user-circle"></i>
+                        <?php
+                        // Ownership lives on the meta — guest bookings have none.
+                        $owner_id = hw_get_quote($post->ID)->getOwnerID();
+                        ?>
+                        <?= sprintf(
+                            __('Owner: %s', 'hola-weddings'),
+                            $owner_id ? get_the_author_meta('display_name', $owner_id) : __('Guest (no account)', 'hola-weddings')
+                        ) ?>
+                    </span>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 
-    <!-- tbas navigation -->
-    <ul class="nav nav-tabs mb-3" id="reservationTabs" role="tablist">
-        <?php foreach($tabs as $key => $tab): ?>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link <?= $key == 'details' ? 'active' : '' ?>" id="<?= $key ?>-tab" data-toggle="tab" data-target="#<?= $key ?>" type="button" role="tab" aria-controls="<?= $key ?>" aria-selected="true">
-                    <?= $tab['title'] ?>
-                </button>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-
-    <!-- tabs and sidebar -->
+    <!-- Details + payment summary -->
     <div class="row">
         <div class="col-lg-8">
-
-            <div class="reservation-container"> 
-                <div class="tab-content" id="myTabContent">
-                    <?php foreach($tabs as $key => $tab): ?>
-                        <div class="tab-pane fade <?= $key == 'details' ? 'show active' : '' ?>" id="<?= $key ?>" role="tabpanel" aria-labelledby="<?= $key ?>-tab">
-                            <?php hw_get_template('template-parts/account/views/reservation/' . $key, ['quote' => $reservation] ); ?>
-                        </div>
-                    <?php endforeach; ?>
+            <?php foreach($tabs as $key => $tab): ?>
+                <div class="panel">
+                    <div class="title">
+                        <?php if( $tab['icon'] ): ?>
+                            <span class="icon">
+                                <i class="<?= $tab['icon'] ?>"></i>
+                            </span>
+                        <?php endif; ?>
+                        <?= $tab['title'] ?>
+                    </div>     
+                    <div class="body">
+                        <?php hw_get_template('template-parts/account/views/reservation/' . $key, ['quote' => $reservation]); ?>
+                    </div>
                 </div>
-            </div>
+            <?php endforeach; ?>
         </div>
         <div class="col-lg-4">
             <?php hw_get_template('template-parts/account/views/reservation/payment', ['quote' => $reservation]); ?>

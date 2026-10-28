@@ -1,6 +1,77 @@
 /**
 * Bootstrap
 */
+
+/**
+ * Buttons follow the React booking form (assets/booking-form/styles/
+ * _bootstrap-overrides.scss): pill shape, centred content, 10px gap so an icon
+ * sits off the label without a margin utility.
+ *
+ * inline-flex rather than the booking form's flex: that bundle is scoped to one
+ * container where every button is a flex child or full width, whereas here a
+ * .btn is often an anchor sitting in a line of text. inline-flex lays the inside
+ * out identically while leaving the button in the flow.
+ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    border-radius: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+    line-height: 32px;
+}
+
+/* Utilities that assume a block-level button still need to win. */
+.btn.btn-block,
+.btn.w-100 {
+    display: flex;
+    width: 100%;
+}
+
+.btn.disabled,
+.btn:disabled {
+    cursor: not-allowed;
+}
+
+.btn-primary{
+    background-color: var(--hw-primary-color);
+    border-color: var(--hw-primary-color);
+    color: var(--hw-primary-contrast-color);
+
+    &.disabled,
+    &:disabled, {
+        background-color: var(--hw-primary-color);
+        border-color: var(--hw-primary-color);
+        color: var(--hw-primary-contrast-color);
+    }
+
+    &:hover,
+    &:active,
+    &:focus,
+    &:not(.disabled, :disabled):hover,
+    &:not(.disabled, :disabled):focus
+    &:not(:disabled):not(.disabled).active, 
+    &:not(:disabled):not(.disabled):active, 
+    .show>&.dropdown-toggle{
+        background-color: var(--hw-primary-darker-color);
+        border-color: var(--hw-primary-darker-color);
+        color: var(--hw-primary-darker-contrast-color);
+    }
+}
+.btn-link{
+    color: var(--hw-accent-color);
+    &:hover,
+    &:active,
+    &:focus{
+        color: var(--hw-accent-hover);
+    }
+}
+.btn-outline-primary{
+    color: var(--hw-primary-color);
+    border-color: var(--hw-primary-color);
+}
 .btn-group>.btn-group:not(:last-child)>.btn, .btn-group>.btn:not(:last-child):not(.dropdown-toggle) {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -16,14 +87,16 @@
 .btn-group>.btn.active, .btn-group>.btn:active, .btn-group>.btn:focus, .btn-group>.btn:hover {
     z-index: 1;
 }
-.btn-check:active+.btn-outline-primary,
-.btn-check:checked+.btn-outline-primary,
+.btn-check:active+.btn-outline-primary, 
+.btn-check:checked+.btn-outline-primary, 
 .btn-outline-primary.active, 
 .btn-outline-primary.dropdown-toggle.show, 
-.btn-outline-primary:active {
-    color: #fff;
-    background-color: #0d6efd;
-    border-color: #0d6efd;
+.btn-outline-primary:active,
+.btn-outline-primary:hover,
+.btn-outline-primary:not(:disabled):not(.disabled):active {
+    color: var(--hw-primary-contrast-color);
+    background-color: var(--hw-primary-color);
+    border-color: var(--hw-primary-color);
 }
 .btn-group-vertical>.btn, .btn-group>.btn {
     position: relative;
@@ -44,4 +117,32 @@
 }
 .btn-white{
     background-color: #fff;
+}
+.alert{
+    svg{
+        height: 24px;
+        width: 24px;
+    }
+    &.alert-warning{
+        background-color: #fff3cd4a;
+        svg{
+            fill: #856404;
+        }
+        .btn{
+            background-color: var(--warning-contrast);
+            color: var(--warning);
+            border-color: var(--warning);
+
+            &:hover,
+            &:active,
+            &:focus{
+                background-color: var(--warning);
+                color: var(--warning-contrast);
+                border-color: var(--warning-contrast);
+            }
+        }
+    }
+    &.alert-danger{
+        background-color: #f8d7da2b;
+    }
 }

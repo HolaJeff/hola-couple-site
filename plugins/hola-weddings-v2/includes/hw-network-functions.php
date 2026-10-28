@@ -39,3 +39,33 @@ function hw_get_network_social_links(){
 
     return get_network_option(null, 'hw_social_links', '');
 }
+
+/**
+ * return the network-level Google OAuth client id
+ *
+ * @return string
+ */
+function hw_get_google_client_id(){
+
+    if( defined( 'HW_GOOGLE_CLIENT_ID' ) && HW_GOOGLE_CLIENT_ID ){
+
+        return (string) HW_GOOGLE_CLIENT_ID;
+    }
+
+    return (string) get_network_option( null, 'hw_google_client_id', '' );
+}
+
+/**
+ * return the network-level Google OAuth client secret
+ *
+ * @return string
+ */
+function hw_get_google_client_secret(){
+
+    if( defined( 'HW_GOOGLE_CLIENT_SECRET' ) && HW_GOOGLE_CLIENT_SECRET ){
+
+        return (string) HW_GOOGLE_CLIENT_SECRET;
+    }
+
+    return (string) get_network_option( null, 'hw_google_client_secret', '' );
+}

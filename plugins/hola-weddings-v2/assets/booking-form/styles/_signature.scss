@@ -1,0 +1,68 @@
+@use 'variables' as *;
+
+// ── Signature Pad ─────────────────────────────────────────────────────────────
+
+.sig-preview {
+    max-height: 80px;
+    background: #fff;
+    display: block;
+}
+
+.sig-canvas-wrap {
+    position: relative;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.sig-canvas {
+    display: block;
+    width: 100%;
+    height: 180px;
+    touch-action: none;
+}
+
+.sig-canvas-hint {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: fs(0.6875);
+    color: #bbb;
+    pointer-events: none;
+}
+
+.sig-font-selector {
+    display: flex;
+    gap: 10px;
+}
+
+.sig-font-option {
+    flex: 1;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+
+    span {
+        display: block;
+        font-size: fs(1.375);
+        line-height: 1.3;
+        margin-bottom: 4px;
+    }
+
+    small {
+        font-size: fs(0.6875);
+        color: #888;
+    }
+}
+
+.sig-font-option--active {
+    border-color: #0d6efd;
+    background: #f0f6ff;
+}

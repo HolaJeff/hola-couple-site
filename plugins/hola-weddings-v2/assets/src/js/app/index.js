@@ -1,3 +1,26 @@
+import HwAuthModal, { AUTH_EVENTS } from './auth-modal';
+import { registerVerifyEmail } from './verify-email';
+
+// window.hw is the wp_localize_script payload for this handle, so extend it
+// rather than replacing it. Assigned at module scope so anything loading after
+// this bundle — the React booking form included — can call it right away;
+// open() queues itself until the footer markup exists.
+window.hw = window.hw || {};
+window.hw.authModal = new HwAuthModal();
+window.hw.AUTH_EVENTS = AUTH_EVENTS;
+
+// Legacy aliases. The modal grew a sign-up pane and was renamed at the JS layer,
+// but window.hw.loginModal is what the React booking form already calls and what
+// any third party would have found — so both names point at the one instance.
+// AUTH_EVENTS is a superset of the old LOGIN_EVENTS keys, and the five original
+// event *names* are unchanged, so existing listeners keep firing.
+window.hw.loginModal = window.hw.authModal;
+window.hw.LOGIN_EVENTS = AUTH_EVENTS;
+
+// Alpine components owned by this bundle. Registered on alpine:init, which has
+// not fired yet — this file runs in <head> and Alpine is deferred.
+registerVerifyEmail();
+
 jQuery(function($){
 
     $('[data-toggle="tooltip"]').tooltip();
@@ -14,6 +37,9 @@ jQuery(function($){
     $('.ajax-login-btn').on( 'click', Ajax_Login );
 
     $('#ajax-reset-password .reset-password-btn').on('click', ResetPassword)
+
+    // Delegated: the pane is only rendered when sign-up is switched on.
+    $(document).on('click', '.hw-signup-btn', SignUp);
 
     $('#help-bubble .bubble .trigger').on('click', function(){
         $(this).parent().toggleClass('open');
@@ -136,6 +162,25 @@ function Ajax_Login() {
             // trigger the event
             jQuery(document).trigger('user_logged_in');
 
+            // Native event for consumers that are not jQuery — the React booking
+            // form persists its in-progress booking here. Dispatched
+            // synchronously and before the reload, so listeners run first.
+            window.hw.authModal.emit(AUTH_EVENTS.success);
+
+            // Signed in, but the address has not been confirmed yet. Say so right
+            // here rather than reloading into a page that will only bounce them to
+            // /account/verify-email/. Closing the modal reloads, so the page still
+            // catches up with the new session.
+            const verification = response.verification || {};
+
+            if (verification.required && window.hw.authModal.showVerification(verification)) {
+
+                container_el.find('input, button').prop('disabled', false);
+                container_el.removeClass('working');
+                unblockUI(container_el);
+                return;
+            }
+
             // reload if allowed
             if(do_rediret){
 
@@ -145,6 +190,11 @@ function Ajax_Login() {
         }else{
 
             jQuery(document).trigger('user_did_not_log_in');
+
+            window.hw.authModal.emit(AUTH_EVENTS.error, {
+                action: 'login',
+                message: response.errorMessage,
+            });
 
             container_el.prepend(jQuery('<p class="errorMessage alert alert-danger"></p>').html(response.errorMessage));
         }
@@ -231,10 +281,145 @@ function ResetPassword() {
 }
 
 /**
+ * Create an account from the sign-up pane.
+ *
+ * Field errors go into each input's .next() div, matching how Ajax_Login and
+ * ResetPassword write theirs; anything the server reports without a field lands
+ * in a banner prepended to the pane.
+ */
+function SignUp() {
+
+    var container_el = jQuery(this).closest('#ajax-signup');
+
+    var fields = {
+        first_name:       container_el.find('input[name="signup_first_name"]'),
+        last_name:        container_el.find('input[name="signup_last_name"]'),
+        email:            container_el.find('input[name="signup_email"]'),
+        password:         container_el.find('input[name="signup_password"]'),
+        password_confirm: container_el.find('input[name="signup_password_confirm"]'),
+    };
+
+    // Clear whatever the previous attempt left behind.
+    container_el.find('.errorMessage').remove();
+    container_el.find('.hw-lm__field-error').html('');
+    container_el.find('input').removeClass('is-invalid');
+
+    var invalid = function(key, message){
+        fields[key].addClass('is-invalid').next().html(message);
+    };
+
+    // Client-side first, so an obvious mistake costs no round trip. The server
+    // repeats every one of these — this is convenience, not the gate.
+    var errors = 0;
+
+    if(!fields.first_name.val().trim()){
+        invalid('first_name', hw_messages.ajax_signup_first_name_required); errors++;
+    }
+
+    if(!fields.email.val().trim()){
+        invalid('email', hw_messages.ajax_signup_email_required); errors++;
+    }
+
+    if(!fields.password.val()){
+        invalid('password', hw_messages.ajax_signup_password_required); errors++;
+    }else if(fields.password.val().length < 8){
+        invalid('password', hw_messages.ajax_signup_password_short); errors++;
+    }else if(fields.password.val() !== fields.password_confirm.val()){
+        invalid('password_confirm', hw_messages.ajax_signup_password_mismatch); errors++;
+    }
+
+    if(errors){
+        return;
+    }
+
+    var request = {
+        'action': 'hw_signup',
+        'nonce': container_el.find('input[name="hw_signup_nonce"]').val(),
+        'signup_first_name': fields.first_name.val(),
+        'signup_last_name': fields.last_name.val(),
+        'signup_email': fields.email.val(),
+        'signup_password': fields.password.val(),
+        'signup_password_confirm': fields.password_confirm.val(),
+    };
+
+    container_el.find('input, button').prop('disabled', true);
+
+    jQuery.ajax({
+        url: ajax.ajax_url,
+        data: request,
+        method: 'POST',
+        contentType: 'application/x-www-form-urlencoded',
+        dataType: 'json',
+        beforeSend: () => {
+            blockUI(container_el);
+        }
+    }).done(function(response) {
+
+        if(!response || !response.success){
+
+            jQuery.each((response && response.errors) || {}, function(key, message){
+                if(fields[key]){
+                    invalid(key, message);
+                }
+            });
+
+            if(response && response.message){
+                container_el.prepend(jQuery('<p class="errorMessage alert alert-danger"></p>').html(response.message));
+            }
+
+            window.hw.authModal.emit(AUTH_EVENTS.error, {
+                action: 'signup',
+                message: (response && response.message) || '',
+            });
+
+            return;
+        }
+
+        // Same contract the login flow uses — listeners persist state here,
+        // synchronously, before we leave the page.
+        window.hw.authModal.emit(AUTH_EVENTS.success);
+
+        // Cancelable, and still fired so anything listening can react. The
+        // redirect it guards is now only the fallback — see below.
+        const go = window.hw.authModal.emit(AUTH_EVENTS.registered, {
+            userId: response.userId,
+            redirect: response.redirect,
+        });
+
+        // A new account is always unconfirmed, so this is the normal path: swap
+        // the modal to its verification pane instead of throwing the visitor onto
+        // another page. Closing the modal reloads so the page catches up.
+        const verification = response.verification || {};
+
+        if (verification.required && window.hw.authModal.showVerification(verification)) {
+
+            container_el.find('input, button').prop('disabled', false);
+            unblockUI(container_el);
+            return;
+        }
+
+        if(go && response.redirect){
+            location.assign(response.redirect);
+        }else{
+            location.reload();
+        }
+
+    }).fail(function() {
+
+        container_el.prepend(jQuery('<p class="errorMessage alert alert-danger"></p>').html(hw_messages.ajax_signup_generic_error));
+
+    }).always(function() {
+
+        container_el.find('input, button').prop('disabled', false);
+        unblockUI(container_el);
+    });
+}
+
+/**
  * Block element
- * 
- * @param {jQuery Element} el 
- * @param {string} msg 
+ *
+ * @param {jQuery Element} el
+ * @param {string} msg
  */
 function blockUI(el, msg){
         
@@ -729,3 +914,34 @@ class GuestField{
         this.el.find('.invalid-feedback.age').remove();
     }
 }
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Public surface
+ *
+ * This file is the app bundle's entry. The moment it gained an `import` it
+ * became an ES module, and webpack wraps entry modules in their own IIFE to
+ * isolate them — `output.iife: false` in gulpfile.babel.js only controls the
+ * outer bundle wrapper, not per-module scope. Everything declared above is
+ * therefore closure-scoped, where it used to leak to `window` by accident.
+ *
+ * These are the ones other scripts actually call, so they are published
+ * deliberately instead. Do not remove without checking the caller listed
+ * beside each — they load separately and would fail silently at runtime.
+ * ────────────────────────────────────────────────────────────────────────── */
+Object.assign(window, {
+    blockUI,          // cart.js, utils.js, admin-settings.js, POS bundle
+    unblockUI,        // cart.js, utils.js, admin-settings.js, POS bundle
+    format_price,     // cart.js
+    ymdToLocalDate,   // cart.js
+    getLang,          // cart.js, template-parts/home/hero/content/countdown.php
+    calc_age,         // assets/js/admin/quote.js
+    GuestField,       // cart.js — `new GuestField(...)`, a class rather than a function
+
+    // Hook API — a documented extension point, so the whole surface ships even
+    // though only hw_addFilter has a caller inside this repo today.
+    hw_addAction,
+    hw_doAction,
+    hw_removeAction,
+    hw_addFilter,
+    hw_applyFilters,
+    hw_removeFilter,
+});

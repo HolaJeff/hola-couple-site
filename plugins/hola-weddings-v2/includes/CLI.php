@@ -4,6 +4,7 @@ namespace HW;
 
 use HW\CLI\EmailTests;
 use HW\CLI\InvoiceTests;
+use HW\CLI\Migrations;
 use HW\CLI\RoomBlocks;
 use HW\CLI\Settings;
 use HW\CLI\Transactions;
@@ -30,8 +31,15 @@ class CLI{
         \WP_CLI::add_command( 'update-homepage-section-single', [ UpdateHomeSections::class, 'update_site' ] );
         \WP_CLI::add_command( 'update-homepage-section', [ UpdateHomeSections::class, 'update' ] );
 
+        // migrations
+        \WP_CLI::add_command( 'hw migrate', Migrations::class );
+
         // email testing
         \WP_CLI::add_command( 'hw test-email', [ EmailTests::class, 'test_email' ] );
+
+        // new quote admin notification, rendered or re-sent for an existing quote
+        // usage example: hw test-quote-email --site=1 --quote=1234 --to=me@example.com
+        \WP_CLI::add_command( 'hw test-quote-email', [ EmailTests::class, 'test_quote_email' ] );
 
         // invoice testing
         // usage example: hw test-invoice change-status --site=1 --invoice=1234 --status=paid

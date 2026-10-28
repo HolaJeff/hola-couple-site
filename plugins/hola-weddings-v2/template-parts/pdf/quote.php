@@ -1,14 +1,16 @@
 <?php
 use HW\API\Operations\Insurance;
+use HW\App;
 
-$him = hw_get_option('hw_his_name', '' );
-$her = hw_get_option('hw_her_name', '' );
-$customer = hw_get_quote_customer($id);
-$guests = hw_get_quote_guests($id);
-$ci = hw_get_quote_check_in($id);
-$co = hw_get_quote_check_out($id);
-$room = hw_get_room(hw_get_quote_room_id($id));
-$insurance_plan_id = hw_get_quote_insurance_plan_id($id);
+$wedding = App::getInstance()->getWedding();
+$him = $wedding->getHisName();
+$her = $wedding->getHerName();
+$billing = $quote->getBillingInformation();
+$guests = $quote->getGuests();
+$ci = $quote->getCheckin();
+$co = $quote->getCheckout();
+$room = $quote->getRoom();
+$insurance_plan_id = $quote->getInsurancePlanID();
 $terms = apply_filters( 'the_content', hw_get_terms()) ;
 $cancellation = apply_filters( 'the_content', hw_get_cancellation_policy()) ;
 ?>
@@ -58,7 +60,7 @@ p{
     </div>
     <div>
         <h1 style="margin-bottom: 10px;"><?= sprintf(__('%s and %s Wedding UCC Form', 'hola-weddings'), $him, $her); ?></h1>
-        <p><?= sprintf(__('Reservation: <strong>%s %s</strong> for 1 Room', 'hola-weddings'), $customer['first_name'], $customer['last_name']); ?></p>
+        <p><?= sprintf(__('Reservation: <strong>%s %s</strong> for 1 Room', 'hola-weddings'), $billing->getFirstName(), $billing->getLastName()); ?></p>
     </div>
     <h6 class="uppercase"><?= __('Reservation Details', 'hola-weddings') ?></h6>
     <table class="box" style="width: 100%;">
@@ -95,25 +97,25 @@ p{
         <tr>
             <td style="width: 100%;">
                 <div class="label"><?= __('Full Name', 'hola-weddings'); ?></div>
-                <?= sprintf('%s %s', $customer['first_name'], $customer['last_name']) ?>
+                <?= sprintf('%s %s', $billing->getFirstName(), $billing->getLastName()) ?>
             </td>
         </tr>
         <tr>
             <td style="width: 100%;">
                 <div class="label"><?= __('Email Address', 'hola-weddings'); ?></div>
-                <?= $customer['email'] ?>
+                <?= $billing->getEmail() ?>
             </td>
         </tr>
         <tr>
             <td style="width: 100%;">
                 <div class="label"><?= __('Phone Number', 'hola-weddings'); ?></div>
-                <?= $customer['phone_number']; ?>
+                <?= $billing->getPhone(); ?>
             </td>
         </tr>
         <tr>
             <td style="border-bottom: 0">
                 <div class="label"><?= __('Address', 'hola-weddings'); ?></div>
-                <?= hw_format_address($customer) ?>
+                <?= hw_format_address($billing) ?>
             </td>
         </tr>
     </table>

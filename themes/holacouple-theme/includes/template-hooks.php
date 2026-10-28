@@ -9,17 +9,29 @@ use HW\App;
  */
 function hw_theme_display_logo(){
 
-    global $hw_theme;
-
-    $show = $hw_theme['show_site_logo'] ?? true;
-
-    if(!$show){
+    if(!hw_theme_header_display_logo()){
         return;
     }
     
     get_template_part('template-parts/header/content/logo');
 }
 add_action('hw_header_content', 'hw_theme_display_logo', 5);
+
+/**
+ * display the logo decoration
+ *
+ * @return void
+ */
+function hw_display_header_logo_decoration(){
+
+    if(!hw_theme_header_display_logo_decoration()){
+        return;
+    }
+
+    $image_url = hw_theme_header_get_logo_decoration_url();
+    echo sprintf('<img class="logo-decoration" src="%s" alt="logo decoration" />', $image_url );
+}
+add_action( 'hw_theme_before_logo', 'hw_display_header_logo_decoration', 10);
 
 /**
  * add body classes

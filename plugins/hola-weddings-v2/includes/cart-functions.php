@@ -351,8 +351,6 @@ function hw_get_cart_rooms($data){
  */
 function hw_is_room_available($room_block, $checkin, $checkout, $units = 1){
     
-    //$max_units = (int) $rooms_data[$room_id]['inventory'];
-    
     // if inventory is not enabled always return true
     if(!hw_is_inventory_enabled()){
 
@@ -525,8 +523,8 @@ function hw_get_cart_search_data(){
     $hotel = (object) hw_get_hotel();
     
     $data = [];
-    $data['co'] = $_GET['co'] ?? '';
-    $data['ci'] = $_GET['ci'] ?? '';
+    $data['co'] = $_GET['co'] ?? ( $_GET['checkout'] ?? '' );
+    $data['ci'] = $_GET['ci'] ?? ( $_GET['checkin'] ?? '' );
     $data['adults'] = isset($_GET['adults']) ? intval($_GET['adults']) : 1;
     $data['children'] = 0;
     $data['teens'] = 0;
@@ -711,7 +709,7 @@ function hw_get_submitted_data(){
  * @param DateTime $comparisonDate
  * @return int
  */
-function ea_calc_guest_age( DateTime $date, DateTime $comparisonDate){
+function hw_calc_guest_age( DateTime $date, DateTime $comparisonDate){
 
     if(empty($date)){
         return false;

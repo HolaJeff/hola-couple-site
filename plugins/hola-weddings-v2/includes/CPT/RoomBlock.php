@@ -33,6 +33,7 @@ class RoomBlock{
             'publicly_queryable' => false,
             'show_ui' => true,
             'show_in_nav_menus' => false,
+            'show_in_menu' => 'holaweddings',
             'show_in_rest' => false,
 			'has_archive' => false,
 			'menu_icon'   => 'dashicons-admin-home',

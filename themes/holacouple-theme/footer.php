@@ -26,13 +26,20 @@ $wedding = hw()->getWedding();
 								?>
 							</div>
 							<div class="column col-sm-4 text-center">
-								<div class="footer-logo">
-									<div class="name"><?= $wedding->getHerName() ?></div>
-									<?php if($display_separator && !empty($separator)): ?>
-										<div class="separator"><?= $separator ?></div>
-									<?php endif; ?>
-									<div class="name"><?= $wedding->getHisName() ?></div>
-								</div>
+								<?php if(hw_theme_footer_display_logo()): ?>
+									<div class="footer-logo">
+
+										<?php do_action('hw_theme_before_logo'); ?>
+
+										<div class="name"><?= $wedding->getHerName() ?></div>
+										<?php if($display_separator && !empty($separator)): ?>
+											<div class="separator"><?= $separator ?></div>
+										<?php endif; ?>
+										<div class="name"><?= $wedding->getHisName() ?></div>
+
+										<?php do_action('hw_theme_after_logo'); ?>
+									</div>
+								<?php endif; ?>
 							</div>
 							<div class="column col-sm-4 text-center text-md-right mt-5 mt-md-0">
 								<?php /* tenant-support */ $hs = function_exists('hw_tenant_support') ? hw_tenant_support() : array('email' => get_option('admin_email'), 'phone' => '', 'facebook' => '', 'instagram' => '', 'twitter' => '', 'pinterest' => ''); ?><?php if ($hs['phone'] !== ''): ?><p class="mb-0"><a href="tel:<?= esc_attr(preg_replace('/[^0-9+]/', '', $hs['phone'])) ?>"><?= esc_html($hs['phone']) ?></a></p><?php endif; ?>
