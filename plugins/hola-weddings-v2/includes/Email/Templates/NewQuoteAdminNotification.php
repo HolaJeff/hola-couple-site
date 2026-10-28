@@ -74,7 +74,11 @@ class NewQuoteAdminNotification extends AbstractTemplate {
      */
     public function getRecipients(): array {
 
-        $recipients = [ 'hola@holaweddings.com' ];
+        // phase4-ops-email: route to the tenant's configured ops address
+        // (hw_agency_ops_email), keeping staging's default when it is empty.
+        $ops = function_exists( 'hw_agency_ops_email' ) ? (string) hw_agency_ops_email() : '';
+
+        $recipients = [ is_email( $ops ) ? $ops : 'hola@holaweddings.com' ];
 
         // Stored as a comma separated list in the settings screen.
         $alternatives = (string) hw_get_option( 'hw_alternative_email', '' );
@@ -111,8 +115,25 @@ class NewQuoteAdminNotification extends AbstractTemplate {
         return [
             'Content-Type: text/html; charset=UTF-8',
             sprintf( 'Reply-To: %s %s <%s>', $billing->getFirstName(), $billing->getLastName(), $billing->getEmail() ),
-            'From: Hola Weddings <hola@holaweddings.com>',
+            $this->getFromHeader(),
         ];
+    }
+
+    /**
+     * From header: branded sender (hw_email_from_header), then the tenant ops
+     * sender (hw_agency_ops_from), then staging's default.
+     *
+     * @return string
+     */
+    protected function getFromHeader(): string {
+
+        $from = function_exists( 'hw_email_from_header' ) ? (string) hw_email_from_header() : '';
+
+        if ( $from === '' && function_exists( 'hw_agency_ops_from' ) ) {
+            $from = (string) hw_agency_ops_from();
+        }
+
+        return $from !== '' ? $from : 'From: Hola Weddings <hola@holaweddings.com>';
     }
 
     /**
