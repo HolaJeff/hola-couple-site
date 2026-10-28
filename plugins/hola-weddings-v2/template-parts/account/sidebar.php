@@ -7,6 +7,12 @@ $view            = function_exists( 'hw_get_account_view' ) ? hw_get_account_vie
 $is_dashboard    = in_array( $view, [ 'dashboard', '' ], true );
 $is_reservations = in_array( $view, [ 'reservations', 'reservation' ], true );
 $is_profile      = ( $view === 'profile' );
+
+// tenant-support: per-site support details, Hola defaults only when empty.
+$hs            = function_exists( 'hw_tenant_support' ) ? (array) hw_tenant_support() : [];
+$support_email = ! empty( $hs['email'] ) ? $hs['email'] : 'hola@holaweddings.com';
+$support_phone = ! empty( $hs['phone'] ) ? $hs['phone'] : '+1 888 472 7077';
+$support_tel   = preg_replace( '/[^0-9+]/', '', $support_phone );
 ?>
 <aside class="account-sidebar" id="account-sidebar">
 
@@ -46,16 +52,16 @@ $is_profile      = ( $view === 'profile' );
                 <i class="fas fa-life-ring"></i>
                 <span><?= __( 'Need assistance?', 'hola-weddings' ) ?></span>
             </div>
-            <a class="account-help__link" href="mailto:hola@holaweddings.com">hola@holaweddings.com</a>
-            <a class="account-help__link" href="tel:+18884727077">+1 888 472 7077</a>
+            <a class="account-help__link" href="mailto:<?= esc_attr( $support_email ) ?>"><?= esc_html( $support_email ) ?></a>
+            <a class="account-help__link" href="tel:<?= esc_attr( $support_tel ) ?>"><?= esc_html( $support_phone ) ?></a>
         </div>
 
         <!-- Contact icons (collapsed rail) -->
         <div class="account-help__icons">
-            <a class="account-help__icon" href="mailto:hola@holaweddings.com" aria-label="<?= esc_attr__( 'Email us', 'hola-weddings' ) ?>" title="hola@holaweddings.com">
+            <a class="account-help__icon" href="mailto:<?= esc_attr( $support_email ) ?>" aria-label="<?= esc_attr__( 'Email us', 'hola-weddings' ) ?>" title="<?= esc_attr( $support_email ) ?>">
                 <i class="fas fa-envelope"></i>
             </a>
-            <a class="account-help__icon" href="tel:+18884727077" aria-label="<?= esc_attr__( 'Call us', 'hola-weddings' ) ?>" title="+1 888 472 7077">
+            <a class="account-help__icon" href="tel:<?= esc_attr( $support_tel ) ?>" aria-label="<?= esc_attr__( 'Call us', 'hola-weddings' ) ?>" title="<?= esc_attr( $support_phone ) ?>">
                 <i class="fas fa-phone"></i>
             </a>
         </div>
