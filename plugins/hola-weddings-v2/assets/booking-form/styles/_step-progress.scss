@@ -1,0 +1,86 @@
+@use 'variables' as *;
+
+// ── Step Progress ─────────────────────────────────────────────────────────────
+
+.sp-wrap {
+    display: flex;
+    gap: 6px;
+    padding: 16px 0 6px;
+
+    .sp-bar {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 9px 12px;
+        border-radius: 8px;
+        background: #fff;
+        border: 1.5px solid #dee2e6;
+        border-top: none;
+        border-left: 4px solid #dee2e6;
+        color: #bbb;
+        font-size: fs(0.8);
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, .07);
+        transition: border-color 0.2s, color 0.2s;
+
+        .sp-bar__label { display: none; }
+
+        .sp-bar__num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            color: #aaa;
+            font-size: fs(0.75);
+            font-weight: 800;
+            flex-shrink: 0;
+            line-height: 1;
+
+            @media (min-width: 768px) {
+                font-size: fs(0.875);
+            }
+        }
+
+        &.sp-bar--done {
+            border-color: color-mix(in srgb, #28a745 20%, #dee2e6);
+            border-left-color: #28a745;
+            color: #28a745;
+
+            .sp-bar__num {
+                border-radius: 50%;
+                background: #28a745;
+                font-size: fs(0.625);
+                color: #fff;
+            }
+        }
+
+        &.sp-bar--active {
+            border-color: color-mix(in srgb, var(--hw-primary-color, #17a2b8) 20%, #dee2e6);
+            border-left-color: var(--hw-primary-color, #17a2b8);
+            color: #1a1a2e;
+            flex-grow: 1;
+
+            .sp-bar__num {
+                color: var(--hw-primary-color, #17a2b8);
+            }
+
+            .sp-bar__label { display: block; }
+        }
+
+        @media (max-width: 540px) {
+            & { 
+                justify-content: center; padding: 8px 6px; 
+            }
+        }
+
+        @media (min-width: 768px) {
+            & { 
+                gap: 6px;
+
+                .sp-bar__label { display: block; }
+            }
+        }
+    }
+}

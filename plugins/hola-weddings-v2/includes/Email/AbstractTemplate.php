@@ -28,4 +28,16 @@ abstract class AbstractTemplate implements TemplateInterface {
     public function getData(): array {
         return [ ];
     }
+
+    /**
+     * Headers for this message.
+     *
+     * Override to set a custom From / Reply-To. Returning an empty array leaves
+     * the Email defaults in place.
+     *
+     * @return array
+     */
+    public function getHeaders(): array {
+        return [ 'Content-Type: text/html; charset=UTF-8' ];
+    }
 }

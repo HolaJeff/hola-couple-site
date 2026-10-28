@@ -3,7 +3,7 @@
     <div class="col-md-6 col-lg-3">
         <a href="<?= hw_get_reservations_url() ?>" class="d-block tile text-center">
             <div class="body">
-                <i class="uil-calendar-alt icon"></i>
+                <i class="fas fa-calendar-alt icon"></i>
                 <h4 class="title"><?= __('My Reservations', 'hola-weddings') ?></h4>
             </div>
         </a>

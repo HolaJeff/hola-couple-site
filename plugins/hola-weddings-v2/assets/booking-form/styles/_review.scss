@@ -1,0 +1,200 @@
+@use 'variables' as *;
+
+// ── Account Card (top of review step) ────────────────────────────────────────
+
+.ac-or {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 16px;
+
+    &__line  { flex: 1; height: 1px; background: #e0e3e8; }
+
+    &__label {
+        font-size: fs(0.75);
+        font-weight: 700;
+        color: #adb5bd;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        flex-shrink: 0;
+    }
+}
+
+.ac-create__heading {
+    font-size: fs(0.88);
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 14px;
+}
+
+// ── Review Step ───────────────────────────────────────────────────────────────
+
+.rv-divider {
+    border: none;
+    border-top: 1px solid #e0e3e8;
+    margin: 18px 0;
+}
+
+// Room summary
+
+.rv-room {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.rv-room__image {
+    width: 90px;
+    height: 70px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    background-color: #f0f2f5;
+}
+
+.rv-room__body {
+    flex: 1;
+    min-width: 0;
+}
+
+.rv-room__name {
+    font-size: fs(1);
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+}
+
+.rv-room__hotel,
+.rv-room__dates {
+    font-size: fs(0.83);
+    color: #6c757d;
+    margin-bottom: 3px;
+}
+
+.rv-room__total {
+    font-size: fs(1.05);
+    font-weight: 700;
+    color: #212529;
+    margin-top: 6px;
+}
+
+.rv-meta-icon {
+    margin-right: 5px;
+    font-size: fs(0.78);
+    color: #adb5bd;
+}
+
+// Sections
+
+.rv-section__title {
+    font-size: fs(0.78);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+.rv-section-icon { margin-right: 6px; }
+
+// Guests
+
+.rv-guests {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.rv-guest {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: fs(0.88);
+}
+
+.rv-guest__badge {
+    font-size: fs(0.72);
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #e9ecef;
+    color: #495057;
+    flex-shrink: 0;
+}
+
+.rv-guest__badge--adult  { background: #d4edda; color: #155724; }
+.rv-guest__badge--teen   { background: #cce5ff; color: #004085; }
+.rv-guest__badge--child  { background: #fff3cd; color: #856404; }
+.rv-guest__badge--infant { background: #f8d7da; color: #721c24; }
+
+.rv-guest__name { font-weight: 500; color: #212529; }
+.rv-guest__age  { color: #adb5bd; font-size: fs(0.8); }
+
+// Extras
+
+.rv-extra {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: fs(0.88);
+}
+
+.rv-extra--muted {
+    color: #adb5bd;
+    gap: 6px;
+}
+
+.rv-extra__label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #212529;
+}
+
+.rv-extra__icon  { color: #28a745; }
+.rv-extra__amount { font-weight: 600; color: #212529; }
+
+// Payment summary
+
+.rv-payment {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.rv-payment__card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.rv-payment__logo { height: 26px; width: auto; }
+
+.rv-payment__digits {
+    font-family: monospace;
+    font-size: fs(0.95);
+    color: #212529;
+    letter-spacing: 0.05em;
+}
+
+.rv-payment__deposit {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.rv-payment__deposit-label {
+    font-size: fs(0.75);
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.rv-payment__deposit-amount {
+    font-size: fs(1.1);
+    font-weight: 700;
+    color: #212529;
+}

@@ -1,0 +1,413 @@
+// ── Dev Toolbar ───────────────────────────────────────────────────────────────
+
+$dev-anim-dur:  0.3s;
+$dev-anim-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+// ── Bookmark trigger ──────────────────────────────────────────────────────────
+
+// Position and shape come from the shared edge-trigger stack
+// (../../shared/_edge-triggers.scss); only colours and the slide are set here.
+.dev-toolbar__trigger {
+    background: #1e1e2e;
+    color: #89b4fa;
+    transition: transform $dev-anim-dur $dev-anim-ease,
+                background 0.15s, color 0.15s;
+
+    &:hover {
+        background: #313244;
+        color: #cdd6f4;
+    }
+
+    &--hidden {
+        transform: translateX(calc(100% + 10px));
+    }
+}
+
+// ── Wrapper ───────────────────────────────────────────────────────────────────
+
+.dev-toolbar-wrap {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 100000;
+    overflow: hidden;
+
+    // Closed state — slide off to the right, hidden
+    pointer-events: none;
+    visibility: hidden;
+    transform: translateX(calc(100% + 60px));
+    transition: transform $dev-anim-dur $dev-anim-ease,
+                visibility 0s linear $dev-anim-dur;
+
+    &--open {
+        pointer-events: auto;
+        visibility: visible;
+        transform: translateX(0);
+        transition: transform $dev-anim-dur $dev-anim-ease,
+                    visibility 0s linear 0s;
+    }
+
+    @media (max-width: 991.98px) {
+        bottom: 0;
+        right: 0;
+        left: 0;
+
+        // Mobile: slide up instead
+        transform: translateY(100%);
+
+        &--open {
+            transform: translateY(0);
+        }
+    }
+}
+
+// ── Panel ─────────────────────────────────────────────────────────────────────
+
+.dev-toolbar {
+    font-family: monospace;
+    font-size: 12px;
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border-radius: 10px;
+    box-shadow: -4px 4px 20px rgba(0, 0, 0, 0.4);
+    width: 280px;
+    overflow: hidden;
+    position: relative;
+
+    @media (max-width: 991.98px) {
+        width: 100%;
+        min-height: 400px;
+        border-radius: 16px 16px 0 0;
+        font-size: 15px;
+        box-shadow: 0 -4px 30px rgba(0, 0, 0, .5);
+    }
+
+    // ── Close button ─────────────────────────────────────────────────────────
+
+    &__close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40px;
+        height: 40px;
+        background: transparent;
+        border: 0;
+        border-left: 1px solid rgba(255, 255, 255, 0.2);
+        color: #f38ba8;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.15s;
+
+        &:hover { background: #313244; }
+    }
+
+    // ── Tabs ─────────────────────────────────────────────────────────────────
+
+    &__tabs {
+        display: flex;
+        border-bottom: 1px solid #313244;
+        padding-right: 40px;
+    }
+
+    &__tab {
+        flex: 1;
+        padding: 7px 10px;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: #6c7086;
+        font-family: monospace;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .07em;
+        cursor: pointer;
+        transition: color 0.15s, border-color 0.15s;
+
+        &--active {
+            color: #89b4fa;
+            border-bottom-color: #89b4fa;
+        }
+    }
+
+    // ── Body ─────────────────────────────────────────────────────────────────
+
+    &__body {
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    &__label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #6c7086;
+        margin-bottom: 2px;
+    }
+
+    // ── Step navigation ───────────────────────────────────────────────────────
+
+    &__steps {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    &__step-btn {
+        text-align: left;
+        background: #313244;
+        color: #cdd6f4;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 8px;
+        cursor: pointer;
+        font-family: monospace;
+        font-size: 12px;
+        transition: background 0.15s;
+
+        &:hover   { background: #45475a; }
+        &--active { background: #89b4fa; color: #1e1e2e; font-weight: 700; }
+    }
+
+    &__mock-btn {
+        background: #a6e3a1;
+        color: #1e1e2e;
+        border: none;
+        border-radius: 5px;
+        padding: 6px 10px;
+        cursor: pointer;
+        font-family: monospace;
+        font-size: 12px;
+        font-weight: 700;
+        transition: background 0.15s;
+
+        &:hover { background: #94d68f; }
+    }
+
+    // ── Settings rows ─────────────────────────────────────────────────────────
+
+    &__setting {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        min-height: 28px;
+
+        &-label {
+            font-size: 12px;
+            color: #cdd6f4;
+            flex: 1;
+        }
+    }
+
+    // ── Toggle switch ─────────────────────────────────────────────────────────
+
+    &__switch {
+        position: relative;
+        width: 36px;
+        height: 20px;
+        flex-shrink: 0;
+        cursor: pointer;
+
+        input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+    }
+
+    &__switch-track {
+        position: absolute;
+        inset: 0;
+        border-radius: 10px;
+        background: #45475a;
+        transition: background 0.2s;
+
+        &::after {
+            content: '';
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #cdd6f4;
+            top: 3px;
+            left: 3px;
+            transition: left 0.2s, background 0.2s;
+        }
+    }
+
+    &__switch input:checked + &__switch-track {
+        background: #a6e3a1;
+
+        &::after {
+            left: 19px;
+            background: #1e1e2e;
+        }
+    }
+
+    // ── Select ────────────────────────────────────────────────────────────────
+
+    &__select {
+        background: #313244;
+        color: #cdd6f4;
+        border: 1px solid #45475a;
+        border-radius: 5px;
+        padding: 4px 8px;
+        font-family: monospace;
+        font-size: 12px;
+        cursor: pointer;
+        min-width: 100px;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5' viewBox='0 0 8 5'%3E%3Cpath d='M0 0l4 5 4-5z' fill='%236c7086'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+        padding-right: 24px;
+        transition: border-color 0.15s;
+
+        &:focus    { outline: none; border-color: #89b4fa; }
+        &:disabled { opacity: .4; cursor: not-allowed; }
+    }
+
+    // ── Inspect button ────────────────────────────────────────────────────────
+
+    &__inspect-btn {
+        background: #89b4fa;
+        color: #1e1e2e;
+        border: none;
+        border-radius: 5px;
+        padding: 4px 10px;
+        cursor: pointer;
+        font-family: monospace;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+        transition: background 0.15s;
+
+        &:hover { background: #74a8f5; }
+    }
+}
+
+// ── Dev Inspector overlay ─────────────────────────────────────────────────────
+
+.dev-inspector-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .6);
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.dev-inspector {
+    background: #1e1e2e;
+    color: #cdd6f4;
+    border-radius: 12px;
+    box-shadow: 0 12px 60px rgba(0, 0, 0, .7);
+    width: 100%;
+    max-width: 680px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    font-family: monospace;
+    overflow: hidden;
+
+    &__header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        background: #313244;
+        font-size: 13px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    &__close {
+        background: none;
+        border: none;
+        color: #a6adc8;
+        font-size: 18px;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0 2px;
+
+        &:hover { color: #f38ba8; }
+    }
+
+    &__status {
+        padding: 10px 16px;
+        background: #181825;
+        border-bottom: 1px solid #313244;
+        flex-shrink: 0;
+    }
+
+    &__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 12px;
+        border-radius: 20px;
+
+        &--success {
+            background: rgba(166, 227, 161, .15);
+            color: #a6e3a1;
+        }
+
+        &--error {
+            background: rgba(243, 139, 168, .15);
+            color: #f38ba8;
+        }
+    }
+
+    &__tabs {
+        display: flex;
+        border-bottom: 1px solid #313244;
+        background: #1e1e2e;
+        flex-shrink: 0;
+    }
+
+    &__tab {
+        padding: 8px 18px;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: #6c7086;
+        font-family: monospace;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .07em;
+        cursor: pointer;
+        transition: color 0.15s, border-color 0.15s;
+
+        &--active {
+            color: #89b4fa;
+            border-bottom-color: #89b4fa;
+        }
+
+        &:hover:not(#{&}--active) {
+            color: #a6adc8;
+        }
+    }
+
+    &__pre {
+        margin: 0;
+        padding: 16px;
+        overflow: auto;
+        font-size: 12px;
+        line-height: 1.6;
+        color: #a6e3a1;
+        white-space: pre;
+        flex: 1;
+    }
+}

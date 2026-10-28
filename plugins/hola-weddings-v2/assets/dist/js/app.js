@@ -1,6 +1,532 @@
+/******/ "use strict";
+/******/ var __webpack_modules__ = ({
+
+/***/ "./assets/src/js/app/auth-modal.js"
+/*!*****************************************!*\
+  !*** ./assets/src/js/app/auth-modal.js ***!
+  \*****************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AUTH_EVENTS: () => (/* binding */ AUTH_EVENTS),
+/* harmony export */   "default": () => (/* binding */ HwAuthModal)
+/* harmony export */ });
+/**
+ * Auth modal controller.
+ *
+ * The one authentication modal on the site — sign in, sign up and reset
+ * password. Its markup is rendered by PHP into every page's footer
+ * (template-parts/modals/login.php), and this class is the only supported way
+ * to drive it, so anything on the page including the React booking form can
+ * open it without knowing how it is built.
+ *
+ * Two things make the timing safe:
+ *
+ *   - this bundle is enqueued in <head> while the markup lands in the footer,
+ *     so the element is resolved lazily rather than captured in the constructor;
+ *   - open() called before the DOM is ready is queued and replayed on boot,
+ *     which removes the race where an early click silently does nothing.
+ *
+ * Consumers react through native CustomEvents on `document`, listed in
+ * AUTH_EVENTS. They are dispatched synchronously, so a listener can still
+ * persist state before the page reloads or navigates away.
+ *
+ * The DOM ids below are deliberately still the "login" ones. They are
+ * referenced by the theme (template-parts/offcanvas.php,
+ * template-parts/header/content/user-login.php) and are baked into the
+ * translated strings in languages/*.po, so renaming them would invalidate
+ * existing translations for no user-visible gain.
+ */
+
+const MODAL_ID = 'loginModal';
+
+/** Pane key → the collapse element that holds it. */
+const PANES = {
+	signin: 'ajax-login',
+	signup: 'ajax-signup',
+	reset:  'ajax-reset-password',
+	verify: 'hw-auth-verify',
+};
+
+/** Accepted spellings that are not pane keys. */
+const ALIASES = {
+	login: 'signin',
+};
+
+const AUTH_EVENTS = {
+	/** The modal became visible. detail: { mode } */
+	opened: 'hw:login:opened',
+	/** The modal was dismissed. detail: {} */
+	closed: 'hw:login:closed',
+	/** Credentials accepted, fired BEFORE the page reloads. detail: {} */
+	success: 'hw:login:success',
+	/** A sign-in, sign-up or reset attempt failed. detail: { message, action } */
+	error: 'hw:login:error',
+	/** About to leave the page for an external provider. detail: { url, provider } */
+	redirect: 'hw:login:redirect',
+	/**
+	 * An account was just created. detail: { userId, redirect }
+	 *
+	 * Cancelable: preventDefault() keeps the visitor where they are instead of
+	 * sending them to the verification screen. The booking form uses this so a
+	 * signup at the review step does not abandon the booking.
+	 */
+	registered: 'hw:auth:registered',
+};
+
+class HwAuthModal {
+
+	constructor() {
+		this._ready = false;
+		this._queued = null;
+		this._mode = 'signin';
+		this._authenticated = false;
+		this._verification = { email: '', nonce: '' };
+
+		// Alpine boots after this bundle (deferred vs. in <head>), so registering
+		// the store here is early enough. It seeds from whatever mode has been
+		// asked for in the meantime, so an open({mode}) that landed first is not
+		// overwritten back to sign-in.
+		document.addEventListener( 'alpine:init', () => {
+
+			window.Alpine.store( 'hwAuth', {
+				mode: this._mode,
+
+				// Filled in from the sign-in / sign-up response: this markup is
+				// rendered while logged out, so neither is known until then.
+				verification: this._verification,
+
+				/** Bound from the template: $store.hwAuth.set('signup'). */
+				set( next ) {
+					this.mode = next;
+					// Keep the controller authoritative so mode() agrees.
+					if ( window.hw && window.hw.authModal ) {
+						window.hw.authModal._mode = next;
+					}
+				},
+			} );
+		} );
+
+		if ( document.readyState === 'loading' ) {
+			document.addEventListener( 'DOMContentLoaded', () => this._boot() );
+		} else {
+			this._boot();
+		}
+	}
+
+	// ── Lifecycle ─────────────────────────────────────────────────────────────
+
+	_boot() {
+		this._ready = true;
+
+		const el = this.element();
+
+		// Bootstrap owns visibility; mirror its events onto the public contract
+		// so consumers never have to know that.
+		if ( el && window.jQuery ) {
+			window.jQuery( el )
+				.on( 'shown.bs.modal', () => this.emit( AUTH_EVENTS.opened, { mode: this.mode() } ) )
+				.on( 'hidden.bs.modal', () => {
+
+					this.emit( AUTH_EVENTS.closed );
+
+					// Someone signed in or signed up and then dismissed the modal.
+					// Nothing on the page knows about the new session yet — the
+					// header still offers "Log In", the booking form still shows
+					// its create-account fields — so pick it up now. Deferred to
+					// the next tick so listeners see the closed event first.
+					if ( this._authenticated ) {
+
+						this._authenticated = false;
+						setTimeout( () => window.location.reload(), 0 );
+					}
+				} );
+		}
+
+		// Signing in with Google leaves the page, so announce it first. The
+		// listener runs synchronously during the click, before navigation, which
+		// is what lets the booking form persist an in-progress booking. Delegated
+		// from the modal root so it covers the button in every pane.
+		if ( el ) {
+			el.addEventListener( 'click', ( event ) => {
+
+				const link = event.target.closest( '.hw-google-btn' );
+
+				if ( ! link ) {
+					return;
+				}
+
+				const proceed = this.emit( AUTH_EVENTS.redirect, {
+					url: link.getAttribute( 'href' ),
+					provider: 'google',
+				} );
+
+				// The event is cancelable, so a listener can veto the redirect.
+				if ( ! proceed ) {
+					event.preventDefault();
+				}
+			} );
+		}
+
+		if ( this._queued ) {
+			const queued = this._queued;
+			this._queued = null;
+			this.open( queued );
+		}
+	}
+
+	/** The modal root, or null on a page that did not render it. */
+	element() {
+		return document.getElementById( MODAL_ID );
+	}
+
+	/** Normalise a caller-supplied mode to a pane key. */
+	_resolveMode( mode ) {
+		const key = ALIASES[ mode ] || mode;
+
+		return PANES[ key ] ? key : 'signin';
+	}
+
+	// ── Public API ────────────────────────────────────────────────────────────
+
+	/**
+	 * Show the modal.
+	 *
+	 * @param {Object} [options]
+	 * @param {'signin'|'signup'|'reset'|'login'} [options.mode] Which pane to land on.
+	 * @returns {HwAuthModal}
+	 */
+	open( options = {} ) {
+
+		if ( ! this._ready ) {
+			this._queued = options;
+			return this;
+		}
+
+		const el = this.element();
+
+		if ( ! el || ! window.jQuery ) {
+			return this;
+		}
+
+		this.setMode( options.mode );
+		window.jQuery( el ).modal( 'show' );
+
+		return this;
+	}
+
+	/** Hide the modal. */
+	close() {
+
+		const el = this.element();
+
+		if ( el && window.jQuery ) {
+			window.jQuery( el ).modal( 'hide' );
+		}
+
+		return this;
+	}
+
+	/** Whether the modal is currently visible. */
+	isOpen() {
+
+		const el = this.element();
+
+		return !! el && el.classList.contains( 'show' );
+	}
+
+	/** Which pane is showing: 'signin', 'signup' or 'reset'. */
+	mode() {
+
+		return this._mode;
+	}
+
+	/**
+	 * Switch panes without opening or closing the modal.
+	 *
+	 * The class holds the mode rather than reading it back off the DOM, because
+	 * Alpine may not have booted yet — this bundle runs in <head> and Alpine is
+	 * deferred. The store, once it exists, is kept in step; until then the value
+	 * waits here and the store picks it up on alpine:init.
+	 *
+	 * Asking for a pane that is not rendered — signup while sign-up is switched
+	 * off — falls back to sign-in rather than leaving the modal blank.
+	 */
+	setMode( mode ) {
+
+		let target = this._resolveMode( mode );
+
+		if ( ! document.getElementById( PANES[ target ] ) ) {
+			target = 'signin';
+		}
+
+		this._mode = target;
+
+		const store = window.Alpine && window.Alpine.store( 'hwAuth' );
+
+		if ( store ) {
+			store.mode = target;
+		}
+
+		return this;
+	}
+
+	/**
+	 * Swap to the "confirm your email" pane after a successful sign-in or sign-up.
+	 *
+	 * Keeps the visitor in the modal instead of sending them to
+	 * /account/verify-email/, which still exists and still handles the emailed
+	 * link, direct visits and anyone without JavaScript.
+	 *
+	 * @param {Object} verification From the auth response: { email, nonce }.
+	 * @returns {boolean} False when the pane is not on the page, so the caller
+	 *                    can fall back to its redirect.
+	 */
+	showVerification( verification = {} ) {
+
+		if ( ! document.getElementById( PANES.verify ) ) {
+			return false;
+		}
+
+		// Mutate rather than replace: Alpine's reactivity is bound to this object.
+		this._verification.email = verification.email || '';
+		this._verification.nonce = verification.nonce || '';
+
+		const store = window.Alpine && window.Alpine.store( 'hwAuth' );
+
+		if ( store ) {
+			store.verification.email = this._verification.email;
+			store.verification.nonce = this._verification.nonce;
+		}
+
+		this._authenticated = true;
+		this.setMode( 'verify' );
+		this.open( { mode: 'verify' } );
+
+		return true;
+	}
+
+	/**
+	 * Note that the visitor is now signed in, so closing the modal reloads.
+	 */
+	markAuthenticated() {
+
+		this._authenticated = true;
+
+		return this;
+	}
+
+	// ── Events ────────────────────────────────────────────────────────────────
+
+	/**
+	 * Dispatch one of AUTH_EVENTS on `document`.
+	 *
+	 * Synchronous on purpose: `success` fires immediately before the reload, so
+	 * a listener gets to persist whatever it needs first.
+	 *
+	 * @returns {boolean} False when a cancelable event was prevented.
+	 */
+	emit( name, detail = {} ) {
+
+		return document.dispatchEvent( new CustomEvent( name, {
+			detail,
+			bubbles: true,
+			cancelable: true,
+		} ) );
+	}
+
+	/**
+	 * Subscribe to one of AUTH_EVENTS.
+	 *
+	 * @returns {Function} Unsubscribe.
+	 */
+	on( name, handler ) {
+
+		document.addEventListener( name, handler );
+
+		return () => document.removeEventListener( name, handler );
+	}
+
+	off( name, handler ) {
+
+		document.removeEventListener( name, handler );
+
+		return this;
+	}
+}
+
+
+/***/ },
+
+/***/ "./assets/src/js/app/verify-email.js"
+/*!*******************************************!*\
+  !*** ./assets/src/js/app/verify-email.js ***!
+  \*******************************************/
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   registerVerifyEmail: () => (/* binding */ registerVerifyEmail)
+/* harmony export */ });
+/**
+ * "Request new link" on the email verification screen.
+ *
+ * Progressive enhancement, not a dependency: the form is a plain POST that
+ * EmailVerificationController::handle_resend() answers with a redirect, and this
+ * only takes over when Alpine is actually running. With JavaScript off the page
+ * behaves exactly as it did before.
+ *
+ * The form already carries its nonce and action as fields, so FormData is
+ * precisely the body admin-ajax.php expects — nothing is rebuilt by hand and the
+ * two paths cannot drift.
+ */
+
+function registerVerifyEmail() {
+
+	document.addEventListener( 'alpine:init', () => {
+
+		window.Alpine.data( 'hwResendVerification', () => ( {
+
+			busy: false,
+			message: '',
+			status: '',
+
+			async send() {
+
+				if ( this.busy ) {
+					return;
+				}
+
+				this.busy = true;
+				this.message = '';
+				this.status = '';
+
+				try {
+					const response = await fetch( window.ajax.ajax_url, {
+						method: 'POST',
+						credentials: 'same-origin',
+						body: new URLSearchParams( new FormData( this.$el ) ),
+					} );
+
+					const json = await response.json();
+
+					this.status = json.success ? 'ok' : 'error';
+					this.message = json.message || '';
+
+				} catch ( e ) {
+
+					this.status = 'error';
+					this.message = window.hw_messages
+						? window.hw_messages.ajax_login_generic_error
+						: 'Something went wrong. Please try again.';
+
+				} finally {
+
+					this.busy = false;
+				}
+			},
+		} ) );
+	} );
+}
+
+
+/***/ }
+
+/******/ });
+/************************************************************************/
+/******/ // The module cache
+/******/ var __webpack_module_cache__ = {};
+/******/ 
+/******/ // The require function
+/******/ function __webpack_require__(moduleId) {
+/******/ 	// Check if module is in cache
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	if (cachedModule !== undefined) {
+/******/ 		return cachedModule.exports;
+/******/ 	}
+/******/ 	// Create a new module (and put it into the cache)
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
+/******/ 		// no module.id needed
+/******/ 		// no module.loaded needed
+/******/ 		exports: {}
+/******/ 	};
+/******/ 
+/******/ 	// Execute the module function
+/******/ 	if (!(moduleId in __webpack_modules__)) {
+/******/ 		delete __webpack_module_cache__[moduleId];
+/******/ 		var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 		e.code = 'MODULE_NOT_FOUND';
+/******/ 		throw e;
+/******/ 	}
+/******/ 	__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 
+/******/ 	// Return the exports of the module
+/******/ 	return module.exports;
+/******/ }
+/******/ 
+/************************************************************************/
+/******/ /* webpack/runtime/define property getters */
+/******/ (() => {
+/******/ 	// define getter functions for harmony exports
+/******/ 	__webpack_require__.d = (exports, definition) => {
+/******/ 		for(var key in definition) {
+/******/ 			if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 			}
+/******/ 		}
+/******/ 	};
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/hasOwnProperty shorthand */
+/******/ (() => {
+/******/ 	__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ })();
+/******/ 
+/******/ /* webpack/runtime/make namespace object */
+/******/ (() => {
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = (exports) => {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/ })();
+/******/ 
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
 /*!************************************!*\
   !*** ./assets/src/js/app/index.js ***!
   \************************************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _auth_modal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./auth-modal */ "./assets/src/js/app/auth-modal.js");
+/* harmony import */ var _verify_email__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./verify-email */ "./assets/src/js/app/verify-email.js");
+
+
+
+// window.hw is the wp_localize_script payload for this handle, so extend it
+// rather than replacing it. Assigned at module scope so anything loading after
+// this bundle — the React booking form included — can call it right away;
+// open() queues itself until the footer markup exists.
+window.hw = window.hw || {};
+window.hw.authModal = new _auth_modal__WEBPACK_IMPORTED_MODULE_0__["default"]();
+window.hw.AUTH_EVENTS = _auth_modal__WEBPACK_IMPORTED_MODULE_0__.AUTH_EVENTS;
+
+// Legacy aliases. The modal grew a sign-up pane and was renamed at the JS layer,
+// but window.hw.loginModal is what the React booking form already calls and what
+// any third party would have found — so both names point at the one instance.
+// AUTH_EVENTS is a superset of the old LOGIN_EVENTS keys, and the five original
+// event *names* are unchanged, so existing listeners keep firing.
+window.hw.loginModal = window.hw.authModal;
+window.hw.LOGIN_EVENTS = _auth_modal__WEBPACK_IMPORTED_MODULE_0__.AUTH_EVENTS;
+
+// Alpine components owned by this bundle. Registered on alpine:init, which has
+// not fired yet — this file runs in <head> and Alpine is deferred.
+(0,_verify_email__WEBPACK_IMPORTED_MODULE_1__.registerVerifyEmail)();
+
 jQuery(function($){
 
     $('[data-toggle="tooltip"]').tooltip();
@@ -17,6 +543,9 @@ jQuery(function($){
     $('.ajax-login-btn').on( 'click', Ajax_Login );
 
     $('#ajax-reset-password .reset-password-btn').on('click', ResetPassword)
+
+    // Delegated: the pane is only rendered when sign-up is switched on.
+    $(document).on('click', '.hw-signup-btn', SignUp);
 
     $('#help-bubble .bubble .trigger').on('click', function(){
         $(this).parent().toggleClass('open');
@@ -139,6 +668,25 @@ function Ajax_Login() {
             // trigger the event
             jQuery(document).trigger('user_logged_in');
 
+            // Native event for consumers that are not jQuery — the React booking
+            // form persists its in-progress booking here. Dispatched
+            // synchronously and before the reload, so listeners run first.
+            window.hw.authModal.emit(_auth_modal__WEBPACK_IMPORTED_MODULE_0__.AUTH_EVENTS.success);
+
+            // Signed in, but the address has not been confirmed yet. Say so right
+            // here rather than reloading into a page that will only bounce them to
+            // /account/verify-email/. Closing the modal reloads, so the page still
+            // catches up with the new session.
+            const verification = response.verification || {};
+
+            if (verification.required && window.hw.authModal.showVerification(verification)) {
+
+                container_el.find('input, button').prop('disabled', false);
+                container_el.removeClass('working');
+                unblockUI(container_el);
+                return;
+            }
+
             // reload if allowed
             if(do_rediret){
 
@@ -148,6 +696,11 @@ function Ajax_Login() {
         }else{
 
             jQuery(document).trigger('user_did_not_log_in');
+
+            window.hw.authModal.emit(_auth_modal__WEBPACK_IMPORTED_MODULE_0__.AUTH_EVENTS.error, {
+                action: 'login',
+                message: response.errorMessage,
+            });
 
             container_el.prepend(jQuery('<p class="errorMessage alert alert-danger"></p>').html(response.errorMessage));
         }
@@ -234,10 +787,145 @@ function ResetPassword() {
 }
 
 /**
+ * Create an account from the sign-up pane.
+ *
+ * Field errors go into each input's .next() div, matching how Ajax_Login and
+ * ResetPassword write theirs; anything the server reports without a field lands
+ * in a banner prepended to the pane.
+ */
+function SignUp() {
+
+    var container_el = jQuery(this).closest('#ajax-signup');
+
+    var fields = {
+        first_name:       container_el.find('input[name="signup_first_name"]'),
+        last_name:        container_el.find('input[name="signup_last_name"]'),
+        email:            container_el.find('input[name="signup_email"]'),
+        password:         container_el.find('input[name="signup_password"]'),
+        password_confirm: container_el.find('input[name="signup_password_confirm"]'),
+    };
+
+    // Clear whatever the previous attempt left behind.
+    container_el.find('.errorMessage').remove();
+    container_el.find('.hw-lm__field-error').html('');
+    container_el.find('input').removeClass('is-invalid');
+
+    var invalid = function(key, message){
+        fields[key].addClass('is-invalid').next().html(message);
+    };
+
+    // Client-side first, so an obvious mistake costs no round trip. The server
+    // repeats every one of these — this is convenience, not the gate.
+    var errors = 0;
+
+    if(!fields.first_name.val().trim()){
+        invalid('first_name', hw_messages.ajax_signup_first_name_required); errors++;
+    }
+
+    if(!fields.email.val().trim()){
+        invalid('email', hw_messages.ajax_signup_email_required); errors++;
+    }
+
+    if(!fields.password.val()){
+        invalid('password', hw_messages.ajax_signup_password_required); errors++;
+    }else if(fields.password.val().length < 8){
+        invalid('password', hw_messages.ajax_signup_password_short); errors++;
+    }else if(fields.password.val() !== fields.password_confirm.val()){
+        invalid('password_confirm', hw_messages.ajax_signup_password_mismatch); errors++;
+    }
+
+    if(errors){
+        return;
+    }
+
+    var request = {
+        'action': 'hw_signup',
+        'nonce': container_el.find('input[name="hw_signup_nonce"]').val(),
+        'signup_first_name': fields.first_name.val(),
+        'signup_last_name': fields.last_name.val(),
+        'signup_email': fields.email.val(),
+        'signup_password': fields.password.val(),
+        'signup_password_confirm': fields.password_confirm.val(),
+    };
+
+    container_el.find('input, button').prop('disabled', true);
+
+    jQuery.ajax({
+        url: ajax.ajax_url,
+        data: request,
+        method: 'POST',
+        contentType: 'application/x-www-form-urlencoded',
+        dataType: 'json',
+        beforeSend: () => {
+            blockUI(container_el);
+        }
+    }).done(function(response) {
+
+        if(!response || !response.success){
+
+            jQuery.each((response && response.errors) || {}, function(key, message){
+                if(fields[key]){
+                    invalid(key, message);
+                }
+            });
+
+            if(response && response.message){
+                container_el.prepend(jQuery('<p class="errorMessage alert alert-danger"></p>').html(response.message));
+            }
+
+            window.hw.authModal.emit(_auth_modal__WEBPACK_IMPORTED_MODULE_0__.AUTH_EVENTS.error, {
+                action: 'signup',
+                message: (response && response.message) || '',
+            });
+
+            return;
+        }
+
+        // Same contract the login flow uses — listeners persist state here,
+        // synchronously, before we leave the page.
+        window.hw.authModal.emit(_auth_modal__WEBPACK_IMPORTED_MODULE_0__.AUTH_EVENTS.success);
+
+        // Cancelable, and still fired so anything listening can react. The
+        // redirect it guards is now only the fallback — see below.
+        const go = window.hw.authModal.emit(_auth_modal__WEBPACK_IMPORTED_MODULE_0__.AUTH_EVENTS.registered, {
+            userId: response.userId,
+            redirect: response.redirect,
+        });
+
+        // A new account is always unconfirmed, so this is the normal path: swap
+        // the modal to its verification pane instead of throwing the visitor onto
+        // another page. Closing the modal reloads so the page catches up.
+        const verification = response.verification || {};
+
+        if (verification.required && window.hw.authModal.showVerification(verification)) {
+
+            container_el.find('input, button').prop('disabled', false);
+            unblockUI(container_el);
+            return;
+        }
+
+        if(go && response.redirect){
+            location.assign(response.redirect);
+        }else{
+            location.reload();
+        }
+
+    }).fail(function() {
+
+        container_el.prepend(jQuery('<p class="errorMessage alert alert-danger"></p>').html(hw_messages.ajax_signup_generic_error));
+
+    }).always(function() {
+
+        container_el.find('input, button').prop('disabled', false);
+        unblockUI(container_el);
+    });
+}
+
+/**
  * Block element
- * 
- * @param {jQuery Element} el 
- * @param {string} msg 
+ *
+ * @param {jQuery Element} el
+ * @param {string} msg
  */
 function blockUI(el, msg){
         
@@ -732,5 +1420,39 @@ class GuestField{
         this.el.find('.invalid-feedback.age').remove();
     }
 }
+/* ─────────────────────────────────────────────────────────────────────────────
+ * Public surface
+ *
+ * This file is the app bundle's entry. The moment it gained an `import` it
+ * became an ES module, and webpack wraps entry modules in their own IIFE to
+ * isolate them — `output.iife: false` in gulpfile.babel.js only controls the
+ * outer bundle wrapper, not per-module scope. Everything declared above is
+ * therefore closure-scoped, where it used to leak to `window` by accident.
+ *
+ * These are the ones other scripts actually call, so they are published
+ * deliberately instead. Do not remove without checking the caller listed
+ * beside each — they load separately and would fail silently at runtime.
+ * ────────────────────────────────────────────────────────────────────────── */
+Object.assign(window, {
+    blockUI,          // cart.js, utils.js, admin-settings.js, POS bundle
+    unblockUI,        // cart.js, utils.js, admin-settings.js, POS bundle
+    format_price,     // cart.js
+    ymdToLocalDate,   // cart.js
+    getLang,          // cart.js, template-parts/home/hero/content/countdown.php
+    calc_age,         // assets/js/admin/quote.js
+    GuestField,       // cart.js — `new GuestField(...)`, a class rather than a function
+
+    // Hook API — a documented extension point, so the whole surface ships even
+    // though only hw_addFilter has a caller inside this repo today.
+    hw_addAction,
+    hw_doAction,
+    hw_removeAction,
+    hw_addFilter,
+    hw_applyFilters,
+    hw_removeFilter,
+});
+
+})();
+
 
 //# sourceMappingURL=app.js.map

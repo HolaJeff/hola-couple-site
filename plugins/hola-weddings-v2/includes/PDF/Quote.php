@@ -16,6 +16,6 @@ final class QuotePdf extends AbstractPdfDocument
 
     protected function viewData(): array
     {
-        return ['id' => $this->quoteId];
+        return ['id' => $this->quoteId, 'quote' => hw_get_quote($this->quoteId)];
     }
 }

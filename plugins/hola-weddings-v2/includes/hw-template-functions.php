@@ -78,7 +78,7 @@ function hw_locate_template( $template_name, $template_path = '', $default_path 
  *
  * @param string  $template_name          Template to load.
  * @param array   $args                   Args passed for the template file.
- * @param string  $string $template_path  Path to templates.
+ * @param string  $template_path          Path to templates.
  * @param string  $default_path           Default path to template files.
  */
 function hw_get_template( $template_name, $args = array(), $tempate_path = '', $default_path = '' ) {
@@ -106,6 +106,53 @@ function hw_get_template( $template_name, $args = array(), $tempate_path = '', $
  * @return void
  */
 function hw_signature_modal(){
-  
+
   hw_get_template('template-parts/modals/signature');
+}
+
+/**
+ * render the "Continue with Google" button
+ *
+ * Outputs nothing unless the network has OAuth credentials saved and this site
+ * has the button switched on, so callers do not need to check first.
+ *
+ * The return URL is resolved here rather than by the caller — every call site
+ * wants the same behaviour, and it is easy to forget.
+ *
+ * @param array $args {
+ *     @type string $class   Classes for the anchor. Defaults to a full width Bootstrap button.
+ *     @type string $label   Button text. Defaults to the label configured for the site.
+ *     @type string $divider Text for a separator rendered above the button, e.g. 'or'.
+ *                           Omit for no separator.
+ * }
+ * @return void
+ */
+function hw_google_login_button( $args = [] ){
+
+  if( ! hw_is_google_login_configured() ){
+
+    return;
+  }
+
+  $args = wp_parse_args( $args, [
+    // .hw-google-btn owns width, border, radius and padding; adding .btn on top
+    // would drag Bootstrap's own metrics in and fight it.
+    'class'   => '',
+    'label'   => hw_get_google_login_button_label(),
+    'divider' => '',
+  ] );
+
+  $args['url'] = hw_get_google_login_url( hw_get_google_login_return_url() );
+
+  hw_get_template( 'template-parts/partials/auth/google-login-button', $args );
+}
+
+/**
+ * return if the booking form has the container
+ *
+ * @return bool
+ */
+function hw_booking_form_page_has_container(){
+
+  return get_field( 'hw_booking_form_page_add_container' );
 }

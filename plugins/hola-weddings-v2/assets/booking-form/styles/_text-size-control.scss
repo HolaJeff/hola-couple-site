@@ -1,0 +1,147 @@
+// ── Text size control ─────────────────────────────────────────────────────────
+//
+// Lives in the shared edge-trigger stack (../../shared/_edge-triggers.scss),
+// which sets the trigger's position and shape. The panel is anchored to the
+// bottom of the same slot, so it grows upward over the triggers above it and is
+// raised over them while open. Slide in/out uses the dev toolbar's timing.
+// Sizes are fixed px on purpose: the control shouldn't grow and shift under the
+// reader's cursor.
+
+$tsc-blue:       #0a5dc2; // 6.4:1 against white
+$tsc-blue-hover: #084a9b;
+$tsc-anim-dur:   0.3s;
+$tsc-anim-ease:  cubic-bezier(0.4, 0, 0.2, 1);
+
+// Colours are !important throughout: themes style bare `button` (and its
+// :hover/:focus/:active states), which otherwise repaints the tool. Every state
+// is restated so none falls through to the theme.
+
+// ── Trigger ───────────────────────────────────────────────────────────────────
+
+.tsc-trigger {
+    background: $tsc-blue !important;
+    color: #fff !important;
+    border: none !important;
+    transition: transform $tsc-anim-dur $tsc-anim-ease,
+                visibility 0s linear 0s,
+                background .15s;
+
+    &:focus,
+    &:active {
+        background: $tsc-blue !important;
+        color: #fff !important;
+    }
+
+    &:hover { background: $tsc-blue-hover !important; }
+
+    &:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: -4px;
+    }
+
+    &--hidden {
+        visibility: hidden;
+        transform: translateX(calc(100% + 10px));
+        transition: transform $tsc-anim-dur $tsc-anim-ease,
+                    visibility 0s linear $tsc-anim-dur,
+                    background .15s;
+    }
+}
+
+// ── Panel ─────────────────────────────────────────────────────────────────────
+
+.tsc-panel {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background: $tsc-blue !important;
+    color: #fff !important;
+    border-radius: 8px 0 0 8px;
+    box-shadow: -2px 2px 12px rgba(0, 0, 0, .35);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+
+    // Closed: off to the right and out of the tab order once the slide ends.
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(calc(100% + 10px));
+    transition: transform $tsc-anim-dur $tsc-anim-ease,
+                visibility 0s linear $tsc-anim-dur;
+
+    &--open {
+        z-index: 1; // over the other slots in the stack, which the open panel covers
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateX(0);
+        transition: transform $tsc-anim-dur $tsc-anim-ease,
+                    visibility 0s linear 0s;
+    }
+
+    &__value {
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1;
+        padding: 6px 0;
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+        color: #fff !important;
+        border-top: 1px solid rgba(255, 255, 255, .25);
+        border-bottom: 1px solid rgba(255, 255, 255, .25);
+    }
+
+    &__btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1px;
+        width: 44px;
+        height: 40px;
+        padding: 0;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        color: #fff !important;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1;
+        cursor: pointer;
+        transition: background .15s;
+
+        &:focus,
+        &:active,
+        &:disabled {
+            background: transparent !important;
+            color: #fff !important;
+        }
+
+        &:hover:not(:disabled) { background: $tsc-blue-hover !important; }
+
+        &:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: -4px;
+        }
+
+        &:disabled {
+            opacity: .45;
+            cursor: default;
+        }
+
+        &--close {
+            height: 34px;
+            border-top: 1px solid rgba(255, 255, 255, .25) !important;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tsc-trigger,
+    .tsc-trigger--hidden,
+    .tsc-panel,
+    .tsc-panel--open {
+        transition-duration: 0s;
+        transition-delay: 0s;
+    }
+}

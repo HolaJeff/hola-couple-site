@@ -66,8 +66,8 @@ class Quote{
         );
 
         add_meta_box(
-            'customer_information',
-            __( 'Customer Information', 'hola-weddings' ),
+            'billing_information',
+            __( 'Billing Information', 'hola-weddings' ),
             [ $this, 'render_customer_information' ],
             'quote',
             'advanced',
@@ -110,6 +110,15 @@ class Quote{
         /**
          * Side
          */
+
+        add_meta_box(
+            'quote_owner',
+            __( 'Owner', 'hola-weddings' ),
+            [ $this, 'render_owner' ],
+            'quote',
+            'side',
+            'high'
+        );
 
         add_meta_box(
             'quote_summary',
@@ -199,9 +208,13 @@ class Quote{
         
         global $post;
 
-        $quote = hw_get_quote($post->ID);
-        
-        hw_get_template('templates/admin/metaboxes/quote/customer-information', ['quote' => $quote]);
+        $quote = hw_get_quote( $post->ID );
+
+        hw_get_template( 'templates/admin/metaboxes/quote/customer-information', [
+            'billing_information' => $quote->getBillingInformation(),
+            'quote_id'            => $post->ID,
+            'nonce'               => wp_create_nonce( 'hw_update_quote_customer' ),
+        ] );
     }
 
     /**
@@ -216,6 +229,42 @@ class Quote{
         $quote = hw_get_quote($post->ID);
 
         hw_get_template('templates/admin/metaboxes/quote/payment', ['quote' => $quote]);
+    }
+
+    /**
+     * render the owner user metabox
+     *
+     * @return void
+     */
+    public function render_owner(){
+
+        global $post;
+
+        $quote    = hw_get_quote( $post->ID );
+        $owner_id = $quote->getOwnerID();
+
+        $users = get_users( [
+            'number'  => -1,
+            'orderby' => 'display_name',
+            'order'   => 'ASC',
+            'fields'  => [ 'ID', 'user_login', 'user_email' ],
+        ] );
+
+        $owner_label = '— No owner —';
+        foreach ( $users as $u ) {
+            if ( (int) $u->ID === $owner_id ) {
+                $owner_label = $u->user_login . ' (' . $u->user_email . ')';
+                break;
+            }
+        }
+
+        hw_get_template( 'templates/admin/metaboxes/quote/owner', [
+            'owner_id'    => $owner_id,
+            'owner_label' => $owner_label,
+            'users'       => $users,
+            'nonce'       => wp_create_nonce( 'hw_quote_owner_' . $post->ID ),
+            'quote_id'    => $post->ID,
+        ] );
     }
 
     /**
@@ -331,6 +380,20 @@ class Quote{
      * @return void
      */
     public function save( $post_id, $post, $update ){
+
+        // Owner field — saved independently from the main data array
+        if (
+            isset( $_POST['hw_quote_owner_nonce'] ) &&
+            wp_verify_nonce( $_POST['hw_quote_owner_nonce'], 'hw_quote_owner_' . $post_id ) &&
+            current_user_can( 'edit_post', $post_id )
+        ) {
+            $owner_id = isset( $_POST['hw_owner_user_id'] ) ? absint( $_POST['hw_owner_user_id'] ) : 0;
+            if ( $owner_id ) {
+                update_post_meta( $post_id, 'hw_owner_user_id', $owner_id );
+            } else {
+                delete_post_meta( $post_id, 'hw_owner_user_id' );
+            }
+        }
 
         if(!isset($_POST['data']) || empty($_POST['data'])){
             return;

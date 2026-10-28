@@ -27,6 +27,8 @@ class Ajax{
         add_action( 'wp_ajax_hw_import_room', [ $this, 'import_room' ] );
 
         add_action( 'wp_ajax_nopriv_ajax_login' , [ $this, 'login']);
+        add_action( 'wp_ajax_ajax_login' , [ $this, 'login']);
+        
         add_action( 'wp_ajax_nopriv_hw_cart_save_form_data_into_session', [ $this, 'store_form_data_session']);
         add_action( 'wp_ajax_hw_cart_save_form_data_into_session', [ $this, 'store_form_data_session']);
 
@@ -38,6 +40,9 @@ class Ajax{
 
         // account
         add_action( 'wp_ajax_hw_send_email_request_invoice_payment_link', [ $this, 'send_email_request_invoice_payment_link' ]);
+
+        // customer
+        add_action( 'wp_ajax_hw_update_quote_customer', [ $this, 'update_quote_customer' ] );
     }
 
     /**
@@ -133,6 +138,11 @@ class Ajax{
             die();
         }
 
+        // add this for the new booking form testing purpose
+        if( is_user_logged_in() && !current_user_can( 'administrator' ) ){
+            wp_send_json( ['errorMessage' => 'Unauthorized request'] , 403 );
+        }
+
         $status_code = 200;
         $response = array(
             'isLoggedIn' => false,
@@ -159,6 +169,18 @@ class Ajax{
                $user->ID,
                False// << This is the "remember me" option.
             );
+
+            // wp_create_nonce() below reads the current user, which the cookie
+            // alone does not set until the next request.
+            wp_set_current_user( $user->ID );
+
+            // A network user signing in on a wedding site they have never
+            // visited would otherwise land with no capabilities there.
+            hw_add_user_to_current_blog( $user->ID );
+
+            // Lets the auth modal show the verification step in place rather
+            // than bouncing the visitor to /account/verify-email/.
+            $response['verification'] = hw_get_verification_payload( $user->ID );
         }
         
         if (!empty($response['errorMessage'])) {
@@ -377,14 +399,43 @@ class Ajax{
      */
     public function send_email_request_invoice_payment_link(){
 
-        $invoice_id = $_POST['invoice_id'];
+        $invoice_id = isset( $_POST['invoice_id'] ) ? absint( $_POST['invoice_id'] ) : 0;
 
         if(empty($invoice_id)){
 
             wp_send_json(['success' => false, 'message' => __('Request failed, please contact our agents.', 'hola-weddings'), 'debug_message' => 'Missing invoice id' ]);
         }
 
+        // This mails a payment link for whichever invoice id it is handed, so it
+        // needs all three of these. Without them any signed-in customer could
+        // walk the id space and have links sent for other people's invoices.
+
+        // 1. The request came from a page we rendered.
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'hw_request_invoice_link_' . $invoice_id ) ) {
+
+            wp_send_json([ 'success' => false, 'message' => __('Your session expired. Please refresh the page and try again.', 'hola-weddings') ], 403);
+        }
+
+        // 2. Somebody is asking.
+        if ( ! is_user_logged_in() ) {
+
+            wp_send_json([ 'success' => false, 'message' => __('Please sign in and try again.', 'hola-weddings') ], 403);
+        }
+
         $invoice = hw_get_invoice($invoice_id);
+
+        if ( ! $invoice || ! $invoice->exists() ) {
+
+            wp_send_json(['success' => false, 'message' => __('Request failed, please contact our agents.', 'hola-weddings'), 'debug_message' => 'Unknown invoice' ]);
+        }
+
+        // 3. It is their invoice — or they are staff. Deliberately the same
+        //    ownership test the account area uses for a reservation.
+        if ( ! hw_user_has_role( 'administrator' ) && (int) $invoice->getOwner() !== get_current_user_id() ) {
+
+            wp_send_json([ 'success' => false, 'message' => __('Not authorized.', 'hola-weddings') ], 403);
+        }
+
         $template = new RequestInvoicePaymentLink($invoice);
         $sender = new EmailSender();
 
@@ -396,5 +447,46 @@ class Ajax{
 
         // return the edit link
         wp_send_json(['success' => true, 'message' => __('Request sent successfully.') ]);
+    }
+
+    /**
+     * Update the customer billing information linked to a quote.
+     * Optionally reassigns the quote to a different customer via customer_id.
+     * Admin-only, logged-in users only (wp_ajax_ prefix enforces this).
+     *
+     * @return void
+     */
+    public function update_quote_customer(): void {
+
+        check_ajax_referer( 'hw_update_quote_customer', 'nonce' );
+
+        if ( ! current_user_can( 'edit_posts' ) ) {
+            wp_send_json_error( [ 'message' => __( 'Not authorized.', 'hola-weddings' ) ], 403 );
+        }
+
+        $quote_id = intval( $_POST['quote_id'] ?? 0 );
+
+        if ( ! $quote_id ) {
+            wp_send_json_error( [ 'message' => __( 'Invalid quote.', 'hola-weddings' ) ] );
+        }
+
+        $raw     = $_POST['data']['billing'] ?? [];
+        $billing = new \HW\Models\CRM\BillingInformation( [
+            'first_name'   => sanitize_text_field( $raw['first_name']   ?? '' ),
+            'last_name'    => sanitize_text_field( $raw['last_name']    ?? '' ),
+            'email'        => sanitize_email(      $raw['email']        ?? '' ),
+            'phone_number' => sanitize_text_field( $raw['phone_number'] ?? '' ),
+            'address'      => sanitize_text_field( $raw['address']      ?? '' ),
+            'city'         => sanitize_text_field( $raw['city']         ?? '' ),
+            'zip'          => sanitize_text_field( $raw['zip']          ?? '' ),
+            'country'      => sanitize_text_field( $raw['country']      ?? '' ),
+            'state'        => sanitize_text_field( $raw['state']        ?? '' ),
+        ] );
+
+        // Billing meta fields only. hw_customer_data records what was submitted
+        // when the booking was made and is deliberately left as it was.
+        hw_get_quote( $quote_id )->setBillingInformation( $billing );
+
+        wp_send_json_success( [ 'message' => __( 'Billing information updated.', 'hola-weddings' ) ] );
     }
 }

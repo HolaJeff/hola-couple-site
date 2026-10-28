@@ -1,14 +1,60 @@
 <?php
 
-use HW\Models\Quote;
-
-$quotes = hw_get_user_quotes();
-$i = 1;
-
 $is_administrator = hw_user_has_role('administrator');
+
+// Per-page limit — admins can override via the ?per_page dropdown; everyone else gets the default.
+$allowed_per_page = [ 20, 40, 100, 200, 500 ];
+$per_page         = 20;
+
+if ( $is_administrator && isset( $_GET['per_page'] ) ) {
+
+    $requested = sanitize_text_field( $_GET['per_page'] );
+
+    if ( $requested === 'all' ) {
+        $per_page = -1;
+    } elseif ( in_array( (int) $requested, $allowed_per_page, true ) ) {
+        $per_page = (int) $requested;
+    }
+}
+
+// 'All' disables pagination, so pin to the first page.
+$paged = ( $per_page === -1 ) ? 1 : max( 1, (int) get_query_var('paged'), (int) get_query_var('page') );
+
+$quotes = hw_get_user_quotes( $per_page, $paged );
 ?>
 <h2><?= __('Your Reservations', 'hola-weddings') ?></h2>
-<?php if($quotes->have_posts()): ?>
+<?php if($quotes->have_posts()):
+
+    $total = (int) $quotes->found_posts;
+
+    if ( $per_page === -1 ) {
+        $count_label = sprintf( _n( '%s reservation', '%s reservations', $total, 'hola-weddings' ), number_format_i18n( $total ) );
+    } else {
+        $start       = ( $paged - 1 ) * $per_page + 1;
+        $end         = $start + $quotes->post_count - 1;
+        $count_label = sprintf( __( 'Showing %1$s–%2$s of %3$s', 'hola-weddings' ), number_format_i18n( $start ), number_format_i18n( $end ), number_format_i18n( $total ) );
+    }
+    ?>
+    <div class="reservations-header">
+        <div class="reservations-header__count"><?= esc_html( $count_label ) ?></div>
+
+        <?php if( $is_administrator ):
+            $per_page_options = [ 'all' => __( 'All', 'hola-weddings' ), 20 => '20', 40 => '40', 100 => '100', 200 => '200', 500 => '500' ];
+            $current_option   = ( $per_page === -1 ) ? 'all' : $per_page;
+            ?>
+            <div class="reservations-header__perpage">
+                <label for="reservations-per-page"><?= __( 'Per page', 'hola-weddings' ) ?></label>
+                <select id="reservations-per-page" class="form-control" onchange="window.location.href = this.value;">
+                    <?php foreach( $per_page_options as $value => $label ):
+                        $url = add_query_arg( 'per_page', $value, home_url( '/account/reservations/' ) );
+                        ?>
+                        <option value="<?= esc_url( $url ) ?>" <?= selected( $current_option, $value, false ) ?>><?= esc_html( $label ) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        <?php endif; ?>
+    </div>
+
     <div id="quote-list">
         <?php while($quotes->have_posts()): 
 
@@ -23,137 +69,144 @@ $is_administrator = hw_user_has_role('administrator');
             $upcoming_invoice = hw_get_quote_upcoming_invoice(get_the_ID());
             $model = hw_get_quote(get_the_ID());
             $insurance_plan = $model->getInsurancePlan();
+
+            $ci_dt = $ci ? new \DateTime($ci) : null;
+            $co_dt = $co ? new \DateTime($co) : null;
             ?>
-            <div class="quote mb-4">
-                <div class="inner d-flex flex-column flex-md-row flex-nowrap align-items-stretch">
-                    <div class="picture" style="background-image:url(<?= $room['main_image'] ?>)">
+            <div class="card card__reservation">
+                <div class="card__body d-flex flex-column flex-md-row">
+                    <!-- Thumb -->
+                    <div class="reservation__thumb position-relative" style="background-image:url(<?= esc_url($room['main_image']) ?>)">
+                        <!-- Mobile Status -->    
+                        <span class="absolute mt-2 ml-2 d-md-none reservation__status <?= esc_attr($status) ?>"><?= hw_quote_status_label($status) ?></span>
                     </div>
-                    <div class="details">
-                        <div class="d-flex flex-column flex-md-row room-type align-items-center">
-
-                            <!-- status -->
-                            <div class="mb-2 mb-md-0">
-                                <span class="status <?= $status ?> align-center d-inline-block d-md-inline mr-3">
-                                    <?= hw_quote_status_label($status) ?>
-                                </span>
-                            </div>
-
-                            <!-- title -->
-                            <div class="mb-2 mb-md-0">
-                                <div class="mb-0 title font-weight-bold text-uppercase"><?= get_the_title() ?></div>
-                                <?php do_action('hw_account_reservation_after_title') ?>
-                            </div>
-                            
-                            <!-- actions -->
-                            <div class="actions text-right ml-md-auto">
-                                <?php if($is_administrator): ?>
-                                    <span class="d-inline-block p-3 mr-2">
+                    <!-- Overview -->
+                    <div class="reservation__overview position-relative flex-grow-1">
+                        <div class="reservation__header d-flex align-items-center">
+                            <!-- Desktop Status -->    
+                            <span class="d-none d-md-inline-flex reservation__status <?= esc_attr($status) ?>"><?= hw_quote_status_label($status) ?></span>
+                            <!-- Admin Meta -->
+                            <?php if($is_administrator): ?>
+                                <div class="reservation__admin-meta-wrapper ml-md-auto d-flex align-items-center flex-wrap">
+                                    <?php do_action('hw_account_reservations_before_admin_meta') ?>
+                                    
+                                    <!-- Owner -->
+                                    <span class="reservation__meta-item reservation__owner">
                                         <i class="far fa-user-circle"></i>
-                                        <?= sprintf(__('Owner: %s'), get_the_author()) ?>
+                                        <?= sprintf(__('Owner: %s', 'hola-weddings'), get_the_author()) ?>
                                     </span>
-                                <?php endif; ?>
+
+                                    <!-- Edit Link -->
+                                    <a href="<?= get_edit_post_link() ?> " target="_blank" class="reservation__meta-item">
+                                        <i class="fas fa-pen"></i>
+                                        <?= __('Edit', 'hola-weddings') ?>
+                                    </a>
+
+                                    <?php do_action('hw_account_reservations_after_admin_meta') ?>
+                                </div>
+                            <?php endif; ?> 
+                        </div>
+                        <div class="reservation__body">
+                            <!-- Title -->
+                            <h3 class="reservation__title"><?= get_the_title() ?></h3>
+                            <!-- Facts -->
+                            <div class="reservation__facts flex-column flex-md-wrap flex-md-row mt-3">
+                                <div class="reservation__fact">
+                                    <span class="reservation__fact-icon"><i class="fas fa-bed"></i></span>
+                                    <span class="reservation__fact-text">
+                                        <span class="reservation__fact-label"><?= __('Room Type', 'hola-weddings') ?></span>
+                                        <span class="reservation__fact-value"><?= esc_html($room['name']) ?></span>
+                                    </span>
+                                </div>
+                                <div class="reservation__fact">
+                                    <span class="reservation__fact-icon"><i class="far fa-calendar-check"></i></span>
+                                    <span class="reservation__fact-text">
+                                        <span class="reservation__fact-label"><?= __('Travel Dates', 'hola-weddings') ?></span>
+                                        <span class="reservation__fact-value"><?= $ci_dt ? $ci_dt->format('M j, Y') : '—' ?> → <?= $co_dt ? $co_dt->format('M j, Y') : '—' ?></span>
+                                    </span>
+                                </div>
+                                <div class="reservation__fact">
+                                    <span class="reservation__fact-icon"><i class="fas fa-users"></i></span>
+                                    <span class="reservation__fact-text">
+                                        <span class="reservation__fact-label"><?= __('Guests', 'hola-weddings') ?></span>
+                                        <span class="reservation__fact-value dropdown">
+                                            <span class="reservation__guests-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                                <?= sprintf(_n('%d guest', '%d guests', count($guests), 'hola-weddings'), count($guests)) ?>
+                                                <i class="fas fa-chevron-down"></i>
+                                            </span>
+                                            <div class="dropdown-menu">
+                                                <?php foreach($guests as $gi => $guest): ?>
+                                                    <li class="dropdown-item <?= $gi < count($guests) - 1 ? 'border-bottom' : '' ?>">
+                                                        <?= esc_html(sprintf('%s %s', $guest['title'], $guest['name'])) ?>
+                                                    </li>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <?php do_action('hw_account_reservation_after_title') ?>
+                        </div>
+
+                        <!-- Upcoming Payment -->
+                        <?php hw_get_template('template-parts/account/partials/upcoming-payment-alert', ['invoice' => $upcoming_invoice]); ?>
+
+                        <!-- Actions -->
+                        <div class="card__footer">
+                            <div class="reservation__actions ml-md-auto">
                                 <a class="btn btn-primary" href="<?= hw_get_reservation_permalink(get_the_ID()) ?>">
-                                    <i class="far fa-eye"></i>
+                                    <i class="far fa-eye mr-1"></i>
                                     <?= __('View Details', 'hola-weddings' ) ?>
                                 </a>
                             </div>
                         </div>
-                        <div class="row mt-4">
-                            <div class="col-md-12 col-lg-4 mb-3 mb-lg-0"><!-- details -->
-                                <div class="bg-light rounded p-3 p-md-0 h-100">
-                                    <div class="d-flex flex-wrap">
-                                        <div class="main-guest info col-12">
-                                            <span class="label"><?= __('Room', 'hola-weddings') ?></span>
-                                            <div class="value"><?= $room['name'] ?></div>
-                                        </div>
-                                        <div class="main-guest info col-7">
-                                            <span class="label"><?= __('Main Guest', 'hola-weddings') ?></span>
-                                            <div class="value"><?= ucwords(hw_guest_full_name($main_guest)) ?></div>
-                                        </div>
-                                        <div class="guests info col-5">
-                                            <span class="label"><?= __('Guests', 'hola-weddings') ?></span>
-                                            <div class="value dropdown" data-toggle="tooltip" data-placement="top"  title="">
-                                                <span class="dropdown-toggle" data-toggle="dropdown" style="text-decoration: underline dotted;">
-                                                    <?= sprintf('%d (View All)', count($guests)) ?>
-                                                </span>
-                                                <div class="dropdown-menu">
-                                                    <?php foreach($guests as $i => $guest): ?>
-                                                        <li class="dropdown-item <?= $i < count($guests) - 1 ? 'border-bottom' : '' ?>">
-                                                            <?= sprintf('%s %s', $guest['title'], $guest['name']) ?>
-                                                        </li>
-                                                    <?php endforeach; ?>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="dates info col-7">
-                                            <span class="label"><?= __('Check-in', 'hola-weddings') ?></span>
-                                            <div class="value"><?=  (new \DateTime($ci))->format('m/d/Y') ?></div>
-                                        </div>
-                                        <div class="dates info col-5">
-                                            <span class="label"><?= __('Check-out', 'hola-weddings') ?></span>
-                                            <div class="value"><?= (new \DateTime($co))->format('m/d/Y') ?></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 mb-3 mb-md-0"><!-- upcoming payment -->
-                                <div class="bg-light rounded p-3 h-100">
-                                    <div class="font-weight-bold text-uppercase mb-3 info">
-                                        <span class="label">
-                                            <?= __('Upcoming Payment', 'hola-weddings' ) ?>
-                                        </span>
-                                    </div>
-                                    <?php if($upcoming_invoice): ?>
-                                        <div>
-                                            <?= $upcoming_invoice->getTitle() ?>
-                                        </div>
-                                        <div>
-                                            <strong><?= __('Due Date', 'hola-weddings' ) ?>:</strong>
-                                            <?= $upcoming_invoice->getDueDate('M d, Y') ?>
-                                        </div>
-                                        <div>
-                                            <strong><?= __('Amount', 'hola-weddings' ) ?>:</strong>
-                                            <?= hw_format_price( $upcoming_invoice->getDueAmount() ) ?>
-                                        </div>
-                                        <?php switch( hw_get_invoice_payment_btn_action () ):
-                                            case 'payment-form': ?>
-                                                <a class="d-block text-right text-underline mt-2" href="<?= hw_get_invoice_payment_permalink($upcoming_invoice->getID()) ?>" target="_blank">
-                                                    <u>  
-                                                        <?= __('Pay Invoice', 'hola-weddings' ) ?> >>
-                                                    </u>
-                                                </a>
-                                            <?php break;
-                                            case 'request-payment-link': ?>
-                                                <?php hw_get_template('template-parts/account/partials/invoice-request-payment-link-btn', [ 'invoice' => $upcoming_invoice ]) ?>
-                                            <?php break;
-                                            endswitch; ?>
-                                    <?php else: ?>
-                                        <?= __('No Payment found', 'hola-weddings' ) ?>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-4"><!-- insurance -->
-                                <div class="bg-light rounded p-3 h-100">
-                                    <div class="font-weight-bold text-uppercase mb-3 info">
-                                        <span class="label">
-                                            <?= __('Insurance', 'hola-weddings' ) ?>
-                                        </span>
-                                    </div>
-                                    <?php if($insurance_plan): ?>
-                                        <?= $insurance_plan['name'] ?>
-                                    <?php else: ?>
-                                        <?= __('No Insurance', 'hola-weddings' ) ?>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
                     </div>
+
+                    
                 </div>
             </div>
-        <?php $i++; endwhile; wp_reset_postdata() ?>
+        <?php endwhile; wp_reset_postdata() ?>
     </div>
+
+    <?php if( $quotes->max_num_pages > 1 ):
+        $pagination_args = [
+            'base'      => home_url( '/account/reservations/' ) . '%_%',
+            'format'    => '?paged=%#%',
+            'current'   => $paged,
+            'total'     => $quotes->max_num_pages,
+            'type'      => 'array',
+            'mid_size'  => 1,
+            'end_size'  => 1,
+            'prev_text' => '<i class="fas fa-chevron-left"></i>',
+            'next_text' => '<i class="fas fa-chevron-right"></i>',
+        ];
+
+        // Keep the selected per-page limit across pages.
+        if ( $per_page !== 20 && $per_page !== -1 ) {
+            $pagination_args['add_args'] = [ 'per_page' => $per_page ];
+        }
+
+        $links = paginate_links( $pagination_args );
+        ?>
+        <nav aria-label="<?= esc_attr__( 'Reservations pages', 'hola-weddings' ) ?>">
+            <ul class="pagination justify-content-center mt-4 mb-0">
+                <?php foreach( $links as $link ):
+                    $classes = 'page-item';
+                    if ( strpos( $link, 'current' ) !== false ) { $classes .= ' active'; }
+                    if ( strpos( $link, 'dots' ) !== false ) { $classes .= ' disabled'; }
+                    $link = str_replace( 'page-numbers', 'page-link', $link );
+                    ?>
+                    <li class="<?= $classes ?>"><?= $link ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </nav>
+    <?php endif; ?>
 <?php else: ?>
-    <p><?= __('You don\'t have any reservation yet.', 'hola-weddings') ?></p>
+    <div class="reservations-empty">
+        <div class="reservations-empty__icon"><i class="far fa-calendar"></i></div>
+        <div class="reservations-empty__title"><?= __('No reservations yet', 'hola-weddings') ?></div>
+        <p><?= __("You don't have any reservation yet.", 'hola-weddings') ?></p>
+    </div>
 <?php endif;
 
 do_action('hw_account_reservations_view_end');

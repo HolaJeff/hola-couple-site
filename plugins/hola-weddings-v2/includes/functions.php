@@ -23,8 +23,75 @@ function hw_get_session(){
  */
 add_action( 'init', function() {
     
-    load_plugin_textdomain( 'hola-weddings', false, dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages' ); 
+    load_plugin_textdomain( 'hola-weddings', false, dirname( dirname( plugin_basename( __FILE__ ) ) ) . '/languages' );
 });
+
+/**
+ * BCP 47 locale for Intl date and number formatting in the React booking form.
+ *
+ * The Spanish translation (es_ES) is written for Latin American customers, so
+ * Spanish formats as Latin America (es-419) rather than Spain.
+ *
+ * @param string|null $locale WordPress locale; defaults to the current one, which
+ *                            TranslatePress sets per request.
+ * @return string
+ */
+function hw_get_intl_locale( $locale = null ){
+
+    $locale = $locale ?: determine_locale();
+    $intl   = str_starts_with( $locale, 'es' ) ? 'es-419' : str_replace( '_', '-', $locale );
+
+    return apply_filters( 'hw_intl_locale', $intl, $locale );
+}
+
+/**
+ * Translate content with the translations stored in TranslatePress.
+ *
+ * TranslatePress translates page HTML and admin-ajax responses as they are sent,
+ * but not REST responses, so the booking form's REST responses call this for the
+ * data they return (room names, descriptions). Same lookup TranslatePress does on
+ * the legacy form: exact match against the original text.
+ *
+ * In a REST request this only translates when called from the
+ * rest_pre_echo_response filter; TranslatePress returns content untouched
+ * anywhere else in a REST request (see hw-rest-hooks.php).
+ *
+ * The language is passed explicitly: TranslatePress takes it from the URL, and
+ * the form's REST calls carry it in X-HW-Locale instead (see hw-rest-hooks.php),
+ * which determine_locale() reflects.
+ *
+ * Returns the content unchanged when TranslatePress isn't active, when the
+ * content isn't a non-empty string, or when no translation exists.
+ *
+ * @param mixed $content
+ * @return mixed
+ */
+function hw_trp_translate( $content ){
+
+    if ( ! is_string( $content ) || trim( $content ) === '' || ! function_exists( 'trp_translate' ) ) {
+        return $content;
+    }
+
+    // false: return plain translated content, without the markers TranslatePress
+    // adds to stop page output from being translated a second time.
+    return trp_translate( $content, determine_locale(), false );
+}
+
+/**
+ * Whether the plugin can serve the given WordPress locale: English, or any
+ * locale the plugin ships a translation for.
+ *
+ * @param string $locale
+ * @return bool
+ */
+function hw_is_supported_locale( $locale ){
+
+    if ( ! is_string( $locale ) || ! preg_match( '/^[a-z]{2,3}(_[A-Z]{2})?$/', $locale ) ) {
+        return false;
+    }
+
+    return $locale === 'en_US' || file_exists( HW_PLUGIN_PATH . "/languages/hola-weddings-{$locale}.mo" );
+}
 
 function hw_get_url(){
     return HW_URL;
@@ -105,7 +172,7 @@ function hw_get_child_service_fee(){
  */
 function hw_get_insurance_id(){
     
-    return  intval( hw_get_option('hw_insurance', null) );
+    return hw_get_option('hw_insurance', null);
 }
 
 /*
@@ -182,7 +249,7 @@ function hw_is_2_child_enabled(){
  */
 function hw_is_inventory_enabled(){
     
-    return hw_get_option('hw_enable_inventory', false);
+    return hw_evaluate_string_to_boolean( hw_get_option('hw_enable_inventory', false) );
 }
 
 /*
@@ -248,7 +315,17 @@ function hw_get_i18n_messages(){
     return [
         'ajax_login_email_required' => __('Insert valid email', 'hola-weddings'),
         'ajax_login_pwd_required' => __('Insert valid password', 'hola-weddings'),
-        'ajax_login_generic_error' => __('An error ocurred with the request. Try again. If the error persist contact us.', 'hola-weddings')
+        'ajax_login_generic_error' => __('An error ocurred with the request. Try again. If the error persist contact us.', 'hola-weddings'),
+
+        // Sign-up pane. Mirrored server-side in HW\Auth\RegistrationService::validate();
+        // these are only to save an obviously-doomed round trip.
+        'ajax_signup_first_name_required' => __('Please enter your first name.', 'hola-weddings'),
+        'ajax_signup_email_required'      => __('Please enter your email address.', 'hola-weddings'),
+        'ajax_signup_email_invalid'       => __('Please enter a valid email address.', 'hola-weddings'),
+        'ajax_signup_password_required'   => __('Please choose a password.', 'hola-weddings'),
+        'ajax_signup_password_short'      => __('Password must be at least 8 characters.', 'hola-weddings'),
+        'ajax_signup_password_mismatch'   => __('The passwords do not match.', 'hola-weddings'),
+        'ajax_signup_generic_error'       => __('An error ocurred with the request. Try again. If the error persist contact us.', 'hola-weddings'),
     ];
 }
 
@@ -267,7 +344,7 @@ function hw_format_price( $price, $currency = null, $symbol = null){
  * return insurance from API
  *
  * @param  int|null $id
- * @return array|false
+ * @return Insurance|null
  */
 function hw_get_insurance($id = null){
     
@@ -279,21 +356,15 @@ function hw_get_insurance($id = null){
     }
     
     if(is_null($id)){
-        
         $id = hw_get_insurance_id();
     }
     
     if(empty($id)){
         
-        return false;
+        return null;
     }
     
     $insurance = Insurance::get($id);
-
-    if( is_wp_error($insurance) ){
-
-        return false;
-    }
     
     return $insurance;
 }
@@ -320,37 +391,100 @@ function hw_get_insurance_plans($id = null){
     return $plans;
 }
 
+/*
+ * Whether a plan of the given insurance can be sold to a customer of the given
+ * US state. Classic insurance (id 2) does not sell the Elite plan (id 4) to New
+ * York residents. Mirrored client side in assets/booking-form/utils/insurance.js
+ */
+function hw_is_insurance_plan_allowed($insurance_id, $plan_id, $state){
+
+    if(intval($insurance_id) === 2 && intval($plan_id) === 4 && strtoupper(trim((string) $state)) === 'NY'){
+
+        return false;
+    }
+
+    return true;
+}
+
 function hw_get_hotel_id(){
-    
+
     return hw_get_option('hw_hotel_id', null);
+}
+
+/**
+ * Return the URL of the booking-form page.
+ *
+ * Scans for a published page assigned either the new React booking-form
+ * template or the legacy one, preferring the new template. Falls back to the
+ * site home if none is found.
+ *
+ * @return string
+ */
+function hw_get_booking_form_url(){
+
+    $templates = [ 'templates/booking-form.php', 'endpoints/book.php' ];
+
+    foreach ( $templates as $template ) {
+
+        $pages = get_pages([
+            'meta_key'    => '_wp_page_template',
+            'meta_value'  => $template,
+            'post_type'   => 'page',
+            'post_status' => 'publish',
+            'number'      => 1,
+        ]);
+
+        if ( $pages ) {
+
+            return get_permalink( $pages[0] );
+        }
+    }
+
+    return home_url( '/' );
 }
 
 /**
  * return hotel data
  *
- * @return void
+ * @return array|bool
  */
 function hw_get_hotel(){
     
     static $hotel;
-    
+    static $fetching = false;
+
     if(!is_null($hotel)){
-        
+
         return $hotel;
     }
 
-    // if transient expired then update it from API
-    if ( false === ( $hotel = hw_get_hotel_transient() ) ) {
-        
-        $hotel = hw_update_hotel_transient();
-    }
-
-    if( is_wp_error($hotel)){
+    // Re-entered while fetching: this runs during App's constructor (via
+    // PersonTypeConfig), and the API call goes through hw(), which builds a new
+    // App because the singleton isn't stored yet - so without this it recurses forever.
+    if($fetching){
 
         return false;
     }
-    
-    return $hotel;
+
+    // if transient expired (or holds a previously cached error) then update it from API
+    if ( !is_array( $data = hw_get_hotel_transient() ) ) {
+
+        $fetching = true;
+
+        try {
+            $data = hw_update_hotel_transient();
+        } finally {
+            $fetching = false;
+        }
+    }
+
+    // don't memoize failures, otherwise later calls in the request get the WP_Error
+    if( !is_array($data)){
+
+        return false;
+    }
+
+    return $hotel = $data;
 }
 
 /**
@@ -366,17 +500,23 @@ function hw_get_hotel_transient(){
 /**
  * update hotel transient from API
  *
- * @return array
+ * @return array|\WP_Error
  */
 function hw_update_hotel_transient(){
 
     $id = hw_get_hotel_id();
 
+    if(empty($id)){
+        return new \WP_Error('no-hotel', 'Hotel was not configured');
+    }
+
     // Get it from API
     $hotel = Hotels::getHotel($id);
 
-    // Set transient
-    HW\Cache::set( 'hotel', $hotel );
+    // Set transient, only on success so API errors aren't cached
+    if( is_array($hotel)){
+        HW\Cache::set( 'hotel', $hotel );
+    }
 
     return $hotel;
 }

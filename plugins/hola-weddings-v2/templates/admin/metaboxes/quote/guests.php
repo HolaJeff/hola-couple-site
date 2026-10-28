@@ -28,16 +28,10 @@
                 </td>
                 <td>
                     <?php
-                    if(!empty($guest['date'])){
-                        $date = new \DateTime($guest['date']);
-                        if($date){
-                            ?>
-                            <input class="form-control guest-age-field"  autocomplete="off" type="text" value="<?= $date->format('m-d-Y') ?>" />
-                            <input type="hidden" name="data[guests][<?= $i ?>][date]" value="<?= $date->format('Y-m-d') ?>" />
-                            <?php
-                        }
-                    }
+                    $date = !empty($guest['date']) ? (new \DateTime($guest['date'])) : null;
                     ?>
+                    <input class="form-control guest-age-field"  autocomplete="off" type="text" value="<?= $date ? $date->format('m-d-Y') : '' ?>" />
+                    <input type="hidden" name="data[guests][<?= $i ?>][date]" value="<?= $date ? $date->format('Y-m-d') : '' ?>" />
                 </td>
                 <td>
                     <input class="age-field form-control" type="text" name="data[guests][<?= $i ?>][age]" value="<?= $guest['age'] ?>" readonly />

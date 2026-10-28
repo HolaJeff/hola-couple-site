@@ -73,32 +73,42 @@ function hw_get_account_profile_url(){
  *
  * @return WP_Query
  */
-function hw_get_user_quotes(){
+function hw_get_user_quotes( $posts_per_page = 20, $paged = null ){
 
-    $user_id = get_current_user_id();
+    $user_id    = get_current_user_id();
+    $is_admin   = hw_user_has_role( 'administrator' );
 
-    $args = [
-        'post_type' => 'quote',
-        'posts_per_page' => -1,
-        'author' => $user_id,
-        'post_status' => [ 'publish' ],
-        'meta_query' => [
-            [
-                'key' => 'hw_quote_status',
-                'value' => ['confirmed', 'pending', 'canceled'],
-                'compare' => 'IN'
-            ]
-        ],
-        'orderby' => 'ID',
-        'order' => 'DESC'
-    ];
-
-    if(hw_user_has_role('administrator')){
-
-        unset($args['author']);
+    // fall back to the built-in pagination query var (?paged=N)
+    if ( is_null( $paged ) ) {
+        $paged = max( 1, (int) get_query_var( 'paged' ), (int) get_query_var( 'page' ) );
     }
 
-    return new WP_Query($args);
+    $meta_query = [
+        'relation' => 'AND',
+        [
+            'key'     => 'hw_quote_status',
+            'value'   => [ 'confirmed', 'pending', 'canceled' ],
+            'compare' => 'IN',
+        ],
+    ];
+
+    if ( ! $is_admin ) {
+        $meta_query[] = [
+            'key'   => 'hw_owner_user_id',
+            'value' => $user_id,
+            'type'  => 'NUMERIC',
+        ];
+    }
+
+    return new WP_Query( [
+        'post_type'      => 'quote',
+        'posts_per_page' => $posts_per_page,
+        'paged'          => $paged,
+        'post_status'    => [ 'publish' ],
+        'meta_query'     => $meta_query,
+        'orderby'        => 'ID',
+        'order'          => 'DESC',
+    ] );
 }
 
 /**
@@ -131,20 +141,21 @@ function hw_get_reservation_pdf_permalink($id){
 function hw_get_single_reservation_tabs(){
 
     return [
-        'details' => [
-            'title' => __('Details', 'ea'),
-        ],
         'guests' => [
-            'title' => __('Guests', 'ea'),
+            'title' => __('Guests', 'hola-weddings'),
+            'icon' => 'fas fa-users'
         ],
         'insurance' => [
-            'title' => __('Insurance', 'ea'),
+            'title' => __('Insurance', 'hola-weddings'),
+            'icon' => 'fas fa-user-shield'
         ],
         'customer' => [
-            'title' => __('Customer Information', 'ea'),
+            'title' => __('Customer Information', 'hola-weddings'),
+            'icon' => 'far fa-address-card'
         ],
         'invoices' => [
-            'title' => __('Upcoming Payments', 'ea'),
+            'title' => __('Upcoming Payments', 'hola-weddings'),
+            'icon' => 'far fa-credit-card'
         ]
     ];
 }
@@ -178,6 +189,23 @@ add_action( 'template_redirect', function(){
             exit;
         }
 
+        /**
+         * Restricted account state for anyone who has not confirmed their email.
+         *
+         * They stay signed in and can reach the verification screen to read the
+         * message, request another email or log out — everything that actually
+         * exposes customer data is held back until the address is proven.
+         *
+         * hw_can_access_verified_account_features() is the only check here on
+         * purpose: it already answers true for administrators and for accounts
+         * that predate this feature, so neither group is ever redirected.
+         */
+        if( ! hw_can_access_verified_account_features() && Routes::get_view() !== 'verify-email' ){
+
+            wp_safe_redirect( hw_get_verify_email_url() );
+            exit;
+        }
+
         // conditional checks for reservations
         if(hw_is_reservation()){
 
@@ -190,11 +218,11 @@ add_action( 'template_redirect', function(){
             }
 
             $user_id = get_current_user_id();
-            
+
             // if user is not owner of the quote then redirect
-            if(!hw_user_has_role('administrator') && $post->post_author != $user_id){
-                
-                wp_safe_redirect(home_url(hw_get_account_url()));
+            if ( ! hw_user_has_role( 'administrator' ) && hw_get_quote( $post->ID )->getOwnerID() !== $user_id ) {
+                wp_safe_redirect( home_url( hw_get_account_url() ) );
+                exit;
             }
 
             if($format == 'pdf'){
@@ -284,7 +312,37 @@ add_action('init', function(){
 });
 
 /**
- * If User is Subscriber, It can not login in Dashboard 
+ * hook to update the user's saved billing information
+ */
+add_action('init', function(){
+
+    if(is_user_logged_in() && isset($_POST['action']) && $_POST['action'] == 'hw_update_billing'
+        && isset($_POST['_wpnonce']) && wp_verify_nonce( $_POST['_wpnonce'], 'hw_update_billing_' . get_current_user_id() )){
+
+        // Billing (payer) name is saved to user meta, separate from the account
+        // identity — the WP user's name/email are not modified here.
+        $billing = new \HW\Models\CRM\BillingInformation([
+            'first_name' => sanitize_text_field($_POST['first_name'] ?? ''),
+            'last_name'  => sanitize_text_field($_POST['last_name'] ?? ''),
+            'phone'      => sanitize_text_field($_POST['phone_number'] ?? ''),
+            'address'    => sanitize_text_field($_POST['address'] ?? ''),
+            'city'       => sanitize_text_field($_POST['city'] ?? ''),
+            'state'      => sanitize_text_field($_POST['state'] ?? ''),
+            'country'    => sanitize_text_field($_POST['country'] ?? ''),
+            'zip'        => sanitize_text_field($_POST['zip'] ?? ''),
+        ]);
+
+        hw_update_user_billing_information( get_current_user_id(), $billing );
+
+        hw_add_notice(__('Billing information updated.', 'hola-weddings'));
+
+        wp_safe_redirect(home_url(hw_get_account_profile_url()));
+        exit;
+    }
+});
+
+/**
+ * If User is Subscriber, It can not login in Dashboard
  */
 add_action('init', function()
 {

@@ -66,7 +66,7 @@ class HotelDescription extends \Elementor\Widget_Base {
         $hotel = hw_get_hotel();
 		?>
 		<div class="elementor-hotel-description">
-			<p class="hotel-description"><?= $hotel->description ?></p>
+			<p class="hotel-description"><?= $hotel['description'] ?? '' ?></p>
 		</div>
 		<?php
 	}

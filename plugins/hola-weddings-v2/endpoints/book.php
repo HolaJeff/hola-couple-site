@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * This template renders Legacy booking form
+ */
 get_header();
 ?>
     <div id="primary" class="content-area">

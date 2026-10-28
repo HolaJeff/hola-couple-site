@@ -142,6 +142,43 @@ function hw_get_the_user_ip() {
 }
 
 /**
+ * return the URL of the page currently being rendered
+ *
+ * Scheme and host come from the site being rendered rather than from the
+ * request: HTTP_HOST is client controlled, is_ssl() describes the incoming
+ * request rather than the blog, and on a network each site can have its own host
+ * and scheme. Only the path and query are taken from the request — appending
+ * home_url()'s own path as well would double it on a subdirectory install.
+ *
+ * Returns an empty string when there is no request path to read, so callers on
+ * ajax, REST or CLI paths get nothing rather than something misleading. Always
+ * provide a fallback when using this as a redirect target.
+ *
+ * @return string
+ */
+function hw_get_current_url(){
+
+    if( empty( $_SERVER['REQUEST_URI'] ) ){
+
+        return '';
+    }
+
+    $home = wp_parse_url( home_url( '/' ) );
+
+    if( empty( $home['host'] ) ){
+
+        return '';
+    }
+
+    $url = ( $home['scheme'] ?? 'https' ) . '://'
+        . $home['host']
+        . ( isset( $home['port'] ) ? ':' . $home['port'] : '' )
+        . $_SERVER['REQUEST_URI'];
+
+    return esc_url_raw( $url );
+}
+
+/**
  * create a unique username given a base
  *
  * @param string $username
@@ -180,15 +217,15 @@ function hw_get_state_name($key){
  * Utility function to format customer address
  *
  * @param BillingInformation|array $customer
- * @return void
+ * @return string
  */
 function hw_format_address(BillingInformation|array $customer){
 
     if($customer instanceof BillingInformation){
-        $customer = $customer->toArray(); 
+        $customer = $customer->toArray();
     }
        
-    return sprintf('%s, %s %s, %s, %s', $customer['address'], $customer['city'], $customer['zip'], $customer['state'], $customer['country']);
+    return sprintf('%s, %s %s, %s, %s', $customer['address'], $customer['city'], $customer['zip'] ?? $customer['postal_code'] ?? '', $customer['state'], $customer['country']);
 }
 
 /**
@@ -283,15 +320,44 @@ function hw_string_to_camel_case(string $string) : string{
 }
 
 /**
+ * Convert a string into a URL-friendly slug.
+ *
+ * Transliterates accented characters to ASCII, lowercases the string, and
+ * replaces every run of non-alphanumeric characters with the separator.
+ *
+ * e.g. hw_slugify('Château Déjà Vu!') => 'chateau-deja-vu'
+ *
+ * @param string $string    The string to slugify.
+ * @param string $separator Character used to join words. Default '-'.
+ * @return string
+ */
+function hw_slugify(string $string, string $separator = '-') : string{
+
+    // transliterate accented characters to their ASCII equivalent
+    $string = remove_accents($string);
+
+    // lowercase
+    $string = strtolower($string);
+
+    // replace every run of non-alphanumeric characters with the separator
+    $string = preg_replace('/[^a-z0-9]+/', $separator, $string);
+
+    // trim leading/trailing separators
+    return trim($string, $separator);
+}
+
+/**
  * evalualte string to boolean
- * 
+ *
  * Strings like '1', 'true', 'on', 'yes' (case-insensitive) will return true.
  * All other values ('0', 'false', 'off', 'no', empty string, etc.) return false.
  *
  * @param string $value
  * @return bool
  */
-function hw_evaluate_string_to_boolean(string $value) : bool{
+function hw_evaluate_string_to_boolean(string|bool $value) : bool{
+
+    if ( is_bool( $value ) ) return $value;
 
     return filter_var($value, FILTER_VALIDATE_BOOLEAN);
 }
@@ -372,4 +438,113 @@ function renderAttributes(array $attributes = []): void
 
         echo ' ' . $key . '="' . esc_attr((string) $value) . '"';
     }
+}
+/**
+ * normalize WYSIWYG/editor HTML so Html2Pdf can parse it.
+ *
+ * Html2Pdf validates closing tags against a plain LIFO stack, with no notion
+ * of optional end tags or auto-closing blocks. Markup a browser renders
+ * happily -- `<ul><li><strong>a</li></ul>`, `<ul><li>a<li>b</ul>`, a list
+ * wrapped in a `<p>` -- makes it throw "Tags are closed in a wrong order".
+ * Running the fragment through DOMDocument applies the normal HTML parsing
+ * rules and hands back strictly balanced markup.
+ *
+ * @param string|null $html
+ * @return string
+ */
+function hw_pdf_safe_html( ?string $html ) : string {
+
+    $html = (string) $html;
+
+    if ( trim( $html ) === '' ) {
+        return '';
+    }
+
+    // Html2Pdf only implements a subset of HTML; anything outside it is either
+    // ignored or fatal, so drop it before we normalize.
+    $html = wp_kses( $html, hw_pdf_allowed_html() );
+
+    if ( ! class_exists( 'DOMDocument' ) ) {
+        return force_balance_tags( $html );
+    }
+
+    $doc      = new DOMDocument();
+    $internal = libxml_use_internal_errors( true );
+
+    // The XML declaration keeps DOMDocument from reading the fragment as
+    // ISO-8859-1; the wrapper div gives us a known node to read back out of.
+    $doc->loadHTML(
+        '<?xml encoding="UTF-8"?><html><body><div id="hw-pdf-root">' . $html . '</div></body></html>',
+        LIBXML_NONET | LIBXML_NOWARNING | LIBXML_NOERROR
+    );
+
+    libxml_clear_errors();
+    libxml_use_internal_errors( $internal );
+
+    $root = ( new DOMXPath( $doc ) )->query( '//div[@id="hw-pdf-root"]' )->item( 0 );
+
+    if ( ! $root ) {
+        return force_balance_tags( $html );
+    }
+
+    $clean = '';
+
+    foreach ( $root->childNodes as $child ) {
+        $clean .= $doc->saveHTML( $child );
+    }
+
+    return $clean;
+}
+
+/**
+ * tags Html2Pdf knows how to render, for use with wp_kses().
+ *
+ * @return array
+ */
+function hw_pdf_allowed_html() : array {
+
+    $inline = [ 'style' => true, 'class' => true ];
+
+    $tags = [
+        'p'          => $inline,
+        'br'         => [],
+        'hr'         => $inline,
+        'h1'         => $inline,
+        'h2'         => $inline,
+        'h3'         => $inline,
+        'h4'         => $inline,
+        'h5'         => $inline,
+        'h6'         => $inline,
+        'div'        => $inline,
+        'span'       => $inline,
+        'strong'     => $inline,
+        'b'          => $inline,
+        'em'         => $inline,
+        'i'          => $inline,
+        'u'          => $inline,
+        's'          => $inline,
+        'del'        => $inline,
+        'ins'        => $inline,
+        'sub'        => $inline,
+        'sup'        => $inline,
+        'small'      => $inline,
+        'big'        => $inline,
+        'cite'       => $inline,
+        'address'    => $inline,
+        'ul'         => $inline,
+        'ol'         => $inline + [ 'start' => true ],
+        'li'         => $inline,
+        'blockquote' => $inline,
+        'table'      => $inline,
+        'thead'      => $inline,
+        'tbody'      => $inline,
+        'tfoot'      => $inline,
+        'tr'         => $inline,
+        'th'         => $inline + [ 'colspan' => true, 'rowspan' => true ],
+        'td'         => $inline + [ 'colspan' => true, 'rowspan' => true ],
+        'a'          => $inline + [ 'href' => true, 'title' => true ],
+        'img'        => $inline + [ 'src' => true, 'alt' => true, 'width' => true, 'height' => true ],
+    ];
+
+    return apply_filters( 'hw_pdf_allowed_html', $tags );
 }

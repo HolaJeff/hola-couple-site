@@ -2,6 +2,8 @@
 global $hw_theme;
 
 $hide_login = hw_evaluate_string_to_boolean($hw_theme['hide_login'] ?? '0');
+$user  = wp_get_current_user();
+$first = $user->first_name ?: $user->display_name;
 ?>
 <div class="<?= hw_is_pos() ? 'ml-auto' : '' ?>">
     <?php if(!is_user_logged_in()): ?>
@@ -24,7 +26,7 @@ $hide_login = hw_evaluate_string_to_boolean($hw_theme['hide_login'] ?? '0');
 
                 <!-- greeting -->
                 <a href="<?= hw_get_account_profile_url() ?>" class="d-md-flex flex-column gap-1 d-none border-bottom py-3 dropdown-item greeting"> 
-                    <div class="my-0"><?= sprintf(__('Hello <strong>%s</strong>', 'hola-weddings'), wp_get_current_user()->display_name) ?></div>
+                    <div class="my-0"><?= sprintf(__('Hello <strong>%s</strong>', 'hola-weddings'), $first ) ?></div>
                     <small>
                         <i data-feather="edit-2"></i>
                         <?= __('Edit Profile', 'hola-weddings') ?>
@@ -38,7 +40,10 @@ $hide_login = hw_evaluate_string_to_boolean($hw_theme['hide_login'] ?? '0');
                 </a>
 
                 <!-- item-->
-                <a href="<?= wp_logout_url( home_url() ); ?>" class="dropdown-item">
+                <!-- Return to the page they logged out from. Falls back to the
+                     homepage when there is no readable request path, since an
+                     empty argument would send them to wp-login.php instead. -->
+                <a href="<?= wp_logout_url( hw_get_current_url() ?: home_url() ); ?>" class="dropdown-item">
                     <i data-feather="log-out"></i>
                     <span><?= __('Logout', 'hola-weddings') ?></span>
                 </a>

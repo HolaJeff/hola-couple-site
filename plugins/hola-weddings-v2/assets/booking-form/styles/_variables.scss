@@ -1,0 +1,45 @@
+// ── Text sizing ───────────────────────────────────────────────────────────────
+//
+// Every font size in the form is a multiple of --hw-bf-base, so one value
+// drives the whole form: the theme's text size, floored at $text-base-min, times
+// the reader's --hw-bf-scale from components/TextSizeControl.jsx.
+//
+// Sizes are written as fs(<multiplier>) rather than rem: rem follows the theme's
+// root size, which the form can't raise without affecting the rest of the page.
+
+$text-base-min: 16px;
+$text-floor:    12px;
+
+// Registered so the calc() below resolves to a length on .hw-bf-text and
+// descendants inherit that length, rather than the raw expression (whose `em`
+// would otherwise be re-evaluated, and compound, on every element using it).
+@property --hw-bf-base {
+    syntax:        '<length>';
+    inherits:      true;
+    initial-value: 16px;
+}
+
+// Font size of $n times the form's base, never below the floor (the floor grows
+// with the reader's scale so the smallest labels still respond to A+).
+@function fs($n) {
+    @return max(calc(#{$text-floor} * var(--hw-bf-scale, 1)), calc(var(--hw-bf-base) * #{$n}));
+}
+
+// The wrapper sets no font-size itself, so its 1em is the size inherited from
+// the theme. --hw-bf-scale is set inline on the same element.
+.hw-bf-text {
+    --hw-bf-base: calc(max(#{$text-base-min}, 1em) * var(--hw-bf-scale, 1));
+}
+
+#booking-form {
+    font-size: var(--hw-bf-base);
+}
+
+// Elements whose size would otherwise come from the theme or Bootstrap in rem,
+// and so ignore the form's base. :where() keeps these at the specificity of the
+// bare element/class so a theme can still restyle them.
+:where(#booking-form) {
+    h5  { font-size: fs(1.25); }
+    h6  { font-size: fs(1); }
+    .btn { font-size: fs(1); }
+}

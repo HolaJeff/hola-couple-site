@@ -1,0 +1,27 @@
+@use 'variables' as *;
+
+// ── Google sign-in button ─────────────────────────────────────────────────────
+//
+// The base button and the "or" divider are NOT defined here. They live in the
+// plugin's stylesheet (assets/src/style/_google-login.scss, shipped as
+// `hw-main`) and are shared with the site's login modal, so restyling them in a
+// theme reaches both. Restating them here would shadow that at equal
+// specificity, since this bundle loads last.
+//
+// Only the form's own variant belongs in this file.
+
+.hw-google-btn {
+
+    // Sits beside another button instead of filling its container — used by the
+    // review step's account card, which renders it icon-only in a circle.
+    // Matches Bootstrap's .btn metrics so the two align on the same row.
+    // This bundle loads after hw-main, so it wins at equal specificity.
+    &--inline {
+        width:        auto;
+        padding:      .375rem .75rem;
+        border-width: 1px;
+        font-size:    fs(1);
+        font-weight:  400;
+        line-height:  1.5;
+    }
+}

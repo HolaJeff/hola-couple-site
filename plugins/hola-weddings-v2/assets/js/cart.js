@@ -327,6 +327,10 @@ var HWCart = window.HWCart || ( function( $ ) {
             
             let value = app.insurance_selector.val();
 
+            // reset the running total, otherwise a previously selected plan keeps
+            // inflating the minimum deposit after the insurance is removed
+            app.insurance_total = 0;
+
             // is customer is not from us hide insurance section and display the wording
             if( $('#country').val() != 'US'){
                 
@@ -419,7 +423,7 @@ var HWCart = window.HWCart || ( function( $ ) {
                         cost = parseInt(prices.amount);
                         break;
                     case 'percentage':
-                        cost = app.room_total * ( parseInt(prices.amount) / 100 );
+                        cost = Math.ceil( app.room_total *  ( parseInt(prices.amount) / 100 ) );
                         break;
                 }
                 
@@ -1115,14 +1119,24 @@ jQuery(function($){
             is_custom = val === 'custom';
 
         $('#deposit-custom-amount-wrapper').children('input').prop('readonly', !is_custom);
-        
-        if(val === 'deposit'){
 
-            let deposit = calc_deposit_amount();
-            
-            $('#deposit-custom-amount').val(deposit).prop('min', deposit);
+        let deposit = calc_deposit_amount();
+
+        // always refresh the minimum, the insurance may have been added/removed
+        // while another payment option was selected
+        if(deposit !== false){
+
+            $('#deposit-custom-amount').prop('min', deposit);
             $('label[for="deposit"] .price').html(format_price(deposit));
-        }else if(val === 'full'){
+
+            // keep the field in sync with the new minimum
+            if(val === 'deposit' || parseInt($('#deposit-custom-amount').val()) < deposit){
+
+                $('#deposit-custom-amount').val(deposit);
+            }
+        }
+
+        if(val === 'full'){
 
             $('#deposit-custom-amount').val(HWCart.cart.total);
         }

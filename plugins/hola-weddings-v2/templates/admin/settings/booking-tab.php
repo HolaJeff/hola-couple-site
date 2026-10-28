@@ -7,6 +7,7 @@ use HW\UI\Forms\Controls\Number;
 use HW\UI\Forms\Layouts\Grid;
 use HW\UI\Forms\Layouts\Heading;
 use HW\API\Operations\Insurances;
+use HW\UI\Forms\Controls\TextArea;
 
 $insurances = Insurances::getList();
 $insurances = array_merge(['0' => '- Select Insurance -'], $insurances);
@@ -47,14 +48,6 @@ Heading::make()
     ->subHeading('Configure person types.')
     ->render();
 
-Checkbox::make('hw_enable_teen')
-    ->id('enable-teen')
-    ->label('Enable Teen Person Type')
-    ->setInputLabel('Yes')
-    ->value(hw_get_option('hw_enable_teen', 0))
-    ->styled()
-    ->render();
-
 Checkbox::make('hw_enable_2_child')
     ->id('enable-2-child')
     ->label('Enable 2 Child')
@@ -63,18 +56,30 @@ Checkbox::make('hw_enable_2_child')
     ->styled()
     ->render();
 
+Checkbox::make('hw_enable_teen')
+    ->id('enable-teen')
+    ->label('Enable Teen Person Type')
+    ->setInputLabel('Yes')
+    ->value(hw_get_option('hw_enable_teen', 0))
+    ->styled()
+    ->attributes([
+        'x-model' => 'isTeenEnabled'
+    ])
+    ->render();
+
 Checkbox::make('hw_enable_2_teen')
     ->id('enable-teen-2')
-    ->label('Enable Teen Person Type')
+    ->label('Enable Teen 2 Person Type')
     ->setInputLabel('Yes')
     ->value(hw_get_option('hw_enable_2_teen', 0))
     ->styled()
+    ->show("isTeenEnabled")
     ->render();
 
-// User Authentication
+// User Authentication / Account Creation
 
 Heading::make()
-    ->heading('User Authentication')
+    ->heading('User Authentication / Account Creation')
     ->render();
 
 Checkbox::make('hw_booking_form_hide_login_cta')
@@ -82,6 +87,14 @@ Checkbox::make('hw_booking_form_hide_login_cta')
     ->description('Hide login Call To Action on the form when user is not logged in')
     ->setInputLabel('Yes')
     ->value(hw_hide_form_login_cta())
+    ->styled()
+    ->render();
+
+Checkbox::make('hw_booking_form_hide_create_account')
+    ->label('Hide Create Account Box')
+    ->description('Hide the Create Account fields from the form')
+    ->setInputLabel('Yes')
+    ->value(hw_booking_form_hide_create_account())
     ->styled()
     ->render();
 
@@ -138,11 +151,6 @@ Select::make('hw_default_quote_availability')
     ->options([
         '1' => 'Available',
         '0' => 'Not Available'
-    ])
-    ->arguments([
-        'wrapper_attributes' => [
-            'x-show' => "enableInventory"
-        ]
     ])
     ->description('This option apply as default value for room bloks availability, it is overriden by inventory when enabled')
     ->render();
@@ -212,11 +220,13 @@ Checkbox::make('hw_additional_notes_required')
 Text::make('hw_additional_notes_label')
     ->label('Additional Notes Label')
     ->value(hw_get_additional_notes_label())
-    ->arguments([
-        'wrapper_attributes' => [
-            'x-show' => "enableAdditionalNotes"
-        ]
-    ])
+    ->show('enableAdditionalNotes')
+    ->render();
+
+TextArea::make('hw_additional_notes_description')
+    ->label('Additional Notes Description')
+    ->value(hw_get_additional_notes_description())
+    ->show('enableAdditionalNotes')
     ->render();
 
 // transfer

@@ -1,0 +1,35 @@
+:root{
+
+    --warning: #856404;
+    --warning-contrast: #fff;
+
+    /* General */
+    --hw-brand-primary: #54c7dc;
+    --hw-brand-primary-contrast: #000;
+    --hw-brand-primary-hover: color-mix(in srgb, var(--hw-brand-primary) 85%, black);
+    --hw-brand-primary-hover-contrast: #000;
+
+    --hw-brand-secondary: #d90166;
+    --hw-brand-secondary-contrast: #fff;
+    --hw-brand-secondary-hover: #A6014E;
+    --hw-brand-secondary-hover-contrast: #fff;
+
+    --hw-text-color: #222;
+    --hw-warning-color: #FF9500;
+
+    --hw-primary-color: var(--hw-brand-primary);
+    --hw-primary-contrast-color: var(--hw-brand-primary-contrast);
+    --hw-primary-darker-color:  var(--hw-brand-primary-hover);
+    --hw-primary-darker-contrast-color: var(--hw-brand-primary-hover-contrast);
+
+    --hw-secondary-color: var(--hw-brand-secondary);
+    --hw-secondary-contrast: var(--hw-brand-secondary-contrast);
+    --hw-secondary-hover:  var(--hw-brand-secondary-hover);
+    --hw-secondary-hover-contrast: var(--hw-brand-secondary-hover-contrast);
+    
+    --hw-accent-color: var(--hw-secondary-color);
+    --hw-accent-color-contrast: var(--hw-secondary-contrast);
+    --hw-accent-hover: var(--hw-secondary-hover);
+    --hw-accent-hover-contrast: var(--hw-secondary-hover-contrast);
+
+}

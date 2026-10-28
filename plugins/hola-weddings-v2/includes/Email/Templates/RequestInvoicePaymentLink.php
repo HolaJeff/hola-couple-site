@@ -12,7 +12,7 @@ class RequestInvoicePaymentLink extends AbstractTemplate {
     /**
      * constructor
      *
-     * @param Transaction $transaction
+     * @param Invoice $invoice
      */
     public function __construct(Invoice $invoice) {
 

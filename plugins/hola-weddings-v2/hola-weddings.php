@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name: Hola Weddings V2
- * Plugin URI:  https://mcweb.mx
+ * Plugin URI:  
  * Description: Hola Weddings V2 Plugin for wedding couple sites
  * Author:      Marco Cariolato
- * Author URI:  https://mcweb.mx
- * Version:     2.3.4.1
- * Text Domain: hola-wedding
- * Domain Path: languages
+ * Author URI:  https://marcocariolato.dev/
+ * Version:     2.5.2
+ * Text Domain: hola-weddings
+ * Domain Path: /languages
  *
  * You should have received a copy of the GNU General Public License
  * along with WPForms. If not, see <http://www.gnu.org/licenses/>.
@@ -60,6 +60,7 @@ require_once( HW_INCLUDES_PATH . '/functions.php' );
 //require_once( HW_INCLUDES_PATH . '/hw-redux-framework.php' );
 require_once( HW_INCLUDES_PATH . '/hw-settings-functions.php' );
 require_once( HW_INCLUDES_PATH . '/hw-user-functions.php' );
+require_once( HW_INCLUDES_PATH . '/hw-user-billing-functions.php' );
 require_once( HW_INCLUDES_PATH . '/hw-template-functions.php' );
 require_once( HW_INCLUDES_PATH . '/hw-acf-fields.php' );
 require_once( HW_INCLUDES_PATH . '/ACF/init.php' );
@@ -79,16 +80,20 @@ require_once( HW_INCLUDES_PATH . '/hw-transactions-functions.php' );
 require_once( HW_INCLUDES_PATH . '/hw-shortcodes-functions.php' );
 require_once( HW_INCLUDES_PATH . '/hw-pos-functions.php' );
 require_once( HW_INCLUDES_PATH . '/hw-email-functions.php' );
-require_once( HW_INCLUDES_PATH . '/hw-email-hooks.php' );
+require_once( HW_INCLUDES_PATH . '/hw-auth-functions.php' );
+require_once( HW_INCLUDES_PATH . '/hw-verification-functions.php' );
 require_once( HW_INCLUDES_PATH . '/API/functions.php' );
 
 // hooks
+require_once( HW_INCLUDES_PATH . '/hw-rest-hooks.php' );
 require_once( HW_INCLUDES_PATH . '/hw-acf-hooks.php' );
 require_once( HW_INCLUDES_PATH . '/hw-invoices-hooks.php' );
 require_once( HW_INCLUDES_PATH . '/hw-pos-hooks.php' );
 require_once( HW_INCLUDES_PATH . '/hw-template-hooks.php' );
 require_once( HW_INCLUDES_PATH . '/hw-network-hooks.php' );
 require_once( HW_INCLUDES_PATH . '/hw-network-functions.php' );
+require_once( HW_INCLUDES_PATH . '/hw-email-hooks.php' );
+require_once( HW_INCLUDES_PATH . '/hw-user-hooks.php' );
 
 /**
  * Init updater

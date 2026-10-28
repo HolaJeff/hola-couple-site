@@ -3,7 +3,12 @@ $paid_amount = $quote->getPaidAmount();
 $quote_total = hw_get_quote_total();
 ?>
 <div class="panel px-3">
-    <div class="title mb-3"><?= __('Summary', 'hola-weddings') ?></div>     
+    <div class="title mb-3">
+        <span class="icon mr-2">
+            <i class="fas fa-shopping-basket"></i>
+        </span>
+        <?= __('Summary', 'hola-weddings') ?>
+    </div>     
     <div class="body">
         <table id="payment-table" class="table" style="width: 100%">
             <tbody>

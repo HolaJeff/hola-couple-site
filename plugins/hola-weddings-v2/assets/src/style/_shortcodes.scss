@@ -1,0 +1,301 @@
+// ── [hw-search-bar] shortcode ─────────────────────────────────────────────────
+// Scoped port of the booking-form app SearchBox (dates + guests + button).
+// All rules live under .hw-search-bar so nothing leaks into the host page.
+
+[x-cloak] { display: none !important; }
+
+.hw-search-bar {
+    position: relative;
+    padding: 20px 0;
+
+    .sb-anchor {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        pointer-events: none;
+        border: none;
+        left: 0;
+        top: auto;
+        bottom: 0;
+    }
+
+    .sb-bar {
+        display: flex;
+        align-items: stretch;
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #dde0e4;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    // Fields
+    .sb-field {
+        flex: 1.5;
+        padding: 12px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 0;
+        cursor: default;
+        transition: background 0.15s;
+
+        &:hover { background: #f7f8fa; }
+
+        &:first-child { border-radius: 14px 0 0 14px; }
+    }
+
+    .sb-field--dates {
+        position: relative;
+        flex: 2;
+        border-left: 1px solid #e4e6ea;
+        padding-bottom: 8px;
+        cursor: pointer;
+
+        &:focus {
+            outline: none;
+            background: #f0f8ff;
+        }
+
+        .sb-label { line-height: 12px; }
+
+        .sb-value--empty { color: #666 !important; }
+    }
+
+    .sb-date-range {
+        display: flex;
+        align-items: end;
+        gap: 8px;
+        min-width: 0;
+
+        &__part {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        &__sep {
+            color: #333;
+            font-size: 12px;
+            flex-shrink: 0;
+            align-self: end;
+        }
+
+        &__disclaimer {
+            display: block;
+            font-size: 12px;
+            line-height: 12px;
+            color: #666;
+            transition: color 0.15s;
+
+            i { font-size: 10px; }
+
+            &--error {
+                color: #dc3545;
+                font-weight: 600;
+            }
+        }
+    }
+
+    .sb-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: #999;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+        display: block;
+        white-space: nowrap;
+
+        i { margin-right: 5px; }
+    }
+
+    .sb-value {
+        font-size: 14px;
+        color: #1a1a2e;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block;
+    }
+
+    .sb-value--empty { color: #bbb; }
+
+    // Guests dropdown
+    .sb-field--guests {
+        border-left: 1px solid #e4e6ea;
+        cursor: pointer;
+        position: relative;
+    }
+
+    .sb-guests-trigger { outline: none; }
+
+    .sb-guests-dropdown {
+        position: absolute;
+        top: calc(100% + 10px);
+        left: 0;
+        background: #fff;
+        border: 1px solid #dde0e4;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        padding: 8px 16px 12px;
+        z-index: 1050;
+        min-width: 250px;
+    }
+
+    .sb-guest-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #f2f2f2;
+
+        &:last-child { border-bottom: none; }
+    }
+
+    .sb-guest-label {
+        font-weight: 600;
+        font-size: 14px;
+        color: #1a1a2e;
+    }
+
+    .sb-guest-desc {
+        font-size: 12px;
+        color: #999;
+        margin-top: 1px;
+    }
+
+    .sb-guest-counter {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .sb-counter-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 1.5px solid #ccc;
+        background: #fff;
+        font-size: 20px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: #555;
+        transition: border-color 0.15s, color 0.15s;
+        padding: 0;
+
+        &:hover:not(:disabled) { border-color: #444; color: #111; }
+        &:disabled { opacity: 0.25; cursor: not-allowed; }
+    }
+
+    .sb-counter-val {
+        min-width: 20px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        color: #1a1a2e;
+    }
+
+    // Search button
+    .sb-action {
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    .sb-search-btn {
+        width: 50px;
+        height: 50px;
+        background: var(--hw-primary-color);
+        color: var(--hw-primary-contrast-color);
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s, transform 0.1s;
+        flex-shrink: 0;
+
+        &:hover {
+            background: var(--hw-primary-darker-color);
+            color: var(--hw-primary-darker-contrast-color);
+        }
+        &:active { transform: scale(0.96); }
+    }
+
+    // Invalid field highlight
+    .sb-field--invalid {
+        background: #fff5f5 !important;
+        box-shadow: inset 0 0 0 2px #dc354540;
+
+        .sb-label { color: #dc3545; }
+    }
+}
+
+// ── Layout: vertical (stacked full-width fields) ──────────────────────────────
+.hw-search-bar--vertical {
+    .sb-bar { flex-direction: column; }
+
+    .sb-field {
+        border-left: none !important;
+        border-bottom: 1px solid #e4e6ea;
+        border-radius: 0 !important;
+
+        &:first-child { border-radius: 14px 14px 0 0 !important; }
+    }
+
+    .sb-guests-dropdown {
+        left: 0;
+        right: 0;
+        min-width: 0;
+    }
+
+    .sb-action {
+        padding: 10px 12px 12px;
+        justify-content: stretch;
+    }
+
+    .sb-search-btn {
+        width: 100%;
+        height: 44px;
+    }
+}
+
+// ── Responsive: horizontal layout collapses to stacked on small screens ───────
+@media (max-width: 768px) {
+    .hw-search-bar--horizontal {
+        .sb-bar { flex-direction: column; }
+
+        .sb-field {
+            border-left: none !important;
+            border-bottom: 1px solid #e4e6ea;
+            border-radius: 0 !important;
+
+            &:first-child { border-radius: 14px 14px 0 0 !important; }
+            &:last-child  { border-bottom: none; }
+        }
+
+        .sb-action {
+            padding: 10px 12px 12px;
+            justify-content: stretch;
+        }
+
+        .sb-search-btn {
+            width: 100%;
+            height: 44px;
+        }
+
+        .sb-guests-dropdown {
+            left: 0;
+            right: 0;
+            min-width: 0;
+        }
+    }
+}

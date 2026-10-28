@@ -1,0 +1,21 @@
+// ── Bootstrap overrides ───────────────────────────────────────────────────────
+//
+// Buttons are deliberately NOT styled here.
+//
+// Shape, padding, colours and states all come from the plugin's own stylesheet
+// (assets/src/style/_bootstrap-reset.scss, shipped as `hw-main`), which is
+// enqueued on every front-end page and listed as a dependency of the booking
+// form bundle. Restating any of it here would shadow the plugin's rules at equal
+// specificity — and because this bundle loads last, the booking form would win
+// and a theme restyling the plugin's buttons would silently stop at the form.
+//
+// Only genuinely form-specific modifiers belong in this file.
+
+// Applied by components/Button.jsx whenever it renders an icon alongside a
+// label. The minimum width stops a short label from collapsing the button, and
+// pushing the two apart is this component's own layout choice rather than a
+// property of the plugin's button — a theme can still override both.
+.btn.btn--with-icon {
+    min-width: 120px;
+    justify-content: space-between;
+}

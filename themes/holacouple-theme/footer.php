@@ -26,13 +26,20 @@ $wedding = hw()->getWedding();
 								?>
 							</div>
 							<div class="column col-sm-4 text-center">
-								<div class="footer-logo">
-									<div class="name"><?= $wedding->getHerName() ?></div>
-									<?php if($display_separator && !empty($separator)): ?>
-										<div class="separator"><?= $separator ?></div>
-									<?php endif; ?>
-									<div class="name"><?= $wedding->getHisName() ?></div>
-								</div>
+								<?php if(hw_theme_footer_display_logo()): ?>
+									<div class="footer-logo">
+
+										<?php do_action('hw_theme_before_logo'); ?>
+
+										<div class="name"><?= $wedding->getHerName() ?></div>
+										<?php if($display_separator && !empty($separator)): ?>
+											<div class="separator"><?= $separator ?></div>
+										<?php endif; ?>
+										<div class="name"><?= $wedding->getHisName() ?></div>
+
+										<?php do_action('hw_theme_after_logo'); ?>
+									</div>
+								<?php endif; ?>
 							</div>
 							<div class="column col-sm-4 text-center text-md-right mt-5 mt-md-0">
 								<p class="mb-0">

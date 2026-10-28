@@ -1,0 +1,51 @@
+// ── Edge trigger stack ────────────────────────────────────────────────────────
+//
+// Container for the floating tool triggers on the right edge (see
+// EdgeTrigger.jsx). Included by both the booking form and feedback bundles, so
+// it works whichever loads; the duplicate rules are identical.
+//
+// It starts above the contact bubble (booking-form/styles/_support-bubble.scss),
+// which tops out at ~82px on desktop and, with its floating label, ~190px below
+// 992px - the same breakpoint it switches at.
+
+#hw-edge-triggers {
+    position: fixed;
+    right: 0;
+    bottom: 100px;
+    z-index: 99998;
+    display: flex;
+    flex-direction: column-reverse; // lowest `order` at the bottom
+    gap: 6px;
+    pointer-events: none; // only the slots take clicks, not the gaps
+
+    @media (max-width: 991.98px) {
+        bottom: 206px;
+    }
+}
+
+.hw-edge-slot {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    pointer-events: auto;
+}
+
+// Shared shape for every trigger: the 44px tab flush with the edge. Each tool
+// only sets its own colours.
+.hw-edge-trigger {
+    box-sizing: border-box;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 8px 0 0 8px;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: -2px 2px 12px rgba(0, 0, 0, .35);
+
+    svg { vertical-align: 0; }
+}

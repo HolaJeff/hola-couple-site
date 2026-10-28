@@ -1,0 +1,66 @@
+/* =============================================================
+   Google sign-in button
+   -------------------------------------------------------------
+   Shared by the plugin's login modal and the React booking form.
+   The class names are identical on both sides on purpose: this is
+   the single definition, and the booking form bundle only adds
+   its own `--inline` variant on top.
+   ============================================================= */
+
+/* ── Base ─────────────────────────────────────────────────────
+   Class names deliberately match the React bundle's, so the two
+   implementations share one design.
+   ============================================================= */
+
+.hw-auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 16px 0;
+    color: #aaa;
+    font-size: .78rem;
+    text-transform: lowercase;
+
+    &::before,
+    &::after {
+        content: '';
+        flex: 1;
+        height: 1px;
+        background: #e5e7eb;
+    }
+}
+
+.hw-google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Mirrors the .btn metrics below so it lines up with the submit button. */
+    gap: 10px;
+    width: 100%;
+    padding: .375rem 20px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 30px;
+    background: #fff;
+    color: #1a1a2e;
+    font-size: .9rem;
+    font-weight: 600;
+    line-height: 32px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color .15s, background-color .15s;
+
+    &:hover,
+    &:focus {
+        border-color: #b9bfc7;
+        background: #f9fafb;
+        color: #1a1a2e;
+        text-decoration: none;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--hw-primary-color, #17a2b8);
+        outline-offset: 2px;
+    }
+
+    svg { flex-shrink: 0; }
+}

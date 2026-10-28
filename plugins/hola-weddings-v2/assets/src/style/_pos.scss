@@ -5,6 +5,172 @@
         }
     }
 }
+
+/* =========================================================
+   PoS — reservation email authentication
+   ========================================================= */
+.hw-template-pos {
+
+    .hw-pos-auth {
+        --pos-accent: var(--hw-brand-primary, #2eb9ba);
+        --pos-accent-hover: var(--hw-brand-primary-hover, #22a6a6);
+        --pos-ink: #101828;
+        --pos-body: #475467;
+        --pos-muted: #98a2b3;
+        --pos-line: #e6e8ec;
+        --pos-danger: #d92d20;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 60vh;
+        padding: 40px 16px;
+        font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+        [x-cloak] { display: none !important; }
+
+        &__card {
+            width: 100%;
+            max-width: 440px;
+            padding: clamp(28px, 5vw, 44px);
+            text-align: center;
+            background: #fff;
+            border: 1px solid var(--pos-line);
+            border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(16, 24, 40, 0.06), 0 16px 40px rgba(16, 24, 40, 0.08);
+        }
+
+        &__icon {
+            width: 62px;
+            height: 62px;
+            margin: 0 auto 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(46, 185, 186, 0.12);
+            color: var(--pos-accent);
+            font-size: 24px;
+        }
+
+        &__title {
+            margin: 0 0 8px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--pos-ink);
+        }
+
+        &__subtitle {
+            margin: 0 0 26px;
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: var(--pos-body);
+        }
+
+        &__form { text-align: left; }
+
+        &__field { margin-bottom: 18px; }
+
+        &__label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--pos-body);
+        }
+
+        &__input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        &__input-icon {
+            position: absolute;
+            left: 15px;
+            color: var(--pos-muted);
+            font-size: 0.9rem;
+            pointer-events: none;
+            transition: color 0.15s ease;
+        }
+
+        &__input {
+            width: 100%;
+            height: 50px;
+            padding: 0 14px 0 42px;
+            border: 1px solid var(--pos-line);
+            border-radius: 12px;
+            background: #fff;
+            color: var(--pos-ink);
+            font-size: 0.98rem;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+            &::placeholder { color: var(--pos-muted); }
+
+            &:focus {
+                outline: none;
+                border-color: var(--pos-accent);
+                box-shadow: 0 0 0 4px rgba(46, 185, 186, 0.18);
+            }
+        }
+
+        &__input-wrap.is-invalid {
+            .hw-pos-auth__input {
+                border-color: var(--pos-danger);
+                box-shadow: 0 0 0 4px rgba(217, 45, 32, 0.15);
+            }
+            .hw-pos-auth__input-icon { color: var(--pos-danger); }
+        }
+
+        &__error {
+            margin: 8px 0 0;
+            font-size: 12px;
+            line-height: 16px;
+            color: var(--pos-danger);
+        }
+
+        &__submit {
+            width: 100%;
+            height: 50px;
+            margin-top: 4px;
+            border: 0;
+            border-radius: 12px;
+            background: var(--pos-accent);
+            color: #fff;
+            font-size: 0.98rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+
+            &:hover:not(:disabled) {
+                background: var(--pos-accent-hover);
+                box-shadow: 0 8px 20px rgba(46, 185, 186, 0.35);
+            }
+
+            &:active:not(:disabled) { transform: translateY(1px); }
+
+            &:disabled { opacity: 0.7; cursor: not-allowed; }
+        }
+
+        &__loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        &__note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            margin-top: 22px;
+            font-size: 0.82rem;
+            color: var(--pos-muted);
+
+            i { color: var(--pos-accent); }
+        }
+    }
+}
 #pos{
     label{
         font-weight: 500;

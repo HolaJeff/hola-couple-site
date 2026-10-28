@@ -13,7 +13,8 @@ class Template{
         $this->templates = [
             'endpoints/home.php' => 'Home',
             'endpoints/travel-info.php' => 'Travel Info',
-            'endpoints/book.php' => 'Book',
+            'endpoints/book.php' => 'Booking form ( Legacy )',
+            'templates/booking-form.php' => 'Booking form ( New )',
         ];
         
 		add_filter( 'theme_page_templates', array( $this, 'add_new_template' ) );

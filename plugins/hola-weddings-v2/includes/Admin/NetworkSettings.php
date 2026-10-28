@@ -96,7 +96,7 @@ class NetworkSettings{
             wp_enqueue_script('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js',['jquery'], true );
             wp_enqueue_script('js-cookie', 'https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js',null, true );
             wp_enqueue_script('hw-settings', HW_URL . 'assets/js/admin-settings.js',['jquery','hw-jquery-ui', 'bootstrap', 'js-cookie', 'blockui'], true );
-
+            wp_enqueue_script('hw-alpinejs', HW_URL . 'assets/vendor/alpinejs/alpinejs.min.js', null, true, ['strategy' => 'defer'] );
         }
     }
 

@@ -1,0 +1,100 @@
+/* =============================================================
+   Confirm your email address
+   -------------------------------------------------------------
+   A single centred card on the site's normal layout. Sized by the
+   Bootstrap grid in templates/verify-email.php (col-lg-4 — one
+   third — falling back to full width on phones), so nothing here
+   sets a width; this file only dresses the card.
+
+   Shares the auth modal's visual language on purpose: the same
+   people see both screens minutes apart.
+   ============================================================= */
+
+.hw-verify-page {
+    padding: 64px 0 80px;
+}
+
+.hw-verify-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .08);
+    padding: 40px 32px 32px;
+    text-align: center;
+
+    &__icon {
+        display: flex;
+        justify-content: center;
+        color: var(--hw-primary-color, #17a2b8);
+        line-height: 1;
+        margin-bottom: 16px;
+
+        &--ok { color: #28a745; }
+    }
+
+    &__title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 10px;
+    }
+
+    &__text {
+        font-size: .9rem;
+        color: #666;
+        margin: 0 0 8px;
+
+        strong { color: #1a1a2e; }
+    }
+
+    &__hint {
+        font-size: .82rem;
+        color: #999;
+        margin: 0 0 20px;
+    }
+
+    /* Stacked rather than side by side: the card is a third of the grid wide,
+       so two buttons on one row would wrap awkwardly at the smaller end. */
+    &__actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    &__btn {
+        width: 100%;
+    }
+
+    /* Written by Alpine after a resend. The no-JS path reloads and uses the
+       plugin's own notices instead, so this stays empty there. */
+    &__result {
+        font-size: .82rem;
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin: 16px 0 0;
+        text-align: left;
+
+        &--ok {
+            color: #0f5132;
+            background: #d1e7dd;
+            border: 1px solid #badbcc;
+        }
+
+        &--error {
+            color: #842029;
+            background: #f8d7da;
+            border: 1px solid #f5c2c7;
+        }
+    }
+
+    &__signout {
+        font-size: .82rem;
+        color: #999;
+        margin: 24px 0 0;
+
+        a {
+            color: var(--hw-primary-color, #17a2b8);
+            text-decoration: underline;
+        }
+    }
+}

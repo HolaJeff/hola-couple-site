@@ -1,6 +1,24 @@
 <?php
 use \HW\Helpers\Countries;
 
+// Pre-fill from the user's saved billing (user meta) on first load (no submitted data yet)
+if ( is_user_logged_in() && empty( $data['customer'] ) ) {
+    $billing = hw_get_user_billing_information( get_current_user_id() );
+    if ( $billing ) {
+        $data['customer'] = [
+            'first_name'   => $billing->getFirstName(),
+            'last_name'    => $billing->getLastName(),
+            'email'        => $billing->getEmail(),
+            'phone_number' => $billing->getPhone(),
+            'address'      => $billing->getAddress(),
+            'city'         => $billing->getCity(),
+            'zip'          => $billing->getPostalCode(),
+            'state'        => $billing->getState(),
+            'country'      => $billing->getCountry(),
+        ];
+    }
+}
+
 $selected_country = $data['customer']['country'] ?? '';
 $is_US = $selected_country == 'US';
 $submitted_state = $data['customer']['state'] ?? '';
@@ -123,11 +141,19 @@ $submitted_state = $data['customer']['state'] ?? '';
         <?php endif; ?>
     </div>
 </div>
-<?php if(!is_user_logged_in() && !hw_hide_form_login_cta()): ?>
+<?php if ( is_user_logged_in() ): ?>
+    <div class="form-check mt-3">
+        <input class="form-check-input" type="checkbox" name="update_customer_data" id="update-customer-data" value="1" />
+        <label class="form-check-label" for="update-customer-data">
+            <?= __( 'Save my information for future bookings.', 'hola-weddings' ) ?>
+        </label>
+    </div>
+<?php endif; ?>
+<?php if(!is_user_logged_in() && !hw_booking_form_hide_create_account()): ?>
     <hr>
     <div class="sign-up">
-        <h4><?= __('Don\'t have an account?', 'hola-weddings') ?></h4>
-        <p><?= __('Create a new account by inserting a password below.') ?></p>
+        <h4><?= __('Create an Account (Optional)', 'hola-weddings') ?></h4>
+        <p><?= __('Insert a password below to create an account and track this reservation. Leave it blank to book as a guest.', 'hola-weddings') ?></p>
         <div class="row">
             <div class="col-6 form-group">
                 <input id="password" type="password" class="form-control <?= isset($errors['password']) ? 'is-invalid' : '' ?>" placeholder="<?= __('Password', 'hola-weddings') ?>" name="password" value="<?= isset($data['customer']['password']) ? $data['customer']['password'] : '' ?>" />
@@ -146,6 +172,8 @@ $submitted_state = $data['customer']['state'] ?? '';
                 <?php //endif; ?>
             </div>
         </div>
-        <p><?= __('Already have an account? <a href="#" class="ml-2 text-primary" type="button" data-toggle="modal" data-target="#loginModal">Log In</a>', 'hola-weddings') ?></p>
+        <?php if(!hw_hide_form_login_cta()): ?>
+            <p><?= __('Already have an account? <a href="#" class="ml-2 text-primary" type="button" data-toggle="modal" data-target="#loginModal">Log In</a>', 'hola-weddings') ?></p>
+        <?php endif; ?>
     </div>
 <?php endif; ?>

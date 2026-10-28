@@ -1,5 +1,5 @@
 <button 
-    x-data="requestPaymentLinkBtnController(<?= $invoice->getID() ?>)"
+    x-data="requestPaymentLinkBtnController(<?= $invoice->getID() ?>, '<?= esc_js( wp_create_nonce( 'hw_request_invoice_link_' . $invoice->getID() ) ) ?>')"
     class="d-block btn <?= $style ?? 'btn-link' ?> ?> text-right text-underline mt-2 <?= $class ?? '' ?>" 
     type="button" 
     data-invoice-id="<?= $invoice->getID() ?>"

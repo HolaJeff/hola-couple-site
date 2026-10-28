@@ -71,3 +71,23 @@ function hw_is_home_endpoint(){
 
     return is_page_template( 'endpoints/home.php' );
 }
+
+/**
+ * turn true if page template is set to Legacy booking form
+ *
+ * @return boolean
+ */
+function hw_is_legacy_booking_form(){
+
+    return is_page_template( 'endpoints/book.php' );
+}
+
+/**
+ * return true if page template is set to React booking form
+ *
+ * @return boolean
+ */
+function hw_is_react_booking_form(){
+
+    return is_page_template( 'templates/booking-form.php' );
+}

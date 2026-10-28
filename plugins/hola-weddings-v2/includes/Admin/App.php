@@ -38,7 +38,10 @@ class App{
         add_action( 'manage_blogs_custom_column', [ $this, 'add_columns' ], 10, 2 );
 			
 		$this->settings = Settings::getInstance();
+		FeedbackSettings::getInstance();
+		GoogleAuthSettings::getInstance();
         NetworkSettings::getInstance();
+        UserVerification::getInstance();
         //$this->menus = Menus::getInstance();
 
         // Add metaboxes
@@ -147,10 +150,12 @@ class App{
     public function enqueue_scripts(){
 
         wp_enqueue_style( 'hw-admin', HW_ASSETS_URL . 'style/admin.css' );
+        wp_enqueue_style('hw-fontawesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
 
         wp_register_script( 'image-upload', HW_URL . 'assets/js/imageupload.js', [ 'jquery' ] );
         wp_enqueue_script( 'hw-utils', HW_URL . 'assets/js/utils.js', [ 'jquery' ] );
         wp_enqueue_script( 'hw-admin', HW_URL . 'assets/js/admin.js', [ 'jquery' ] );
+        wp_enqueue_script('hw-alpinejs', HW_URL . 'assets/vendor/alpinejs/alpinejs.min.js', null, true, ['strategy' => 'defer'] );
 
         Bootstrap::import();
 
@@ -160,10 +165,15 @@ class App{
         wp_localize_script('hw-admin', 'hw', $hw_data );
     }
     
+    /**
+     * Add admin menu
+     *
+     * @return void
+     */
     public function custom_menu() {
         
-        $settings_hook = \add_menu_page('Hola Weddings', 'Hola Weddings', 'manage_options', 'holaweddings', [ $this->settings, 'submenu_page_callback' ] , 'dashicons-buddicons-community', 20);
-		//\add_submenu_page( 'holaweddings', 'Settings', 'Wedding Settings', 'manage_options', 'wedding-settings', [ $this->settings, 'submenu_page_callback' ] );
+        $settings_hook = add_menu_page('Wedding Settings', 'Wedding Settings', 'manage_options', 'holaweddings', [ $this->settings, 'submenu_page_callback' ] , HW_ASSETS_URL . 'img/hw-icon.png' , 2);
+		add_submenu_page( 'holaweddings', 'Wedding Settings', 'Settings', 'manage_options', 'holaweddings', [ $this->settings, 'submenu_page_callback' ], 0);
 		
         $hook = add_submenu_page( 'holaweddings', 'Dynamic Prices', 'Dynamic Prices', 'manage_options', 'edit.php?post_type=dynamic_prices');
         $logs_hook = add_submenu_page( 'holaweddings', 'Logs', 'Logs', 'manage_options', 'hw-site-logs', [ $this, 'display_logs' ]);

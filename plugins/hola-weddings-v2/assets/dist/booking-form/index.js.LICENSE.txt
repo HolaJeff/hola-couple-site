@@ -1,0 +1,11 @@
+/*!
+ * Signature Pad v4.2.0 | https://github.com/szimek/signature_pad
+ * (c) 2024 Szymon Nowak | Released under the MIT license
+ */
+
+/**
+ * @license lucide-react v1.31.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */

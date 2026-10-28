@@ -1,0 +1,247 @@
+@use 'variables' as *;
+
+// ── Step Card ─────────────────────────────────────────────────────────────────
+
+.step-card {
+    background: #fff;
+    border: 1.5px solid #e0e3e8;
+    border-top: 4px solid var(--hw-primary-color, #17a2b8);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
+}
+
+.step-card__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: -20px -20px 20px;
+    padding: 13px 20px;
+    background: #fff;
+    border-bottom: 1px solid #e8eaed;
+    border-radius: 7px 7px 0 0;
+}
+
+.step-card__icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--hw-primary-color, #17a2b8);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: fs(0.875);
+    flex-shrink: 0;
+}
+
+.step-card__title {
+    font-weight: 700;
+    font-size: fs(0.875);
+    color: #1a1a2e;
+}
+
+.step-card__section-title {
+    font-size: fs(0.85);
+    font-weight: 700;
+    color: #444;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e8eaed;
+}
+
+.step-card__subtitle {
+    font-size: fs(0.78);
+    color: #aaa;
+    margin-top: 2px;
+}
+
+.step-card__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 20px -20px -20px;
+    padding: 14px 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #e8eaed;
+    border-radius: 0 0 8px 8px;
+}
+
+.step-card__disclaimer {
+    font-size: fs(0.84);
+    color: #666;
+    line-height: 1.65;
+    margin-bottom: 16px;
+}
+
+.step-card__tc-link {
+    font-size: inherit !important;
+    color: var(--hw-brand-secondary) !important;
+    line-height: inherit;
+
+    &:hover { color: #a8004e !important; }
+}
+
+// ── Signature area ────────────────────────────────────────────────────────────
+
+.step-card__signature {
+    margin: 0 -20px -20px;
+    padding: 18px 20px;
+    background: linear-gradient(135deg, #fdf0f6 0%, #fff5f9 100%);
+    border-top: 1px solid #f5d0e5;
+}
+
+.step-card__signature--error { border-top-color: #dc3545; }
+
+.step-card__sig-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: fs(0.92);
+    color: var(--hw-brand-secondary);
+    margin-bottom: 6px;
+}
+
+.step-card__sig-hint {
+    font-size: fs(0.82);
+    color: #888;
+    margin-bottom: 12px;
+}
+
+.step-card__sig-preview {
+    display: block;
+    max-height: 70px;
+    background: #fff;
+    border: 1px solid #f0c4da;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.step-card__sig-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--hw-brand-secondary);
+    color: #fff;
+    border: none;
+    font-size: fs(0.875);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover { background: #b8005a; color: #fff; }
+}
+
+.step-card__sig-error {
+    margin-top: 8px;
+    font-size: fs(0.8);
+    color: #dc3545;
+}
+
+// ── Variant: brand-secondary ──────────────────────────────────────────────────
+
+.step-card--brand-secondary {
+    border-color: #f0c4da;
+    border-top-color: var(--hw-brand-secondary);
+    box-shadow: 0 4px 20px rgba(217, 1, 102, 0.08);
+    overflow: hidden;
+
+    .step-card__header {
+        background: linear-gradient(135deg, #fdf0f6 0%, #fff5f9 100%);
+        border-bottom-color: #f5d0e5;
+    }
+
+    .step-card__icon { background: var(--hw-brand-secondary); }
+}
+
+// ── Variant: alert ────────────────────────────────────────────────────────────
+
+.step-card--alert {
+    border-color: #fde8b4;
+    border-top-color: #f59e0b;
+    box-shadow: 0 4px 20px rgba(245, 158, 11, .08);
+    overflow: hidden;
+
+    .step-card__header {
+        background: linear-gradient(135deg, #fffbeb 0%, #fefce8 100%);
+        border-bottom-color: #fde68a;
+    }
+
+    .step-card__icon { background: #f59e0b; }
+}
+
+// ── Variant: danger ───────────────────────────────────────────────────────────
+
+.step-card--danger {
+    border-color: #f5c6cb;
+    border-top-color: #dc3545;
+    box-shadow: 0 4px 20px rgba(220, 53, 69, .08);
+    overflow: hidden;
+
+    .step-card__header {
+        background: linear-gradient(135deg, #fff5f5 0%, #fff8f8 100%);
+        border-bottom-color: #f5c6cb;
+    }
+
+    .step-card__icon { background: #dc3545; }
+}
+
+// ── Variant: success ──────────────────────────────────────────────────────────
+
+.step-card--success {
+    border-color: #c3e6cb;
+    border-top-color: #28a745;
+    box-shadow: 0 4px 20px rgba(40, 167, 69, .08);
+    overflow: hidden;
+
+    .step-card__header {
+        background: linear-gradient(135deg, #f4fff6 0%, #f6fff8 100%);
+        border-bottom-color: #c3e6cb;
+    }
+
+    .step-card__icon { background: #28a745; }
+}
+
+// ── Variant: cancellation ─────────────────────────────────────────────────────
+
+.step-card--cancellation {
+    border-color: #fdd8b5;
+    border-top-color: #e05000;
+    box-shadow: 0 4px 20px rgba(224, 80, 0, .08);
+    overflow: hidden;
+
+    .step-card__header {
+        background: linear-gradient(135deg, #fff1ea, #fffbf8);
+        border-bottom-color: #b94200;
+    }
+
+    .step-card__icon { background: #e05000; }
+}
+
+// ── Variant: policy-payment ───────────────────────────────────────────────────
+
+.step-card--policy-payment {
+    border-color: #b8cff0;
+    border-top-color: #1565c0;
+    box-shadow: 0 4px 20px rgba(21, 101, 192, .08);
+    overflow: hidden;
+
+    .step-card__header {
+        background: linear-gradient(135deg, #e3effd, #f4f8fd);
+        border-bottom-color: #0f52a0;
+    }
+
+    .step-card__icon { background-color: #1565c0; }
+}
+
+// ── Policy body ───────────────────────────────────────────────────────────────
+
+.policy-block__body {
+    font-size: fs(0.82);
+    line-height: 1.6;
+    color: #555;
+    max-height: 200px;
+    overflow-y: auto;
+}

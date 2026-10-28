@@ -4,8 +4,9 @@ Noty.overrideDefaults({
 });
 
 document.addEventListener('alpine:init', () => {
-    Alpine.data('requestPaymentLinkBtnController', ( invoiceID ) => ({
+    Alpine.data('requestPaymentLinkBtnController', ( invoiceID, nonce ) => ({
         invoiceID,
+        nonce,
         loading: false,
 
         request() {
@@ -26,6 +27,9 @@ document.addEventListener('alpine:init', () => {
                 data: {
                     action: 'hw_send_email_request_invoice_payment_link',
                     invoice_id: this.invoiceID,
+                    // Minted per invoice by the button template; the endpoint
+                    // also checks the invoice actually belongs to this user.
+                    nonce: this.nonce,
                 },
             }).done((response) => {
 
@@ -60,24 +64,32 @@ document.addEventListener('alpine:init', () => {
             });
         },
     }));
+
+    // Sidebar state — shared across the topbar, sidebar and backdrop.
+    Alpine.store('accountSidebar', {
+        collapsed: false, // desktop icon-rail
+        open: false,      // mobile drawer
+
+        init() {
+            this.collapsed = localStorage.getItem('hw-account-sidebar-collapsed') === '1';
+
+            // Never leave the drawer open when growing to desktop.
+            window.matchMedia('(min-width: 992px)').addEventListener('change', (e) => {
+                if (e.matches) this.open = false;
+            });
+        },
+
+        toggle() {
+            if (window.matchMedia('(min-width: 992px)').matches) {
+                this.collapsed = !this.collapsed;
+                localStorage.setItem('hw-account-sidebar-collapsed', this.collapsed ? '1' : '0');
+            } else {
+                this.open = !this.open;
+            }
+        },
+
+        close() {
+            this.open = false;
+        },
+    });
 });
-
-(function ($) {
-
-    'use strict';
-
-    
-    function init() {
-
-        $('#leftside-menu-btn').on('click', function(){
-            $('body').toggleClass('leftside-open');
-        });
-
-        $('#leftside-close-btn').on('click', function(){
-            $('body').removeClass('leftside-open');
-        });
-    }
-
-    init();
-
-})(jQuery)

@@ -17,6 +17,8 @@ document.addEventListener('alpine:init', () => {
         hasCeremony: false,
         hasCocktail: false,
         hasReception: false,
+        isTeenEnabled: false,
+        enableGoogleLogin: false,
 
         init() {
             this.invoicePaymentBtnAction = this.$el.querySelector('[name="hw_invoice_payment_btn_action"]')?.value;
@@ -27,6 +29,8 @@ document.addEventListener('alpine:init', () => {
             this.enableInventory = !!this.$el.querySelector('[name="hw_enable_inventory"]')?.checked;
             this.enableAdditionalNotes = !!this.$el.querySelector('[name="hw_enable_additional_notes"]')?.checked;
             this.isTransferEnabled = !!this.$el.querySelector('[name="hw_has_transfer"]')?.checked;
+            this.isTeenEnabled = !!this.$el.querySelector('[name="hw_enable_teen"]')?.checked;
+            this.enableGoogleLogin = !!this.$el.querySelector('[name="hw_enable_google_login"]')?.checked;
             this.enableBasicPrice = !!this.$el.querySelector('[name="hw_enable_basic_price"]')?.checked;
             this.enablePaymentForm = !!this.$el.querySelector('[name="hw_enable_payment"]')?.checked;
             this.hasCeremony = !!this.$el.querySelector('[name="hw_events[ceremony][active]"]')?.checked;

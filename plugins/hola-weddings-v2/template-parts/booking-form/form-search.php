@@ -72,7 +72,7 @@ $checkout = !empty($idata['co']) ? (new DateTime($idata['co'])) : null;
                 </div>
             <?php endif; ?>
             <div class="form-group d-flex flex-column justify-content-end ml-auto">
-                <button type="submit" class="btn btn-info"><?= __('Submit', 'hola-weddings') ?></button>
+                <button type="submit" class="btn btn-primary"><?= __('Submit', 'hola-weddings') ?></button>
             </div>
         <?php if(!$hotel->adults_only): ?>
             </div>

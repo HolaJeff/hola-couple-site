@@ -1,0 +1,251 @@
+/* =============================================================
+   Auth modal — sign in, sign up, reset password
+   -------------------------------------------------------------
+   A port of the React booking form's login modal (.lm in
+   assets/booking-form/styles/_login.scss) onto the Bootstrap 4
+   modal this side of the plugin uses, so a visitor sees the same
+   card whether they sign in from the booking form or anywhere
+   else on the site.
+
+   The `hw-lm` prefix and the `#loginModal` id predate the sign-up
+   pane and are kept deliberately: the id is referenced by the
+   theme and is baked into the translated strings in languages/*.po.
+
+   The Bootstrap shell stays because the modal is opened through
+   `.modal('show')` and `data-toggle="modal"`; only its skin is
+   replaced. Anything Bootstrap paints on .modal-content is
+   therefore neutralised here rather than left to fight the card.
+   ============================================================= */
+
+.hw-lm-modal {
+
+    .modal-dialog {
+        max-width: 400px;
+        width: 100%;
+    }
+
+    /* Bootstrap's own backdrop, matched to the React modal's. */
+    & + .modal-backdrop,
+    &.show + .modal-backdrop { opacity: 1; background: rgba(0, 0, 0, .5); }
+}
+
+.hw-lm {
+    position: relative;
+    background: #fff;
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, .22);
+    padding: 36px 32px 28px;
+    text-align: center;
+
+    &__body {
+        padding: 0;
+    }
+
+    /* ── Pane transition ──────────────────────────────────────
+       Alpine swaps the panes, not Bootstrap's .collapse, which
+       animated height and read as a slide.
+
+       Only the entering pane animates: the outgoing one is hidden
+       at once (Alpine has no leave transition declared), so the
+       two never overlap and the card cannot double in height
+       mid-swap. A short fade with a barely-there scale reads as
+       one form replacing another rather than anything sliding.
+       ========================================================= */
+    &__pane--in {
+        transition: opacity .18s ease, transform .18s ease;
+    }
+
+    &__pane--from {
+        opacity: 0;
+        transform: scale(.985);
+    }
+
+    &__pane--to {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    &__close {
+        position: absolute;
+        top: 12px;
+        right: 14px;
+        z-index: 2;
+        background: none;
+        border: none;
+        color: #aaa;
+        cursor: pointer;
+        line-height: 1;
+        padding: 4px;
+        transition: color .15s;
+
+        &:hover { color: #555; }
+
+        svg { display: block; }
+    }
+
+    &__icon-wrap {
+        display: flex;
+        justify-content: center;
+        color: var(--hw-primary-color, #17a2b8);
+        line-height: 1;
+        margin-bottom: 14px;
+    }
+
+    &__title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 6px;
+    }
+
+    &__subtitle {
+        font-size: .85rem;
+        color: #888;
+        margin: 0 0 20px;
+    }
+
+    &__form {
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    &__field {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    &__label {
+        font-size: .8rem;
+        font-weight: 600;
+        color: #555;
+        margin: 0;
+    }
+
+    &__input {
+        width: 100%;
+        padding: 9px 12px;
+        border: 1.5px solid #d1d5db;
+        border-radius: 7px;
+        font-size: .9rem;
+        color: #1a1a2e;
+        background: #fff;
+        transition: border-color .15s;
+        outline: none;
+        box-sizing: border-box;
+
+        &:focus { border-color: var(--hw-primary-color, #17a2b8); }
+
+        /* Set by the AJAX handlers on a failed field. */
+        &.is-invalid,
+        &.is-invalid:focus { border-color: #dc3545; }
+    }
+
+    /* Bootstrap still owns whether this is shown (`.is-invalid ~ .invalid-feedback`);
+       only the look is restated, so the JS keeps working untouched. */
+    &__field-error {
+        font-size: .78rem;
+        color: #dc3545;
+        margin-top: 3px;
+    }
+
+    &__submit {
+        width: 100%;
+        margin-top: 2px;
+    }
+
+    &__link {
+        background: none;
+        border: none;
+        color: var(--hw-primary-color, #17a2b8);
+        font-size: .82rem;
+        cursor: pointer;
+        padding: 0;
+        text-decoration: underline;
+        transition: opacity .15s;
+
+        &:hover,
+        &:focus { opacity: .75; color: var(--hw-primary-color, #17a2b8); text-decoration: underline; }
+    }
+
+    /* Sits under the password input, trailing edge — the field is a column flex
+       box, so it aligns itself rather than stretching across. */
+    &__link--inline {
+        align-self: flex-end;
+        margin-top: 2px;
+        font-size: .78rem;
+    }
+
+    &__back {
+        display: inline-block;
+        margin-top: 4px;
+    }
+
+    /* Written by Alpine after a resend from the verification pane. */
+    &__result {
+        font-size: .82rem;
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin: 14px 0 0;
+        text-align: left;
+
+        &--ok {
+            color: #0f5132;
+            background: #d1e7dd;
+            border: 1px solid #badbcc;
+        }
+
+        &--error {
+            color: #842029;
+            background: #f8d7da;
+            border: 1px solid #f5c2c7;
+        }
+    }
+
+    /* "Don't have an account? Sign up" — the line that swaps panes. */
+    &__hint {
+        font-size: .82rem;
+        color: #888;
+        margin: 0;
+
+        .hw-lm__link { margin-left: 2px; }
+    }
+
+    /* Google sign-in failures land here on page load. */
+    &__alert {
+        font-size: .82rem;
+        color: #842029;
+        background: #f8d7da;
+        border: 1px solid #f5c2c7;
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin: 0 0 16px;
+        text-align: left;
+    }
+
+    /* Prepended by the AJAX callbacks — matched to __alert so a live error and a
+       page-load error look the same. */
+    .errorMessage,
+    .alert-danger {
+        font-size: .82rem;
+        color: #842029;
+        background: #f8d7da;
+        border: 1px solid #f5c2c7;
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin: 0 0 16px;
+        text-align: left;
+    }
+
+    .notice {
+        font-size: .82rem;
+        border-radius: 8px;
+        padding: 10px 12px;
+        margin: 0 0 16px;
+        text-align: left;
+    }
+}

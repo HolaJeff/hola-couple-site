@@ -48,11 +48,14 @@ if($is_greetings): ?>
         <?php if(!is_user_logged_in() && !hw_hide_form_login_cta()): ?>
             <div class="login-alert alert alert-primary d-flex flex-row align-items-center mt-3 p-3">
                 <div class="mb-0 fw-bold"><?= __('Do you already have an account?', 'hola-weddings') ?></div>
-                <button class="btn btn-info ml-auto" type="button" data-toggle="modal" data-target="#loginModal"><?= __('Log In', 'hola-weddings') ?></button>
+                <button class="btn btn-primary ml-auto" type="button" data-toggle="modal" data-target="#loginModal">
+                    <i class="mr-1" style="height: 20px; width: 20px;" data-feather="log-in"></i>
+                    <?= __('Log In', 'hola-weddings') ?>
+                </button>
             </div>
         <?php endif; ?>
         
-        <?= hw_get_template('template-parts/booking-form/form-search', ['idata' => $idata, 'hotel' => $hotel]) ?>
+        <?php hw_get_template('template-parts/booking-form/form-search', ['idata' => $idata, 'hotel' => $hotel]) ?>
         
         <?php if($proceed):
             
@@ -108,7 +111,7 @@ if($is_greetings): ?>
                     
                     <!-- Submit button -->
                     <div class="text-right mt-3">
-                        <button id="submit-btn" type="submit" class="btn btn-info">
+                        <button id="submit-btn" type="submit" class="btn btn-primary">
                             <?= __('Submit', 'hola-weddings') ?>
                         </button>
                     </div>

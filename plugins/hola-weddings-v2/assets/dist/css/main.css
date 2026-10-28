@@ -1,3 +1,4 @@
+@charset "UTF-8";
 .air-datepicker-cell.-year-.-other-decade-, .air-datepicker-cell.-day-.-other-month- {
   color: var(--adp-color-other-month);
 }
@@ -777,9 +778,98 @@
   transition: opacity var(--adp-overlay-transition-duration) var(--adp-overlay-transition-ease), height 0s, width 0s;
 }
 
+:root {
+  --warning: #856404;
+  --warning-contrast: #fff;
+  /* General */
+  --hw-brand-primary: #54c7dc;
+  --hw-brand-primary-contrast: #000;
+  --hw-brand-primary-hover: color-mix(in srgb, var(--hw-brand-primary) 85%, black);
+  --hw-brand-primary-hover-contrast: #000;
+  --hw-brand-secondary: #d90166;
+  --hw-brand-secondary-contrast: #fff;
+  --hw-brand-secondary-hover: #A6014E;
+  --hw-brand-secondary-hover-contrast: #fff;
+  --hw-text-color: #222;
+  --hw-warning-color: #FF9500;
+  --hw-primary-color: var(--hw-brand-primary);
+  --hw-primary-contrast-color: var(--hw-brand-primary-contrast);
+  --hw-primary-darker-color: var(--hw-brand-primary-hover);
+  --hw-primary-darker-contrast-color: var(--hw-brand-primary-hover-contrast);
+  --hw-secondary-color: var(--hw-brand-secondary);
+  --hw-secondary-contrast: var(--hw-brand-secondary-contrast);
+  --hw-secondary-hover: var(--hw-brand-secondary-hover);
+  --hw-secondary-hover-contrast: var(--hw-brand-secondary-hover-contrast);
+  --hw-accent-color: var(--hw-secondary-color);
+  --hw-accent-color-contrast: var(--hw-secondary-contrast);
+  --hw-accent-hover: var(--hw-secondary-hover);
+  --hw-accent-hover-contrast: var(--hw-secondary-hover-contrast);
+}
+
 /**
 * Bootstrap
 */
+/**
+ * Buttons follow the React booking form (assets/booking-form/styles/
+ * _bootstrap-overrides.scss): pill shape, centred content, 10px gap so an icon
+ * sits off the label without a margin utility.
+ *
+ * inline-flex rather than the booking form's flex: that bundle is scoped to one
+ * container where every button is a flex child or full width, whereas here a
+ * .btn is often an anchor sitting in a line of text. inline-flex lays the inside
+ * out identically while leaving the button in the flow.
+ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 30px;
+  padding-left: 20px;
+  padding-right: 20px;
+  line-height: 32px;
+}
+
+/* Utilities that assume a block-level button still need to win. */
+.btn.btn-block,
+.btn.w-100 {
+  display: flex;
+  width: 100%;
+}
+
+.btn.disabled,
+.btn:disabled {
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: var(--hw-primary-color);
+  border-color: var(--hw-primary-color);
+  color: var(--hw-primary-contrast-color);
+}
+.btn-primary.disabled, .btn-primary:disabled {
+  background-color: var(--hw-primary-color);
+  border-color: var(--hw-primary-color);
+  color: var(--hw-primary-contrast-color);
+}
+.btn-primary:hover, .btn-primary:active, .btn-primary:focus, .btn-primary:not(.disabled, :disabled):hover, .btn-primary:not(.disabled, :disabled):focus .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+  background-color: var(--hw-primary-darker-color);
+  border-color: var(--hw-primary-darker-color);
+  color: var(--hw-primary-darker-contrast-color);
+}
+
+.btn-link {
+  color: var(--hw-accent-color);
+}
+.btn-link:hover, .btn-link:active, .btn-link:focus {
+  color: var(--hw-accent-hover);
+}
+
+.btn-outline-primary {
+  color: var(--hw-primary-color);
+  border-color: var(--hw-primary-color);
+}
+
 .btn-group > .btn-group:not(:last-child) > .btn, .btn-group > .btn:not(:last-child):not(.dropdown-toggle) {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
@@ -801,10 +891,12 @@
 .btn-check:checked + .btn-outline-primary,
 .btn-outline-primary.active,
 .btn-outline-primary.dropdown-toggle.show,
-.btn-outline-primary:active {
-  color: #fff;
-  background-color: #0d6efd;
-  border-color: #0d6efd;
+.btn-outline-primary:active,
+.btn-outline-primary:hover,
+.btn-outline-primary:not(:disabled):not(.disabled):active {
+  color: var(--hw-primary-contrast-color);
+  background-color: var(--hw-primary-color);
+  border-color: var(--hw-primary-color);
 }
 
 .btn-group-vertical > .btn, .btn-group > .btn {
@@ -832,26 +924,6 @@
   background-color: #fff;
 }
 
-@font-face {
-  font-family: "Dancing";
-  src: url("../../fonts/dancing/DancingScript-VariableFont_wght.ttf") format("TrueType");
-}
-@font-face {
-  font-family: "Pinyon";
-  src: url("../../fonts/pinyon/PinyonScript-Regular.ttf") format("TrueType");
-}
-:root {
-  --hw-primary-color: #284A70;
-}
-
-.dancing-font {
-  font-family: "Dancing";
-}
-
-.pinyon-font {
-  font-family: "Pinyon";
-}
-
 .alert svg {
   height: 24px;
   width: 24px;
@@ -863,12 +935,37 @@
   fill: #856404;
 }
 .alert.alert-warning .btn {
-  background-color: #fff;
-  color: #856404;
-  border-color: #856404;
+  background-color: var(--warning-contrast);
+  color: var(--warning);
+  border-color: var(--warning);
+}
+.alert.alert-warning .btn:hover, .alert.alert-warning .btn:active, .alert.alert-warning .btn:focus {
+  background-color: var(--warning);
+  color: var(--warning-contrast);
+  border-color: var(--warning-contrast);
 }
 .alert.alert-danger {
   background-color: rgba(248, 215, 218, 0.168627451);
+}
+
+@font-face {
+  font-family: "Dancing";
+  src: url("../../fonts/dancing/DancingScript-VariableFont_wght.ttf") format("TrueType");
+}
+@font-face {
+  font-family: "Pinyon";
+  src: url("../../fonts/pinyon/PinyonScript-Regular.ttf") format("TrueType");
+}
+body {
+  max-width: 100%;
+}
+
+.dancing-font {
+  font-family: "Dancing";
+}
+
+.pinyon-font {
+  font-family: "Pinyon";
 }
 
 #signature-wrapper .font label {
@@ -919,7 +1016,6 @@
 .section {
   padding: 50px 0;
   position: relative;
-  overflow-x: hidden;
 }
 .section .bg-overlay {
   position: absolute;
@@ -1001,7 +1097,29 @@
   transform: translateY(-50%);
   left: 0;
   color: #fff !important;
-  text-align: center;
+}
+#hero .hero-columns .hero-col--search {
+  margin-top: 30px;
+}
+@media (min-width: 992px) {
+  #hero .hero-columns .hero-col--search {
+    margin-top: 0;
+  }
+}
+#hero .hero-columns .hero-col--search .hw-search-bar {
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+  color: initial;
+  text-align: left;
+}
+#hero .hero-content-search .hw-search-bar {
+  color: initial;
+  text-align: left;
+}
+#hero .hero-content-search.hero-content-search--vertical {
+  width: 100%;
+  max-width: 420px;
 }
 
 #story img {
@@ -1579,6 +1697,429 @@
   font-size: 0.9em;
 }
 
+/* ── Spinner ──────────────────────────────────────────────────
+   Owned here rather than in the booking form bundle, so the two
+   share one definition — same arrangement as .btn and
+   .hw-google-btn. Applied to any icon marking a loading state.
+   ============================================================= */
+@keyframes hw-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.hw-spin {
+  animation: hw-spin 1s linear infinite;
+  transform-origin: center;
+}
+
+/* =============================================================
+   Auth modal — sign in, sign up, reset password
+   -------------------------------------------------------------
+   A port of the React booking form's login modal (.lm in
+   assets/booking-form/styles/_login.scss) onto the Bootstrap 4
+   modal this side of the plugin uses, so a visitor sees the same
+   card whether they sign in from the booking form or anywhere
+   else on the site.
+
+   The `hw-lm` prefix and the `#loginModal` id predate the sign-up
+   pane and are kept deliberately: the id is referenced by the
+   theme and is baked into the translated strings in languages/*.po.
+
+   The Bootstrap shell stays because the modal is opened through
+   `.modal('show')` and `data-toggle="modal"`; only its skin is
+   replaced. Anything Bootstrap paints on .modal-content is
+   therefore neutralised here rather than left to fight the card.
+   ============================================================= */
+.hw-lm-modal .modal-dialog {
+  max-width: 400px;
+  width: 100%;
+}
+.hw-lm-modal {
+  /* Bootstrap's own backdrop, matched to the React modal's. */
+}
+.hw-lm-modal + .modal-backdrop, .hw-lm-modal.show + .modal-backdrop {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.hw-lm {
+  position: relative;
+  background: #fff;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.22);
+  padding: 36px 32px 28px;
+  text-align: center;
+}
+.hw-lm__body {
+  padding: 0;
+}
+.hw-lm {
+  /* ── Pane transition ──────────────────────────────────────
+     Alpine swaps the panes, not Bootstrap's .collapse, which
+     animated height and read as a slide.
+
+     Only the entering pane animates: the outgoing one is hidden
+     at once (Alpine has no leave transition declared), so the
+     two never overlap and the card cannot double in height
+     mid-swap. A short fade with a barely-there scale reads as
+     one form replacing another rather than anything sliding.
+     ========================================================= */
+}
+.hw-lm__pane--in {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+.hw-lm__pane--from {
+  opacity: 0;
+  transform: scale(0.985);
+}
+.hw-lm__pane--to {
+  opacity: 1;
+  transform: scale(1);
+}
+.hw-lm__close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  z-index: 2;
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px;
+  transition: color 0.15s;
+}
+.hw-lm__close:hover {
+  color: #555;
+}
+.hw-lm__close svg {
+  display: block;
+}
+.hw-lm__icon-wrap {
+  display: flex;
+  justify-content: center;
+  color: var(--hw-primary-color, #17a2b8);
+  line-height: 1;
+  margin-bottom: 14px;
+}
+.hw-lm__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 6px;
+}
+.hw-lm__subtitle {
+  font-size: 0.85rem;
+  color: #888;
+  margin: 0 0 20px;
+}
+.hw-lm__form {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.hw-lm__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hw-lm__label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #555;
+  margin: 0;
+}
+.hw-lm__input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 7px;
+  font-size: 0.9rem;
+  color: #1a1a2e;
+  background: #fff;
+  transition: border-color 0.15s;
+  outline: none;
+  box-sizing: border-box;
+}
+.hw-lm__input:focus {
+  border-color: var(--hw-primary-color, #17a2b8);
+}
+.hw-lm__input {
+  /* Set by the AJAX handlers on a failed field. */
+}
+.hw-lm__input.is-invalid, .hw-lm__input.is-invalid:focus {
+  border-color: #dc3545;
+}
+.hw-lm {
+  /* Bootstrap still owns whether this is shown (`.is-invalid ~ .invalid-feedback`);
+     only the look is restated, so the JS keeps working untouched. */
+}
+.hw-lm__field-error {
+  font-size: 0.78rem;
+  color: #dc3545;
+  margin-top: 3px;
+}
+.hw-lm__submit {
+  width: 100%;
+  margin-top: 2px;
+}
+.hw-lm__link {
+  background: none;
+  border: none;
+  color: var(--hw-primary-color, #17a2b8);
+  font-size: 0.82rem;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  transition: opacity 0.15s;
+}
+.hw-lm__link:hover, .hw-lm__link:focus {
+  opacity: 0.75;
+  color: var(--hw-primary-color, #17a2b8);
+  text-decoration: underline;
+}
+.hw-lm {
+  /* Sits under the password input, trailing edge — the field is a column flex
+     box, so it aligns itself rather than stretching across. */
+}
+.hw-lm__link--inline {
+  align-self: flex-end;
+  margin-top: 2px;
+  font-size: 0.78rem;
+}
+.hw-lm__back {
+  display: inline-block;
+  margin-top: 4px;
+}
+.hw-lm {
+  /* Written by Alpine after a resend from the verification pane. */
+}
+.hw-lm__result {
+  font-size: 0.82rem;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 14px 0 0;
+  text-align: left;
+}
+.hw-lm__result--ok {
+  color: #0f5132;
+  background: #d1e7dd;
+  border: 1px solid #badbcc;
+}
+.hw-lm__result--error {
+  color: #842029;
+  background: #f8d7da;
+  border: 1px solid #f5c2c7;
+}
+.hw-lm {
+  /* "Don't have an account? Sign up" — the line that swaps panes. */
+}
+.hw-lm__hint {
+  font-size: 0.82rem;
+  color: #888;
+  margin: 0;
+}
+.hw-lm__hint .hw-lm__link {
+  margin-left: 2px;
+}
+.hw-lm {
+  /* Google sign-in failures land here on page load. */
+}
+.hw-lm__alert {
+  font-size: 0.82rem;
+  color: #842029;
+  background: #f8d7da;
+  border: 1px solid #f5c2c7;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0 0 16px;
+  text-align: left;
+}
+.hw-lm {
+  /* Prepended by the AJAX callbacks — matched to __alert so a live error and a
+     page-load error look the same. */
+}
+.hw-lm .errorMessage,
+.hw-lm .alert-danger {
+  font-size: 0.82rem;
+  color: #842029;
+  background: #f8d7da;
+  border: 1px solid #f5c2c7;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0 0 16px;
+  text-align: left;
+}
+.hw-lm .notice {
+  font-size: 0.82rem;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 0 0 16px;
+  text-align: left;
+}
+
+/* =============================================================
+   Confirm your email address
+   -------------------------------------------------------------
+   A single centred card on the site's normal layout. Sized by the
+   Bootstrap grid in templates/verify-email.php (col-lg-4 — one
+   third — falling back to full width on phones), so nothing here
+   sets a width; this file only dresses the card.
+
+   Shares the auth modal's visual language on purpose: the same
+   people see both screens minutes apart.
+   ============================================================= */
+.hw-verify-page {
+  padding: 64px 0 80px;
+}
+
+.hw-verify-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  padding: 40px 32px 32px;
+  text-align: center;
+}
+.hw-verify-card__icon {
+  display: flex;
+  justify-content: center;
+  color: var(--hw-primary-color, #17a2b8);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+.hw-verify-card__icon--ok {
+  color: #28a745;
+}
+.hw-verify-card__title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 10px;
+}
+.hw-verify-card__text {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0 0 8px;
+}
+.hw-verify-card__text strong {
+  color: #1a1a2e;
+}
+.hw-verify-card__hint {
+  font-size: 0.82rem;
+  color: #999;
+  margin: 0 0 20px;
+}
+.hw-verify-card {
+  /* Stacked rather than side by side: the card is a third of the grid wide,
+     so two buttons on one row would wrap awkwardly at the smaller end. */
+}
+.hw-verify-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.hw-verify-card__btn {
+  width: 100%;
+}
+.hw-verify-card {
+  /* Written by Alpine after a resend. The no-JS path reloads and uses the
+     plugin's own notices instead, so this stays empty there. */
+}
+.hw-verify-card__result {
+  font-size: 0.82rem;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 16px 0 0;
+  text-align: left;
+}
+.hw-verify-card__result--ok {
+  color: #0f5132;
+  background: #d1e7dd;
+  border: 1px solid #badbcc;
+}
+.hw-verify-card__result--error {
+  color: #842029;
+  background: #f8d7da;
+  border: 1px solid #f5c2c7;
+}
+.hw-verify-card__signout {
+  font-size: 0.82rem;
+  color: #999;
+  margin: 24px 0 0;
+}
+.hw-verify-card__signout a {
+  color: var(--hw-primary-color, #17a2b8);
+  text-decoration: underline;
+}
+
+/* =============================================================
+   Google sign-in button
+   -------------------------------------------------------------
+   Shared by the plugin's login modal and the React booking form.
+   The class names are identical on both sides on purpose: this is
+   the single definition, and the booking form bundle only adds
+   its own `--inline` variant on top.
+   ============================================================= */
+/* ── Base ─────────────────────────────────────────────────────
+   Class names deliberately match the React bundle's, so the two
+   implementations share one design.
+   ============================================================= */
+.hw-auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  color: #aaa;
+  font-size: 0.78rem;
+  text-transform: lowercase;
+}
+.hw-auth-divider::before, .hw-auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.hw-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Mirrors the .btn metrics below so it lines up with the submit button. */
+  gap: 10px;
+  width: 100%;
+  padding: 0.375rem 20px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 30px;
+  background: #fff;
+  color: #1a1a2e;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 32px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.hw-google-btn:hover, .hw-google-btn:focus {
+  border-color: #b9bfc7;
+  background: #f9fafb;
+  color: #1a1a2e;
+  text-decoration: none;
+}
+.hw-google-btn:focus-visible {
+  outline: 2px solid var(--hw-primary-color, #17a2b8);
+  outline-offset: 2px;
+}
+.hw-google-btn svg {
+  flex-shrink: 0;
+}
+
 .cart-card.sticky {
   margin-top: 50px;
 }
@@ -1790,29 +2331,1349 @@
   }
 }
 
-#invoices-table td,
-#mobile-invoices-list td {
+/* =============================================================
+   Account area — design system
+   -------------------------------------------------------------
+   A self-contained, modern dashboard UI for the customer account
+   area. Everything is scoped under `.hw-template-account` (a body
+   class present on every account route) so it ships in the global
+   `main` bundle without leaking onto the rest of the site.
+
+   Layout model:
+     .account-sidebar  fixed rail (collapsible on desktop,
+                       off-canvas drawer on mobile)
+     .account-topbar   sticky header, offset by the sidebar width
+     .content-page     scrollable content, offset by the sidebar
+
+   The sidebar width is a single custom property (`--hw-sidebar-w`)
+   so the collapse simply re-points it and everything animates.
+   Icons are Font Awesome (enqueued globally as `hw-fontawesome`).
+   ============================================================= */
+@keyframes hw-dropdown-slide {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hw-template-account {
+  /* ---- Metrics ---- */
+  --hw-sidebar-w: 264px;
+  --hw-sidebar-w-collapsed: 84px;
+  --hw-topbar-h: 72px;
+  /* ---- Brand accent (from _variables.scss) ---- */
+  --hw-accent: var(--hw-brand-primary, #2eb9ba);
+  --hw-accent-hover: var(--hw-brand-primary-hover, #22a6a6);
+  --hw-accent-soft: rgba(46, 185, 186, 0.12);
+  --hw-accent-ring: rgba(46, 185, 186, 0.20);
+  /* ---- Neutrals ---- */
+  --hw-ink: #101828;
+  --hw-body: #475467;
+  --hw-muted: #98a2b3;
+  --hw-line: #eaecf0;
+  --hw-line-strong: #dfe3e8;
+  --hw-canvas: #f4f6f8;
+  --hw-surface: #ffffff;
+  /* ---- Elevation & shape ---- */
+  --hw-radius: 16px;
+  --hw-radius-sm: 10px;
+  --hw-shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.04);
+  --hw-shadow-md: 0 2px 6px rgba(16, 24, 40, 0.06), 0 12px 28px rgba(16, 24, 40, 0.09);
+  --hw-shadow-lg: 0 16px 40px rgba(16, 24, 40, 0.18);
+  background-color: var(--hw-canvas);
+  color: var(--hw-body);
+  font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.hw-template-account.leftside-collapsed {
+  --hw-sidebar-w: var(--hw-sidebar-w-collapsed);
+}
+.hw-template-account {
+  /* Neutralise theme content-container constraints for a full-bleed shell */
+}
+.hw-template-account #primary,
+.hw-template-account #main {
+  padding: 0 !important;
+  margin: 0 !important;
+  max-width: none !important;
+  width: auto !important;
+}
+.hw-template-account {
+  /* =========================================================
+     Sidebar
+     ========================================================= */
+}
+.hw-template-account .account-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--hw-sidebar-w);
+  display: flex;
+  flex-direction: column;
+  background: var(--hw-surface);
+  border-right: 1px solid var(--hw-line);
+  z-index: 1045;
+  overflow: hidden;
+  transition: width 0.25s ease, transform 0.25s ease;
+}
+.hw-template-account .account-sidebar__top {
+  flex: none;
+  height: var(--hw-topbar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  border-bottom: 1px solid var(--hw-line);
+}
+.hw-template-account .account-sidebar__logo {
+  height: 34px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+.hw-template-account .account-sidebar__close {
+  display: none;
+  border: 0;
+  background: transparent;
+  color: var(--hw-muted);
+  font-size: 1.05rem;
+  cursor: pointer;
+}
+.hw-template-account .account-nav {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 18px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.hw-template-account .account-nav__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 11px 12px;
+  border-radius: 12px;
+  color: var(--hw-body);
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.hw-template-account .account-nav__link .account-nav__icon {
+  flex: none;
+  width: 24px;
+  text-align: center;
+  font-size: 1.05rem;
+  color: var(--hw-muted);
+  transition: color 0.15s ease;
+}
+.hw-template-account .account-nav__link:hover, .hw-template-account .account-nav__link:focus {
+  background: #f4f6f8;
+  color: var(--hw-ink);
+  text-decoration: none;
+}
+.hw-template-account .account-nav__link:hover .account-nav__icon, .hw-template-account .account-nav__link:focus .account-nav__icon {
+  color: var(--hw-ink);
+}
+.hw-template-account .account-nav__link.is-active {
+  background: var(--hw-accent-soft);
+  color: var(--hw-accent);
+  font-weight: 600;
+}
+.hw-template-account .account-nav__link.is-active .account-nav__icon {
+  color: var(--hw-accent);
+}
+.hw-template-account .account-sidebar__bottom {
+  flex: none;
+  padding: 16px;
+  border-top: 1px solid var(--hw-line);
+}
+.hw-template-account .account-help {
+  background: #f7f9fa;
+  border: 1px solid var(--hw-line);
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 14px;
+}
+.hw-template-account .account-help__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 9px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--hw-ink);
+}
+.hw-template-account .account-help__title i {
+  color: var(--hw-accent);
+}
+.hw-template-account .account-help__link {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--hw-body);
+  text-decoration: none;
+  padding: 2px 0;
+}
+.hw-template-account .account-help__link:hover {
+  color: var(--hw-accent);
+}
+.hw-template-account {
+  /* Contact icons — only shown on the collapsed rail */
+}
+.hw-template-account .account-help__icons {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.hw-template-account .account-help__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f2f4f7;
+  color: var(--hw-body);
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.hw-template-account .account-help__icon:hover {
+  background: var(--hw-accent);
+  color: #fff;
+}
+.hw-template-account {
+  /* ---- Collapsed rail (desktop only) ---- */
+}
+@media (min-width: 992px) {
+  .hw-template-account.leftside-collapsed .account-sidebar__top {
+    justify-content: center;
+    padding: 0 10px;
+  }
+  .hw-template-account.leftside-collapsed .account-sidebar__logo {
+    height: auto;
+    max-height: 30px;
+  }
+  .hw-template-account.leftside-collapsed .account-nav {
+    padding: 18px 12px;
+  }
+  .hw-template-account.leftside-collapsed .account-nav__link {
+    justify-content: center;
+    padding: 12px 0;
+  }
+  .hw-template-account.leftside-collapsed .account-nav__link .account-nav__label {
+    display: none;
+  }
+  .hw-template-account.leftside-collapsed .account-sidebar__bottom {
+    padding: 14px 10px;
+  }
+  .hw-template-account.leftside-collapsed .account-help {
+    display: none;
+  }
+  .hw-template-account.leftside-collapsed .account-help__icons {
+    display: flex;
+  }
+  .hw-template-account.leftside-collapsed {
+    /* icon-rail tooltips */
+  }
+  .hw-template-account.leftside-collapsed .account-nav__link[data-title]:hover::after {
+    content: attr(data-title);
+    position: absolute;
+    left: calc(100% + 14px);
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: var(--hw-ink);
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: var(--hw-shadow-md);
+    z-index: 30;
+  }
+}
+.hw-template-account {
+  /* =========================================================
+     Topbar
+     ========================================================= */
+}
+.hw-template-account .account-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  height: var(--hw-topbar-h);
+  margin-left: var(--hw-sidebar-w);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 clamp(16px, 3vw, 32px);
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+  backdrop-filter: saturate(180%) blur(10px);
+  border-bottom: 1px solid var(--hw-line);
+  transition: margin-left 0.25s ease;
+}
+.hw-template-account .account-topbar__left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.hw-template-account .account-topbar__toggle {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--hw-line);
+  background: #fff;
+  color: var(--hw-body);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.hw-template-account .account-topbar__toggle:hover {
+  background: #f4f6f8;
+  color: var(--hw-ink);
+}
+.hw-template-account .account-topbar__logo {
+  display: none;
+  align-items: center;
+}
+.hw-template-account .account-topbar__logo img {
+  height: 30px;
+  width: auto;
+}
+.hw-template-account .account-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hw-template-account .account-user__avatar {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--hw-accent), #1c8586);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+}
+.hw-template-account .account-user__meta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  text-align: left;
+}
+.hw-template-account .account-user__hello {
+  font-size: 0.72rem;
+  color: var(--hw-muted);
+}
+.hw-template-account .account-user__name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--hw-ink);
+}
+.hw-template-account .account-action__btn {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--hw-line);
+  background: #fff;
+  color: var(--hw-body);
+  text-decoration: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  padding: 5px 10px;
+}
+.hw-template-account .account-action__btn span {
+  margin-left: 10px;
+}
+.hw-template-account .account-action__btn:hover {
+  background: #f4f6f8;
+  color: var(--hw-ink);
+}
+.hw-template-account {
+  /* =========================================================
+     Mobile drawer backdrop
+     ========================================================= */
+}
+.hw-template-account .account-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1040;
+  background: rgba(16, 24, 40, 0.45);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+.hw-template-account.leftside-open .account-backdrop {
+  opacity: 1;
+  visibility: visible;
+}
+.hw-template-account {
+  /* =========================================================
+     Content shell
+     ========================================================= */
+}
+.hw-template-account .content-page {
+  position: relative;
+  margin-left: var(--hw-sidebar-w);
+  min-height: calc(100vh - var(--hw-topbar-h));
+  background: var(--hw-canvas);
+  transition: margin-left 0.25s ease;
+}
+.hw-template-account .content {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: clamp(22px, 4vw, 44px);
+}
+.hw-template-account {
+  /* Page heading (per-view <h2>) */
+}
+.hw-template-account .content > h2,
+.hw-template-account .content .reservation > .d-flex h2 {
+  font-size: clamp(1.5rem, 2.4vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--hw-ink);
+}
+.hw-template-account .content > h2 {
+  margin: 0 0 24px;
+}
+.hw-template-account {
+  /* =========================================================
+     Cards / panels
+     ========================================================= */
+}
+.hw-template-account .panel {
+  background: var(--hw-surface);
+  border: 1px solid var(--hw-line);
+  border-radius: var(--hw-radius);
+  box-shadow: var(--hw-shadow-sm);
+  padding: clamp(20px, 3vw, 32px);
+  margin-bottom: 24px;
+}
+.hw-template-account .panel .title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--hw-line);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--hw-ink);
+}
+.hw-template-account .panel .title .icon {
+  margin-right: 10px;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--hw-accent-soft);
+  color: var(--hw-accent);
+  font-size: 1rem;
+}
+.hw-template-account .profile-details .label {
+  margin-bottom: 4px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--hw-muted);
+}
+.hw-template-account .profile-details .value {
+  color: var(--hw-ink);
+  font-weight: 500;
+}
+.hw-template-account {
+  /* =========================================================
+     Form fields
+     ========================================================= */
+}
+.hw-template-account label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--hw-body);
+  margin-bottom: 0.4rem;
+}
+.hw-template-account .form-group {
+  margin-bottom: 1.15rem;
+}
+.hw-template-account .form-control {
+  height: auto;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--hw-line-strong);
+  border-radius: var(--hw-radius-sm);
+  background-color: #fff;
+  color: var(--hw-ink);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  box-shadow: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.hw-template-account .form-control::placeholder {
+  color: var(--hw-muted);
+}
+.hw-template-account .form-control:focus {
+  border-color: var(--hw-accent);
+  box-shadow: 0 0 0 4px var(--hw-accent-ring);
+  outline: none;
+}
+.hw-template-account select.form-control {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding-right: 2.4rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.85rem center;
+  background-size: 16px;
+}
+.hw-template-account textarea.form-control {
+  min-height: 110px;
+}
+.hw-template-account {
+  /* =========================================================
+     Buttons
+     ========================================================= */
+  /* Pill shape and spacing come from the global .btn rule in
+     _bootstrap-reset.scss, so the dashboard speaks the same button language as
+     the booking form. Only the dashboard's own weight, density and press
+     affordance are kept. */
+}
+.hw-template-account .btn {
+  font-weight: 600;
+  font-size: 0.92rem;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.hw-template-account .btn:active {
+  transform: translateY(1px);
+}
+.hw-template-account .btn-primary {
+  background-color: var(--hw-accent);
+  border-color: var(--hw-accent);
+  color: var(--hw-accent-contrast);
+}
+.hw-template-account .btn-primary:hover, .hw-template-account .btn-primary:focus, .hw-template-account .btn-primary:active, .hw-template-account .btn-primary:not(:disabled):not(.disabled):active {
+  background-color: var(--hw-accent-hover);
+  border-color: var(--hw-accent-hover);
+  color: var(--hw-accent-hover-contrast);
+}
+.hw-template-account .btn-primary:focus, .hw-template-account .btn-primary.focus {
+  box-shadow: 0 0 0 4px var(--hw-accent-ring);
+}
+.hw-template-account .btn-light {
+  background-color: #fff;
+  border-color: var(--hw-line-strong);
+  color: var(--hw-body);
+}
+.hw-template-account .btn-light:hover {
+  background-color: #f4f6f8;
+  color: var(--hw-ink);
+}
+.hw-template-account {
+  /* =========================================================
+     Tables
+     ========================================================= */
+}
+.hw-template-account .panel table,
+.hw-template-account .table {
+  width: 100%;
+  margin-bottom: 0;
+  color: var(--hw-body);
+}
+.hw-template-account .panel table th,
+.hw-template-account .table th {
+  padding: 0.65rem 0.6rem;
+  border: 0;
+  border-bottom: 1px solid var(--hw-line);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--hw-muted);
+  text-align: left;
+}
+.hw-template-account .panel table td,
+.hw-template-account .table td {
+  padding: 0.8rem 0.6rem;
+  border-top: 1px solid var(--hw-line);
   vertical-align: middle;
 }
-#invoices-table .actions a,
-#mobile-invoices-list .actions a {
-  padding: 8px 12px;
-  border: 1px solid #284a70;
-  border-radius: 30px;
-  display: inline-block;
-  margin-right: 10px;
-  color: #284a70;
-  text-decoration: none !important;
+.hw-template-account .panel table tbody tr:first-child td,
+.hw-template-account .table tbody tr:first-child td {
+  border-top: 0;
 }
-#invoices-table .actions a:hover,
-#mobile-invoices-list .actions a:hover {
-  color: #fff;
-  background-color: #284a70;
+.hw-template-account .panel table strong,
+.hw-template-account .table strong {
+  color: var(--hw-ink);
+}
+.hw-template-account {
+  /* =========================================================
+     Tabs (reservation view)
+     ========================================================= */
+}
+.hw-template-account .nav-tabs {
+  border-bottom: 1px solid var(--hw-line);
+  gap: 4px;
+}
+.hw-template-account .nav-tabs .nav-item {
+  margin-bottom: -1px;
+}
+.hw-template-account .nav-tabs .nav-link {
+  border: 0;
+  border-radius: 10px;
+  padding: 0.55rem 0.95rem;
+  color: var(--hw-body);
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.hw-template-account .nav-tabs .nav-link:hover {
+  background: #f2f4f7;
+  color: var(--hw-ink);
+}
+.hw-template-account .nav-tabs .nav-link.active {
+  background: var(--hw-accent-soft);
+  color: var(--hw-accent);
+  font-weight: 600;
+}
+.hw-template-account {
+  /* =========================================================
+     Dashboard tiles
+     ========================================================= */
+}
+.hw-template-account #dashboard-tiles .tile {
+  display: block;
+  padding: clamp(24px, 3vw, 34px);
+  text-align: center;
+  text-decoration: none;
+  color: var(--hw-ink);
+  background: var(--hw-surface);
+  border: 1px solid var(--hw-line);
+  border-radius: var(--hw-radius);
+  box-shadow: var(--hw-shadow-sm);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.hw-template-account #dashboard-tiles .tile .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 18px;
+  border-radius: 18px;
+  background: var(--hw-accent-soft);
+  color: var(--hw-accent);
+  font-size: 26px;
+}
+.hw-template-account #dashboard-tiles .tile .title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--hw-ink);
+}
+.hw-template-account #dashboard-tiles .tile:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--hw-shadow-md);
+}
+.hw-template-account {
+  /* =========================================================
+     Card — reusable surface across account views
+     ========================================================= */
+}
+.hw-template-account .card {
+  display: block; /* neutralise Bootstrap's .card flex */
+  margin-bottom: 22px;
+  background: var(--hw-surface);
+  border: 1px solid var(--hw-line);
+  border-radius: var(--hw-radius);
+  box-shadow: var(--hw-shadow-sm);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.hw-template-account .card__body {
+  flex: 1 1 auto;
+  gap: 20px;
+  padding: clamp(20px, 2.6vw, 28px);
 }
 @media (min-width: 768px) {
-  #invoices-table .actions a,
-  #mobile-invoices-list .actions a {
-    padding: 10px 20px;
+  .hw-template-account .card__body {
+    flex-grow: grow;
+  }
+}
+.hw-template-account .card__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+.hw-template-account .reservation__overview {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.hw-template-account .reservation__thumb {
+  flex: none;
+  height: 150px;
+  min-height: 150px;
+  border-radius: 14px;
+  border: 1px solid var(--hw-line);
+  background-color: #e9edf1;
+  background-size: cover;
+  background-position: center;
+}
+@media (min-width: 768px) {
+  .hw-template-account .reservation__thumb {
+    width: 150px;
+    height: auto;
+  }
+}
+.hw-template-account .reservation__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 11px;
+  border-radius: 30px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: #eef1f4;
+  color: #5b6673;
+}
+.hw-template-account .reservation__status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.hw-template-account .reservation__status.confirmed {
+  color: #05603a;
+  background: #d1fadf;
+}
+.hw-template-account .reservation__status.pending {
+  color: #93370d;
+  background: #fef0c7;
+}
+.hw-template-account .reservation__status.canceled {
+  color: #912018;
+  background: #fee4e2;
+}
+.hw-template-account .reservation__header {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.hw-template-account .reservation__title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--hw-ink);
+}
+.hw-template-account .reservation__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+.hw-template-account .reservation__actions .btn {
+  white-space: nowrap;
+}
+.hw-template-account .reservation__admin-meta-wrapper {
+  gap: 5px;
+}
+.hw-template-account .reservation__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 30px;
+  background: #f2f4f7;
+  color: var(--hw-body);
+  font-size: 0.8rem;
+}
+.hw-template-account .reservation__meta-item i {
+  color: var(--hw-muted);
+}
+.hw-template-account .reservation__facts {
+  display: flex;
+  gap: 10px;
+}
+@media (min-width: 768px) {
+  .hw-template-account .reservation__facts {
+    gap: 20px;
+  }
+}
+.hw-template-account .reservation__fact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.hw-template-account .reservation__fact-icon {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--hw-accent-soft);
+  color: var(--hw-accent);
+  font-size: 1rem;
+}
+.hw-template-account .reservation__fact-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.hw-template-account .reservation__fact-label {
+  font-size: 0.7rem;
+  line-height: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--hw-muted);
+}
+.hw-template-account .reservation__fact-value {
+  color: var(--hw-ink);
+  font-weight: 600;
+  font-size: 0.92rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.hw-template-account .reservation__guests-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--hw-ink);
+  cursor: pointer;
+}
+.hw-template-account .reservation__guests-toggle i {
+  font-size: 0.62rem;
+  color: var(--hw-muted);
+  transition: transform 0.2s ease;
+}
+.hw-template-account .reservation__guests-toggle[aria-expanded=true] i {
+  transform: rotate(180deg);
+}
+.hw-template-account .reservation__guests-toggle:hover {
+  color: var(--hw-accent);
+}
+.hw-template-account .reservation__panel {
+  padding: 16px 18px;
+  background: #f7f9fa;
+  border: 1px solid var(--hw-line);
+  border-radius: 12px;
+}
+.hw-template-account .reservation__footer-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.hw-template-account .reservation__upcoming-payment {
+  margin-bottom: 4px;
+  font-size: 0.7rem;
+  line-height: 0.8rem;
+  letter-spacing: 0.04em;
+  color: var(--hw-text);
+  border-radius: 10px;
+  border: 1px solid var(--hw-brand-secondary);
+  border-left-width: 5px;
+  display: flex;
+  gap: 10px;
+}
+.hw-template-account .reservation__upcoming-payment--label {
+  color: var(--hw-brand-secondary);
+  font-weight: 600;
+}
+.hw-template-account .reservation__upcoming-payment--title {
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1rem;
+  color: #222;
+}
+.hw-template-account .reservation__upcoming-payment--meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 0.7rem;
+}
+.hw-template-account .reservation__upcoming-payment--meta i {
+  color: var(--hw-muted);
+}
+.hw-template-account .reservation__upcoming-payment--amount {
+  margin-left: 4px;
+  font-weight: 700;
+  color: var(--hw-ink);
+}
+.hw-template-account .reservation__upcoming-payment--icon-wrapper {
+  font-size: 32px;
+  color: var(--hw-brand-secondary);
+}
+.hw-template-account .reservation__upcoming-payment--pay-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 9px 14px 9px 18px;
+  background-color: var(--hw-brand-secondary);
+  color: var(--hw-brand-secondary-contrast);
+  border: 0 !important;
+  width: 100%;
+}
+.hw-template-account .reservation__upcoming-payment--pay-btn:hover {
+  background: var(--hw-brand-secondary-hover);
+  color: var(--hw-brand-secondary-hover-contrast);
+  transition: transform 0.3s ease-in-out;
+}
+.hw-template-account .reservation__upcoming-payment--pay-btn:hover i {
+  transform: translateX(2px);
+}
+@media (min-width: 768px) {
+  .hw-template-account .reservation__upcoming-payment--pay-btn {
+    width: auto;
+  }
+}
+.hw-template-account .reservation__upcoming-payment {
+  /* Pay button — small "Pay" label over the amount, arrow on the right */
+}
+.hw-template-account .reservation__upcoming-payment__pay {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 9px 14px 9px 18px;
+  border-radius: 12px;
+  background: var(--hw-accent-color);
+  color: var(--hw-accent-color-contrast);
+  text-decoration: none !important;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.hw-template-account .reservation__upcoming-payment__pay:hover {
+  background: var(--hw-accent-hover);
+  color: var(--hw-accent-hover-contrast);
+  box-shadow: 0 6px 16px rgba(46, 185, 186, 0.35);
+}
+.hw-template-account .reservation__upcoming-payment__pay:active {
+  transform: translateY(1px);
+}
+.hw-template-account .reservation__upcoming-payment__pay-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  text-align: left;
+}
+.hw-template-account .reservation__upcoming-payment__pay-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.hw-template-account .reservation__upcoming-payment__pay-amount {
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-wrap: nowrap;
+}
+.hw-template-account .reservation__upcoming-payment__pay-arrow {
+  font-size: 1.1rem;
+}
+.hw-template-account .reservation__upcoming-payment {
+  /* Request-payment-link variant (renders the shared partial button) */
+}
+.hw-template-account .reservation__upcoming-payment__request-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: auto !important;
+  margin-top: 0 !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  white-space: nowrap;
+}
+@media (min-width: 992px) {
+  .hw-template-account .reservation__upcoming-payment {
+    gap: 15px;
+  }
+}
+.hw-template-account {
+  /* Empty state */
+}
+.hw-template-account .reservations-empty {
+  padding: clamp(40px, 8vw, 72px) 24px;
+  text-align: center;
+  background: var(--hw-surface);
+  border: 1px dashed var(--hw-line-strong);
+  border-radius: var(--hw-radius);
+}
+.hw-template-account .reservations-empty__icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--hw-accent-soft);
+  color: var(--hw-accent);
+  font-size: 26px;
+}
+.hw-template-account .reservations-empty__title {
+  margin-bottom: 6px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--hw-ink);
+}
+.hw-template-account .reservations-empty p {
+  margin: 0;
+  color: var(--hw-muted);
+}
+.hw-template-account {
+  /* =========================================================
+     Reservations list header (count + per-page)
+     ========================================================= */
+}
+.hw-template-account .reservations-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.hw-template-account .reservations-header__count {
+  font-size: 0.9rem;
+  color: var(--hw-muted);
+}
+.hw-template-account .reservations-header__perpage {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+.hw-template-account .reservations-header__perpage label {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--hw-body);
+}
+.hw-template-account .reservations-header__perpage select.form-control {
+  width: auto;
+  height: 40px;
+  padding: 0 34px 0 12px;
+  font-size: 0.9rem;
+}
+.hw-template-account {
+  /* =========================================================
+     Pagination
+     ========================================================= */
+}
+.hw-template-account .pagination {
+  gap: 6px;
+}
+.hw-template-account .pagination .page-item .page-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid var(--hw-line);
+  border-radius: 10px !important;
+  background: var(--hw-surface);
+  color: var(--hw-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.hw-template-account .pagination .page-item .page-link:hover {
+  background: #f4f6f8;
+  color: var(--hw-ink);
+}
+.hw-template-account .pagination .page-item .page-link:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--hw-accent-ring);
+}
+.hw-template-account .pagination .page-item.active .page-link {
+  background: var(--hw-accent);
+  border-color: var(--hw-accent);
+  color: #fff;
+}
+.hw-template-account .pagination .page-item.disabled .page-link {
+  background: transparent;
+  border-color: var(--hw-line);
+  color: var(--hw-muted);
+}
+.hw-template-account {
+  /* =========================================================
+     Reservation list view
+     ========================================================= */
+}
+.hw-template-account.hw-view-reservations .reservation:hover {
+  box-shadow: var(--hw-shadow-md);
+}
+.hw-template-account.hw-view-reservations .reservation__thumb {
+  height: 150px;
+  min-height: 150px;
+}
+@media (min-width: 768px) {
+  .hw-template-account.hw-view-reservations .reservation__thumb {
+    width: 200px;
+    height: auto;
+  }
+}
+.hw-template-account {
+  /* =========================================================
+     Reservation single view
+     ========================================================= */
+}
+.hw-template-account.hw-view-reservation .reservation > .d-flex h2 {
+  margin: 0;
+}
+.hw-template-account.hw-view-reservation .reservation {
+  /* Status badge (single-view header) */
+}
+.hw-template-account.hw-view-reservation .reservation h2 .status {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background-color: #eef1f4;
+  border: 1px solid #e3e7eb;
+  color: #5b6673;
+  vertical-align: middle;
+}
+.hw-template-account.hw-view-reservation .reservation h2 .status.confirmed {
+  color: #05603a;
+  background-color: #d1fadf;
+  border-color: #a6f4c5;
+}
+.hw-template-account.hw-view-reservation .reservation h2 .status.pending {
+  color: #93370d;
+  background-color: #fef0c7;
+  border-color: #fedf89;
+}
+.hw-template-account.hw-view-reservation .reservation h2 .status.canceled {
+  color: #912018;
+  background-color: #fee4e2;
+  border-color: #fecdca;
+}
+.hw-template-account.hw-view-reservation .reservation table td {
+  padding: 0.6rem 0.5rem;
+}
+.hw-template-account.hw-view-reservation .reservation table strong {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--hw-ink);
+}
+.hw-template-account.hw-view-reservation .reservation table p {
+  margin: 0;
+  color: var(--hw-body);
+}
+.hw-template-account.hw-view-reservation .reservation {
+  /* Reservation single-view overview — fixed 200×200 thumb */
+}
+@media (min-width: 768px) {
+  .hw-template-account.hw-view-reservation .reservation__thumb {
+    height: 150px;
+  }
+}
+.hw-template-account {
+  /* =========================================================
+     Invoices tables
+     ========================================================= */
+}
+.hw-template-account #invoices-table td,
+.hw-template-account #mobile-invoices-list td {
+  vertical-align: middle;
+}
+.hw-template-account #invoices-table .actions a,
+.hw-template-account #mobile-invoices-list .actions a {
+  display: inline-block;
+  margin-right: 10px;
+  padding: 8px 14px;
+  border: 1px solid var(--hw-accent);
+  border-radius: 30px;
+  color: var(--hw-accent);
+  font-weight: 500;
+  text-decoration: none !important;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.hw-template-account #invoices-table .actions a:hover,
+.hw-template-account #mobile-invoices-list .actions a:hover {
+  background-color: var(--hw-accent);
+  color: #fff;
+}
+@media (min-width: 768px) {
+  .hw-template-account #invoices-table .actions a,
+  .hw-template-account #mobile-invoices-list .actions a {
+    padding: 9px 18px;
+  }
+}
+.hw-template-account {
+  /* =========================================================
+     Dropdown menus (profile, guests)
+     ========================================================= */
+}
+.hw-template-account .dropdown-menu {
+  border: 1px solid var(--hw-line);
+  border-radius: 12px;
+  padding: 0.4rem;
+  box-shadow: var(--hw-shadow-md);
+  color: var(--hw-body);
+}
+.hw-template-account .dropdown-menu-animated {
+  animation: hw-dropdown-slide 0.18s ease both;
+}
+.hw-template-account .dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.55rem 0.7rem;
+  border-radius: 8px;
+  color: var(--hw-body);
+  font-size: 0.92rem;
+}
+.hw-template-account .dropdown-item i {
+  width: 18px;
+  text-align: center;
+  color: var(--hw-muted);
+}
+.hw-template-account .dropdown-item:hover, .hw-template-account .dropdown-item:focus {
+  background: var(--hw-accent-soft);
+  color: var(--hw-accent);
+}
+.hw-template-account .dropdown-item:hover i, .hw-template-account .dropdown-item:focus i {
+  color: var(--hw-accent);
+}
+.hw-template-account {
+  /* =========================================================
+     Footer
+     ========================================================= */
+  /* Footer sits inside .content-page (already offset); align it with .content. */
+}
+.hw-template-account .footer,
+.hw-template-account #account-footer {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 22px clamp(22px, 4vw, 44px) 32px;
+  color: var(--hw-muted);
+  font-size: 0.85rem;
+}
+.hw-template-account .footer .container-fluid,
+.hw-template-account #account-footer .container-fluid {
+  padding: 0;
+}
+.hw-template-account .footer a,
+.hw-template-account #account-footer a {
+  color: var(--hw-muted);
+  text-decoration: none;
+}
+.hw-template-account .footer a:hover,
+.hw-template-account #account-footer a:hover {
+  color: var(--hw-accent);
+}
+.hw-template-account .footer ul,
+.hw-template-account #account-footer ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 1.25rem;
+  justify-content: flex-end;
+}
+.hw-template-account {
+  /* =========================================================
+     Responsive — off-canvas drawer under 992px
+     ========================================================= */
+}
+@media (max-width: 991.98px) {
+  .hw-template-account .account-sidebar {
+    transform: translateX(-100%);
+    z-index: 1045;
+  }
+  .hw-template-account.leftside-open .account-sidebar {
+    transform: none;
+    box-shadow: var(--hw-shadow-lg);
+  }
+  .hw-template-account.leftside-open {
+    overflow: hidden;
+  }
+  .hw-template-account .account-sidebar__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+  }
+  .hw-template-account .account-topbar,
+  .hw-template-account .content-page,
+  .hw-template-account .footer,
+  .hw-template-account #account-footer {
+    margin-left: 0;
+  }
+  .hw-template-account .account-topbar__logo {
+    display: flex;
+  }
+}
+@media (max-width: 575.98px) {
+  .hw-template-account .account-user__meta {
+    display: none;
+  }
+  .hw-template-account .card__actions {
+    width: 100%;
+  }
+  .hw-template-account .card__actions .btn {
+    flex: 1 1 auto;
+  }
+}
+.hw-template-account {
+  /* =========================================================
+     WordPress admin bar offset
+     ========================================================= */
+}
+.hw-template-account.admin-bar .account-sidebar,
+.hw-template-account.admin-bar .account-topbar {
+  top: 32px;
+}
+@media (max-width: 782px) {
+  .hw-template-account.admin-bar .account-sidebar,
+  .hw-template-account.admin-bar .account-topbar {
+    top: 46px;
   }
 }
 
@@ -1820,6 +3681,161 @@
   .hw-template-pos .container {
     max-width: 1240px;
   }
+}
+
+/* =========================================================
+   PoS — reservation email authentication
+   ========================================================= */
+.hw-template-pos .hw-pos-auth {
+  --pos-accent: var(--hw-brand-primary, #2eb9ba);
+  --pos-accent-hover: var(--hw-brand-primary-hover, #22a6a6);
+  --pos-ink: #101828;
+  --pos-body: #475467;
+  --pos-muted: #98a2b3;
+  --pos-line: #e6e8ec;
+  --pos-danger: #d92d20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 40px 16px;
+  font-family: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.hw-template-pos .hw-pos-auth [x-cloak] {
+  display: none !important;
+}
+.hw-template-pos .hw-pos-auth__card {
+  width: 100%;
+  max-width: 440px;
+  padding: clamp(28px, 5vw, 44px);
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--pos-line);
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(16, 24, 40, 0.06), 0 16px 40px rgba(16, 24, 40, 0.08);
+}
+.hw-template-pos .hw-pos-auth__icon {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(46, 185, 186, 0.12);
+  color: var(--pos-accent);
+  font-size: 24px;
+}
+.hw-template-pos .hw-pos-auth__title {
+  margin: 0 0 8px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--pos-ink);
+}
+.hw-template-pos .hw-pos-auth__subtitle {
+  margin: 0 0 26px;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--pos-body);
+}
+.hw-template-pos .hw-pos-auth__form {
+  text-align: left;
+}
+.hw-template-pos .hw-pos-auth__field {
+  margin-bottom: 18px;
+}
+.hw-template-pos .hw-pos-auth__label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--pos-body);
+}
+.hw-template-pos .hw-pos-auth__input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.hw-template-pos .hw-pos-auth__input-icon {
+  position: absolute;
+  left: 15px;
+  color: var(--pos-muted);
+  font-size: 0.9rem;
+  pointer-events: none;
+  transition: color 0.15s ease;
+}
+.hw-template-pos .hw-pos-auth__input {
+  width: 100%;
+  height: 50px;
+  padding: 0 14px 0 42px;
+  border: 1px solid var(--pos-line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--pos-ink);
+  font-size: 0.98rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.hw-template-pos .hw-pos-auth__input::placeholder {
+  color: var(--pos-muted);
+}
+.hw-template-pos .hw-pos-auth__input:focus {
+  outline: none;
+  border-color: var(--pos-accent);
+  box-shadow: 0 0 0 4px rgba(46, 185, 186, 0.18);
+}
+.hw-template-pos .hw-pos-auth__input-wrap.is-invalid .hw-pos-auth__input {
+  border-color: var(--pos-danger);
+  box-shadow: 0 0 0 4px rgba(217, 45, 32, 0.15);
+}
+.hw-template-pos .hw-pos-auth__input-wrap.is-invalid .hw-pos-auth__input-icon {
+  color: var(--pos-danger);
+}
+.hw-template-pos .hw-pos-auth__error {
+  margin: 8px 0 0;
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--pos-danger);
+}
+.hw-template-pos .hw-pos-auth__submit {
+  width: 100%;
+  height: 50px;
+  margin-top: 4px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--pos-accent);
+  color: #fff;
+  font-size: 0.98rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+}
+.hw-template-pos .hw-pos-auth__submit:hover:not(:disabled) {
+  background: var(--pos-accent-hover);
+  box-shadow: 0 8px 20px rgba(46, 185, 186, 0.35);
+}
+.hw-template-pos .hw-pos-auth__submit:active:not(:disabled) {
+  transform: translateY(1px);
+}
+.hw-template-pos .hw-pos-auth__submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.hw-template-pos .hw-pos-auth__loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.hw-template-pos .hw-pos-auth__note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 22px;
+  font-size: 0.82rem;
+  color: var(--pos-muted);
+}
+.hw-template-pos .hw-pos-auth__note i {
+  color: var(--pos-accent);
 }
 
 #pos label {
@@ -1929,4 +3945,287 @@
 }
 #payment-processing-message .close-icon:hover {
   cursor: pointer;
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+.hw-search-bar {
+  position: relative;
+  padding: 20px 0;
+}
+.hw-search-bar .sb-anchor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: none;
+  left: 0;
+  top: auto;
+  bottom: 0;
+}
+.hw-search-bar .sb-bar {
+  display: flex;
+  align-items: stretch;
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #dde0e4;
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+}
+.hw-search-bar .sb-field {
+  flex: 1.5;
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  cursor: default;
+  transition: background 0.15s;
+}
+.hw-search-bar .sb-field:hover {
+  background: #f7f8fa;
+}
+.hw-search-bar .sb-field:first-child {
+  border-radius: 14px 0 0 14px;
+}
+.hw-search-bar .sb-field--dates {
+  position: relative;
+  flex: 2;
+  border-left: 1px solid #e4e6ea;
+  padding-bottom: 8px;
+  cursor: pointer;
+}
+.hw-search-bar .sb-field--dates:focus {
+  outline: none;
+  background: #f0f8ff;
+}
+.hw-search-bar .sb-field--dates .sb-label {
+  line-height: 12px;
+}
+.hw-search-bar .sb-field--dates .sb-value--empty {
+  color: #666 !important;
+}
+.hw-search-bar .sb-date-range {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+  min-width: 0;
+}
+.hw-search-bar .sb-date-range__part {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.hw-search-bar .sb-date-range__sep {
+  color: #333;
+  font-size: 12px;
+  flex-shrink: 0;
+  align-self: end;
+}
+.hw-search-bar .sb-date-range__disclaimer {
+  display: block;
+  font-size: 12px;
+  line-height: 12px;
+  color: #666;
+  transition: color 0.15s;
+}
+.hw-search-bar .sb-date-range__disclaimer i {
+  font-size: 10px;
+}
+.hw-search-bar .sb-date-range__disclaimer--error {
+  color: #dc3545;
+  font-weight: 600;
+}
+.hw-search-bar .sb-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #999;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  display: block;
+  white-space: nowrap;
+}
+.hw-search-bar .sb-label i {
+  margin-right: 5px;
+}
+.hw-search-bar .sb-value {
+  font-size: 14px;
+  color: #1a1a2e;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+.hw-search-bar .sb-value--empty {
+  color: #bbb;
+}
+.hw-search-bar .sb-field--guests {
+  border-left: 1px solid #e4e6ea;
+  cursor: pointer;
+  position: relative;
+}
+.hw-search-bar .sb-guests-trigger {
+  outline: none;
+}
+.hw-search-bar .sb-guests-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  background: #fff;
+  border: 1px solid #dde0e4;
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  padding: 8px 16px 12px;
+  z-index: 1050;
+  min-width: 250px;
+}
+.hw-search-bar .sb-guest-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f2f2f2;
+}
+.hw-search-bar .sb-guest-row:last-child {
+  border-bottom: none;
+}
+.hw-search-bar .sb-guest-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #1a1a2e;
+}
+.hw-search-bar .sb-guest-desc {
+  font-size: 12px;
+  color: #999;
+  margin-top: 1px;
+}
+.hw-search-bar .sb-guest-counter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hw-search-bar .sb-counter-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid #ccc;
+  background: #fff;
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #555;
+  transition: border-color 0.15s, color 0.15s;
+  padding: 0;
+}
+.hw-search-bar .sb-counter-btn:hover:not(:disabled) {
+  border-color: #444;
+  color: #111;
+}
+.hw-search-bar .sb-counter-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+.hw-search-bar .sb-counter-val {
+  min-width: 20px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 15px;
+  color: #1a1a2e;
+}
+.hw-search-bar .sb-action {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.hw-search-bar .sb-search-btn {
+  width: 50px;
+  height: 50px;
+  background: var(--hw-primary-color);
+  color: var(--hw-primary-contrast-color);
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.1s;
+  flex-shrink: 0;
+}
+.hw-search-bar .sb-search-btn:hover {
+  background: var(--hw-primary-darker-color);
+  color: var(--hw-primary-darker-contrast-color);
+}
+.hw-search-bar .sb-search-btn:active {
+  transform: scale(0.96);
+}
+.hw-search-bar .sb-field--invalid {
+  background: #fff5f5 !important;
+  box-shadow: inset 0 0 0 2px rgba(220, 53, 69, 0.2509803922);
+}
+.hw-search-bar .sb-field--invalid .sb-label {
+  color: #dc3545;
+}
+
+.hw-search-bar--vertical .sb-bar {
+  flex-direction: column;
+}
+.hw-search-bar--vertical .sb-field {
+  border-left: none !important;
+  border-bottom: 1px solid #e4e6ea;
+  border-radius: 0 !important;
+}
+.hw-search-bar--vertical .sb-field:first-child {
+  border-radius: 14px 14px 0 0 !important;
+}
+.hw-search-bar--vertical .sb-guests-dropdown {
+  left: 0;
+  right: 0;
+  min-width: 0;
+}
+.hw-search-bar--vertical .sb-action {
+  padding: 10px 12px 12px;
+  justify-content: stretch;
+}
+.hw-search-bar--vertical .sb-search-btn {
+  width: 100%;
+  height: 44px;
+}
+
+@media (max-width: 768px) {
+  .hw-search-bar--horizontal .sb-bar {
+    flex-direction: column;
+  }
+  .hw-search-bar--horizontal .sb-field {
+    border-left: none !important;
+    border-bottom: 1px solid #e4e6ea;
+    border-radius: 0 !important;
+  }
+  .hw-search-bar--horizontal .sb-field:first-child {
+    border-radius: 14px 14px 0 0 !important;
+  }
+  .hw-search-bar--horizontal .sb-field:last-child {
+    border-bottom: none;
+  }
+  .hw-search-bar--horizontal .sb-action {
+    padding: 10px 12px 12px;
+    justify-content: stretch;
+  }
+  .hw-search-bar--horizontal .sb-search-btn {
+    width: 100%;
+    height: 44px;
+  }
+  .hw-search-bar--horizontal .sb-guests-dropdown {
+    left: 0;
+    right: 0;
+    min-width: 0;
+  }
 }

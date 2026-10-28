@@ -173,10 +173,9 @@ function hw_get_quote_invoices($quote_id){
 function hw_get_frontend_invoices_columns(){
         
     $columns = array(
-        'status' => __('', 'hola-weddings'),
+        // 'status' => __('', 'hola-weddings'),
         'name' => __('Name', 'hola-weddings'),
         'amount' => __('Amount', 'hola-weddings'),
-        'due_date' => __('Due Date', 'hola-weddings'),
         //'type' => __('Type', 'hola-weddings'),
         'actions' => __('Actions', 'hola-weddings'),
         //'post_status' => 'Status'
@@ -204,19 +203,26 @@ function hw_display_frontend_invoices_columns( $item, $column_name ) {
     $invoice = hw_get_invoice($item->ID);
     switch($column_name){
         case 'name':
-            echo $item->post_title;
+            $status = $invoice->getStatus();
+            $date = get_field('hw_due_date', $item->ID);
+            ?>
+                <?php if($status): ?>
+                    <span class="d-inline-block mb-1 alert alert-<?= hw_get_invoice_alert_class($status) ?> rounded-pill px-2 py-0"><?= hw_get_invoice_status_label($status) ?></span>
+                <?php endif ?>
+                <strong><?= $item->post_title; ?></strong>
+                <div class="d-flex align-items-center" style="font-size: 12px;">
+                    <i class="far fa-clock mr-1"></i>
+                    <?= $date ? sprintf(__('Due %s', 'hola-weddings'), (new DateTime($date))->format('d F Y') ) : ''; ?>
+                </div>
+            <?php
             break;
         case 'amount':
             $amount = get_field('hw_amount', $item->ID);
             echo $amount ? hw_format_price($amount) : '';
             break;
-        case 'due_date':
-            $date = get_field('hw_due_date', $item->ID);
-            echo $date ? (new DateTime($date))->format('d F Y') : '';
-            break;
         case 'status':
             $status = $invoice->getStatus();
-            echo $status ? sprintf('<span class="d-inline-block mb-0 alert alert-%s rounded-pill py-1 py-md-2">%s</span>',hw_get_invoice_alert_class($status), hw_get_invoice_status_label($status)) : '';
+            echo $status ? sprintf('<span class="d-inline-block mb-0 alert alert-%s rounded-pill p-1 py-md-2">%s</span>',hw_get_invoice_alert_class($status), hw_get_invoice_status_label($status)) : '';
             break;
         case 'type':
             $type = get_field('hw_type', $item->ID);

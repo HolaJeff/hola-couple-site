@@ -1,0 +1,147 @@
+@use 'variables' as *;
+
+// ── Submit overlay ────────────────────────────────────────────────────────────
+
+.hw-submit-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .55);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hw-submit-overlay__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+.hw-submit-overlay__text {
+    font-size: fs(1.15);
+    font-weight: 600;
+    margin: 0;
+}
+
+.hw-submit-overlay__sub {
+    font-size: fs(0.85);
+    opacity: .75;
+    margin: 0;
+}
+
+// ── Dialog ────────────────────────────────────────────────────────────────────
+
+@keyframes hw-dialog-backdrop-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes hw-dialog-slide-in {
+    from { opacity: 0; transform: translateY(-20px) scale(.97); }
+    to   { opacity: 1; transform: translateY(0)     scale(1);   }
+}
+
+.hw-dialog-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .5);
+    z-index: 99998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: hw-dialog-backdrop-in .15s ease;
+}
+
+.hw-dialog {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, .22);
+    max-width: 400px;
+    width: 100%;
+    padding: 36px 32px 28px;
+    text-align: center;
+    animation: hw-dialog-slide-in .2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes hw-redirect-shrink {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+}
+
+.hw-dialog__redirect-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: #28a745;
+    transform-origin: left;
+    animation: hw-redirect-shrink linear forwards;
+}
+
+.hw-dialog__icon-wrap {
+    display: flex;
+    justify-content: center;
+    line-height: 1;
+    margin-bottom: 16px;
+}
+
+.hw-dialog__title {
+    font-size: fs(1.15);
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0 0 10px;
+}
+
+.hw-dialog__message {
+    font-size: fs(0.9);
+    color: #666;
+    line-height: 1.65;
+    margin: 0 0 24px;
+}
+
+.hw-dialog__actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.hw-dialog__errors {
+    margin-bottom: 20px;
+}
+
+.hw-dialog__errors-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: .85em;
+    color: #6c757d;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    &:hover { color: #343a40; }
+}
+
+.hw-dialog__errors-list {
+    text-align: left;
+    font-size: .8em;
+    color: #dc3545;
+    margin: 8px 0 0;
+    padding: 1.5rem;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    max-height: 200px;
+    overflow-y: scroll;
+
+    li + li { margin-top: 2px; }
+}

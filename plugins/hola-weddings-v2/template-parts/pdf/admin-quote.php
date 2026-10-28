@@ -1,12 +1,14 @@
 <?php
-$him = hw_get_option('hw_his_name', '' );
-$her = hw_get_option('hw_her_name', '' );
-$quote = hw_get_quote($id);
-$customer = $quote->getBillingInformation();
-$guests = hw_get_quote_guests($id);
-$ci = hw_get_quote_check_in($id);
-$co = hw_get_quote_check_out($id);
-$room = hw_get_room(hw_get_quote_room_id($id));
+use HW\App;
+
+$wedding = App::getInstance()->getWedding();
+$him = $wedding->getHisName();
+$her = $wedding->getHerName();
+$billing = $quote->getBillingInformation();
+$guests = $quote->getGuests();
+$ci = $quote->getCheckin();
+$co = $quote->getCheckout();
+$room = $quote->getRoom();
 ?>
 <?= hw_get_template('template-parts/pdf/partials/style') ?>
 <page>
@@ -15,7 +17,7 @@ $room = hw_get_room(hw_get_quote_room_id($id));
     </div>
     <div>
         <h1 style="margin-bottom: 10px;"><?= sprintf(__('%s and %s Wedding UCC Form', 'hola-weddings'), $him, $her); ?></h1>
-        <p><?= sprintf(__('Reservation: <strong>%s %s</strong> for 1 Room', 'hola-weddings'), $customer->getFirstName() ?: '', $customer->getLastName() ?: ''); ?></p>
+        <p><?= sprintf(__('Reservation: <strong>%s %s</strong> for 1 Room', 'hola-weddings'), $billing->getFirstName(), $billing->getLastName()); ?></p>
     </div>
 
     <!-- Room -->
@@ -33,10 +35,10 @@ $room = hw_get_room(hw_get_quote_room_id($id));
 <page>
 
     <!-- Balance -->
-    <?= hw_get_template('template-parts/pdf/partials/payment', ['id' => $id]) ?>
+    <?php hw_get_template('template-parts/pdf/partials/payment', ['id' => $id, 'quote' => $quote ]) ?>
     
     <!-- Balance -->
-    <?= hw_get_template('template-parts/pdf/partials/billing', ['id' => $id, 'customer' => $customer]) ?>
+    <?= hw_get_template('template-parts/pdf/partials/billing', ['id' => $id, 'billing' => $billing]) ?>
 </page>
 <?php if(is_payment_enabled()): ?>
     <page>

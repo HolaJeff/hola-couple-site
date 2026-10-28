@@ -1,0 +1,48 @@
+@use 'variables' as *;
+
+// ── Page Tab ──────────────────────────────────────────────────────────────────
+
+.page-tab {
+    display: inline-flex;
+    align-items: center;
+    background: var(--hw-brand-secondary, #d90166);
+    color: #fff;
+    font-size: fs(0.75);
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+    line-height: 1;
+    padding: 8px 12px;
+    border-radius: 6px 0 0 6px;
+    position: relative;
+    margin-right: 20px;
+}
+
+.page-tab::after {
+    content: '';
+    position: absolute;
+    right: -9px;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    background: var(--hw-brand-secondary, #d90166);
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+// ── Booking form Bootstrap card overrides ─────────────────────────────────────
+
+#booking-form .card {
+    border-radius: 14px;
+    border: 1px solid #dde0e4;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    background: #fff;
+}
+
+#booking-form .card h4 {
+    font-size: fs(1.125);
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 20px;
+}
