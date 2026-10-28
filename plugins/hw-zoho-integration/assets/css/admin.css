@@ -1,0 +1,32 @@
+input[type=date], input[type=datetime-local], input[type=datetime], input[type=email], input[type=month], input[type=number], input[type=password], input[type=search], input[type=tel], input[type=text], input[type=time], input[type=url], input[type=week]{
+    min-height: 37px;
+}
+.form-label{
+    display: inline-block;
+}
+.btn-zoho{
+    background-color: #ff3030;
+    border-color: #ff3030;
+    color: #fff;
+}
+.btn-zoho:hover{
+    background-color: #aa1e1e;
+    border-color: #aa1e1e;
+    color: #fff;
+}
+.btn-zoho.disabled, 
+.btn-zoho:disabled, 
+fieldset:disabled .btn-zoho{
+    background-color: #ff5656;
+    border-color: #ff3030;
+    color: #fff;
+}
+.btn-has-spinner .spinner-border{
+    display: none;
+}
+.btn-has-spinner.loading .spinner-border{
+    display: inline-block;
+}
+.btn-has-spinner.loading .dashicons{
+    display: none;
+}

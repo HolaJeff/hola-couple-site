@@ -1,0 +1,532 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Hola Weddings V2\n"
+"POT-Creation-Date: 2023-03-23 12:04-0500\n"
+"PO-Revision-Date: 2023-03-23 12:06-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: templates\n"
+"X-Poedit-SearchPath-1: template-parts\n"
+"X-Poedit-SearchPath-2: endpoints\n"
+
+#: endpoints/home.php:18 template-parts/booking-form/form.php:121
+#, php-format
+msgid "%s and %s"
+msgstr "%s and %s"
+
+#: endpoints/home.php:42
+msgid "Our Story"
+msgstr "Our Story"
+
+#: endpoints/home.php:54
+msgid "Gallery"
+msgstr "Gallery"
+
+#: endpoints/travel-info.php:34
+msgid "Resort"
+msgstr "Resort"
+
+#: endpoints/travel-info.php:42 template-parts/hotel/rooms.php:13
+msgid "Accommodation"
+msgstr "Accommodation"
+
+#: endpoints/travel-info.php:50
+msgid "Things to know"
+msgstr "Things to know"
+
+#: endpoints/travel-info.php:61
+#, php-format
+msgid "About %s"
+msgstr "About %s"
+
+#: endpoints/travel-info.php:85
+msgid "Address & Map"
+msgstr "Address & Map"
+
+#: endpoints/travel-info.php:109
+msgid "Things to Know"
+msgstr "Things to Know"
+
+#: endpoints/travel-info.php:115
+msgid "ALL INCLUSIVE RATES INCLUDE"
+msgstr ""
+
+#: endpoints/travel-info.php:117
+msgid "Hotel Stay"
+msgstr ""
+
+#: endpoints/travel-info.php:118
+msgid "All meals as well as unlimited alcoholic and non-alcoholic drinks"
+msgstr ""
+
+#: endpoints/travel-info.php:119
+msgid "Shows and entertainment on the property"
+msgstr ""
+
+#: endpoints/travel-info.php:120
+msgid "Non-motorized water sports"
+msgstr ""
+
+#: endpoints/travel-info.php:122
+msgid "Useful Travel Information"
+msgstr ""
+
+#: template-parts/booking-form/form-billing.php:9
+#: template-parts/booking-form/form-billing.php:10
+msgid "First Name"
+msgstr "First Name"
+
+#: template-parts/booking-form/form-billing.php:18
+#: template-parts/booking-form/form-billing.php:19
+msgid "Last Name"
+msgstr "Last Name"
+
+#: template-parts/booking-form/form-billing.php:29
+#: template-parts/booking-form/form-billing.php:30
+msgid "Email"
+msgstr "Email"
+
+#: template-parts/booking-form/form-billing.php:38
+#: template-parts/booking-form/form-billing.php:39
+msgid "Phone Number"
+msgstr "Phone Number"
+
+#: template-parts/booking-form/form-billing.php:52
+msgid "Address"
+msgstr "Address"
+
+#: template-parts/booking-form/form-billing.php:53
+msgid "Street address"
+msgstr ""
+
+#: template-parts/booking-form/form-billing.php:62
+#: template-parts/booking-form/form-billing.php:63
+msgid "City"
+msgstr ""
+
+#: template-parts/booking-form/form-billing.php:72
+#: template-parts/booking-form/form-billing.php:73
+msgid "ZIP Code"
+msgstr ""
+
+#: template-parts/booking-form/form-billing.php:85
+#: template-parts/booking-form/form-billing.php:92
+msgid "State / Province"
+msgstr "State / Province"
+
+#: template-parts/booking-form/form-billing.php:87
+msgid "- Select State -"
+msgstr ""
+
+#: template-parts/booking-form/form-billing.php:101
+#: template-parts/booking-form/form-billing.php:102
+#: template-parts/booking-form/form-billing.php:117
+msgid "Country"
+msgstr "Country"
+
+#: template-parts/booking-form/form-billing.php:103
+msgid "Most Used"
+msgstr ""
+
+#: template-parts/booking-form/form-billing.php:106
+msgid "All Countries"
+msgstr ""
+
+#: template-parts/booking-form/form-guests.php:8
+msgid "Adult"
+msgstr ""
+
+#: template-parts/booking-form/form-guests.php:12
+msgid "Teen"
+msgstr ""
+
+#: template-parts/booking-form/form-guests.php:16
+msgid "Child"
+msgstr ""
+
+#: template-parts/booking-form/form-guests.php:20
+msgid "Infant"
+msgstr ""
+
+#: template-parts/booking-form/form-guests.php:36
+#, php-format
+msgid "%s #%s"
+msgstr ""
+
+#: template-parts/booking-form/form-guests.php:40
+msgid "Title"
+msgstr ""
+
+#: template-parts/booking-form/form-guests.php:43
+msgid "Mr"
+msgstr ""
+
+#: template-parts/booking-form/form-guests.php:44
+msgid "Mrs"
+msgstr ""
+
+#: template-parts/booking-form/form-guests.php:45
+msgid "Miss"
+msgstr ""
+
+#: template-parts/booking-form/form-guests.php:46
+msgid "Mstr"
+msgstr ""
+
+#: template-parts/booking-form/form-guests.php:51
+msgid "Full Name"
+msgstr "Full Name"
+
+#: template-parts/booking-form/form-guests.php:53
+msgid "Guest Name"
+msgstr "Guest Name"
+
+#: template-parts/booking-form/form-guests.php:54
+msgid "Please enter your name as it appears on your passport."
+msgstr "Please enter your name as it appears on your passport."
+
+#: template-parts/booking-form/form-guests.php:63
+msgid "Date of birth"
+msgstr "Date of birth"
+
+#: template-parts/booking-form/form-guests.php:82
+msgid "Age"
+msgstr ""
+
+#: template-parts/booking-form/form-insurance.php:8
+msgid "Insurance"
+msgstr "Insurance"
+
+#: template-parts/booking-form/form-insurance.php:15
+msgid "Choose Plan"
+msgstr "Choose Plan"
+
+#: template-parts/booking-form/form-insurance.php:17
+msgid "No, I do not need an insurance plan."
+msgstr ""
+
+#: template-parts/booking-form/form-insurance.php:29
+msgid ""
+"NOTE: Without insurance the trip is 100% non refundable after a certain date."
+msgstr ""
+
+#: template-parts/booking-form/form-packages.php:34
+msgid "From:"
+msgstr "From:"
+
+#: template-parts/booking-form/form-packages.php:37
+msgid "To:"
+msgstr "To:"
+
+#: template-parts/booking-form/form-packages.php:47
+#: template-parts/hotel/packages.php:36
+msgid "Flight Included"
+msgstr "Flight Included"
+
+#: template-parts/booking-form/form-packages.php:51
+#: template-parts/hotel/packages.php:40
+msgid "Airport Transportation Included"
+msgstr "Airport Transportation Included"
+
+#: template-parts/booking-form/form-packages.php:56
+msgid "Room Details"
+msgstr "Room Details"
+
+#: template-parts/booking-form/form-packages.php:57
+msgid "Package Details"
+msgstr "Package Details"
+
+#: template-parts/booking-form/form-payment.php:7
+msgid "Payment"
+msgstr "Payment"
+
+#: template-parts/booking-form/form-payment.php:12
+#: template-parts/booking-form/form-payment.php:13
+msgid "Card Owner"
+msgstr "Card Owner"
+
+#: template-parts/booking-form/form-payment.php:23
+msgid "Card Type"
+msgstr ""
+
+#: template-parts/booking-form/form-payment.php:56
+#: template-parts/booking-form/form-payment.php:57
+msgid "Card Number"
+msgstr "Card Number"
+
+#: template-parts/booking-form/form-payment.php:68
+msgid "Expiration Date"
+msgstr "Expiration Date"
+
+#: template-parts/booking-form/form-payment.php:71
+msgid "MM"
+msgstr "MM"
+
+#: template-parts/booking-form/form-payment.php:80
+msgid "YYYY"
+msgstr "YYYY"
+
+#: template-parts/booking-form/form-payment.php:90
+#: template-parts/booking-form/form-payment.php:91
+msgid "CCV"
+msgstr "CCV"
+
+#: template-parts/booking-form/form-payment.php:102
+msgid "Payment Amount"
+msgstr ""
+
+#: template-parts/booking-form/form-payment.php:103
+#, php-format
+msgid ""
+"Choose the amount you wish to pay in order to confirm your reservation. "
+"Minimum deposit amount is %s"
+msgstr ""
+
+#: template-parts/booking-form/form-payment.php:109
+#, php-format
+msgid "Deposit (%s)"
+msgstr ""
+
+#: template-parts/booking-form/form-payment.php:112
+msgid "Full Amount"
+msgstr ""
+
+#: template-parts/booking-form/form-payment.php:115
+msgid "Custom Amount"
+msgstr ""
+
+#: template-parts/booking-form/form-payment.php:132
+#, php-format
+msgid "A minimum deposit amount of %s is required"
+msgstr ""
+
+#: template-parts/booking-form/form-rooms.php:27
+msgid "Room Details & Rates"
+msgstr "Room Details & Rates"
+
+#: template-parts/booking-form/form-search.php:11
+msgid "Check-in"
+msgstr "Check-in"
+
+#: template-parts/booking-form/form-search.php:12
+msgid "Check-in Date"
+msgstr ""
+
+#: template-parts/booking-form/form-search.php:16
+msgid "Check-out"
+msgstr "Check-out"
+
+#: template-parts/booking-form/form-search.php:17
+msgid "Check-out Date"
+msgstr ""
+
+#: template-parts/booking-form/form-search.php:29
+msgid "Adults"
+msgstr "Adults"
+
+#: template-parts/booking-form/form-search.php:38
+msgid "Teens"
+msgstr "Teens"
+
+#: template-parts/booking-form/form-search.php:49
+msgid "Children"
+msgstr "Children"
+
+#: template-parts/booking-form/form-search.php:58
+msgid "Infants"
+msgstr ""
+
+#: template-parts/booking-form/form-search.php:68
+#: template-parts/booking-form/form.php:97
+msgid "Submit"
+msgstr "Submit"
+
+#: template-parts/booking-form/form-search.php:75
+#, php-format
+msgid "A minimum of %s nights is required."
+msgstr ""
+
+#: template-parts/booking-form/form-terms-conditions.php:7
+msgid "Cancellation Policy"
+msgstr "Cancellation Policy"
+
+#: template-parts/booking-form/form-terms-conditions.php:14
+msgid "Terms & Conditions, Payment Policy"
+msgstr "Terms & Conditions, Payment Policy"
+
+#: template-parts/booking-form/form-terms-conditions.php:24
+msgid "I authorize Hola Weddings to charge my card for the amount of "
+msgstr ""
+
+#: template-parts/booking-form/form-terms-conditions.php:32
+msgid "I Accept the Terms and Conditions"
+msgstr "I Accept the Terms and Conditions"
+
+#: template-parts/booking-form/form.php:31
+#: template-parts/booking-form/form.php:35
+msgid ""
+"Thanks for submitting your reservation. Please allow 48 hours for "
+"processing, Monday through Saturday. You will receive an email confirmation "
+"once it has been approved."
+msgstr ""
+"Thanks for submitting your reservation. Please allow 48 hours for "
+"processing, Monday through Saturday. You will receive an email confirmation "
+"once it has been approved."
+
+#: template-parts/booking-form/form.php:58
+msgid "Ops! There are no rates available for your selection"
+msgstr "Ops! There are no rates available for your selection"
+
+#: template-parts/booking-form/form.php:63
+msgid "Select Room"
+msgstr "Select Room"
+
+#: template-parts/booking-form/form.php:63
+msgid "Select Package"
+msgstr "Select Package"
+
+#: template-parts/booking-form/form.php:73
+msgid "Guests Information"
+msgstr "Guests Information"
+
+#: template-parts/booking-form/form.php:79
+msgid "Card Holder Information"
+msgstr ""
+
+#: template-parts/booking-form/form.php:79
+msgid "Main Contact Information"
+msgstr ""
+
+#: template-parts/booking-form/form.php:131
+msgid "Your Reservation"
+msgstr "Your Reservation"
+
+#: template-parts/booking-form/form.php:135
+msgid "No rooms selected"
+msgstr "No rooms selected"
+
+#: template-parts/common/flights.php:3
+msgid "Arrival Flight"
+msgstr "Arrival Flight"
+
+#: template-parts/common/flights.php:18
+msgid "Return Flight"
+msgstr "Return Flight"
+
+#: template-parts/hotel/amenities.php:7
+msgid "Amenities & Services"
+msgstr "Amenities & Services"
+
+#: template-parts/hotel/overview.php:11
+msgid "Rooms"
+msgstr "Rooms"
+
+#: template-parts/hotel/overview.php:16
+msgid "Restaurants"
+msgstr "Restaurants"
+
+#: template-parts/hotel/overview.php:21
+msgid "Bars"
+msgstr "Bars"
+
+#: template-parts/hotel/overview.php:26
+msgid "Swimming Pools"
+msgstr "Swimming Pools"
+
+#: template-parts/hotel/overview.php:31
+msgid "Airport Distance"
+msgstr "Airport Distance"
+
+#: template-parts/hotel/packages.php:7
+msgid "Packages"
+msgstr "Packages"
+
+#: template-parts/hotel/packages.php:26
+msgid "From"
+msgstr "From"
+
+#: template-parts/hotel/packages.php:29
+msgid "To"
+msgstr "To"
+
+#: template-parts/hotel/packages.php:47
+msgid "View Details"
+msgstr "View Details"
+
+#: template-parts/hotel/packages.php:57
+msgid "About the room"
+msgstr "About the room"
+
+#: template-parts/hotel/packages.php:73
+msgid "Sorry, there are no packages available."
+msgstr "Sorry, there are no packages available."
+
+#: template-parts/hotel/rooms.php:73
+msgid "Free"
+msgstr ""
+
+#: template-parts/hotel/rooms.php:90
+msgid "* Rates are per person per night and include all taxes"
+msgstr "* Rates are per person per night and include all taxes"
+
+#: templates/admin/dynamic-prices.php:56
+msgid "Enable"
+msgstr "Enable"
+
+#: templates/admin/settings/booking-tab.php:4
+msgid "Separated by comma"
+msgstr "Separated by comma"
+
+#: templates/admin/settings/common/rooms.php:9
+msgid "No rooms available"
+msgstr "No rooms available"
+
+#: templates/admin/settings/common/rooms.php:35
+msgid "Disabled"
+msgstr "Disabled"
+
+#: templates/admin/settings/common/rooms.php:45
+msgid "Default Price"
+msgstr "Default Price"
+
+#: templates/admin/settings/common/rooms.php:98
+msgid "Dynamic Prices"
+msgstr "Dynamic Prices"
+
+#: templates/partials/overview.php:10
+msgid "Wedding Details"
+msgstr "Wedding Details"
+
+#: templates/partials/overview.php:16
+msgid "Hotel"
+msgstr "Hotel"
+
+#: templates/partials/overview.php:24
+msgid "Wedding Date"
+msgstr "Wedding Date"
+
+#: templates/partials/overview.php:32
+msgid "Ceremony"
+msgstr "Ceremony"
+
+#: templates/partials/overview.php:41
+msgid "Cocktail Hour"
+msgstr "Cocktail Hour"
+
+#: templates/partials/overview.php:50
+msgid "Reception"
+msgstr "Reception"
+
+#~ msgid "Guest #"
+#~ msgstr "Guest #"
+
+#~ msgid "Personal Details"
+#~ msgstr "Personal Details"

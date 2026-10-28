@@ -1,0 +1,6 @@
+{
+    "require": {
+        "zohocrm/php-sdk-4.0": "5.0.0",
+        "deliciousbrains/wp-background-processing": "^1.3"
+    }
+}

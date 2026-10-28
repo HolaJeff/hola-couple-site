@@ -1,0 +1,60 @@
+.fields .field{
+    display: flex;
+    flex-wrap: nowrap;
+    font-weight: 400;
+    font-size: 14px;
+}
+.fields .field .label,
+.fields .field .value{
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.fields .field .label{
+    color: #666;;
+    width: 25%;
+    --font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+.fields .field .value{
+    margin-left: 20px;
+    width: 75%;
+    color: #000;
+}
+.form-select{
+    min-height: 37px!important;
+}
+.form-switch input[type=checkbox]{
+    width: 4em;
+    height: 1.75em;
+    margin-top: .25em;
+    vertical-align: top;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border: 1px solid rgba(0, 0, 0, .25);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+    print-color-adjust: exact;
+}
+.form-switch input[type=checkbox]:checked{
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+.form-switch input[type=checkbox]:checked::before{
+    content: none;
+}
+.hw-metabox .section{
+    padding: 15px 0 30px;
+    border-bottom: 1px solid #eee;
+}
+.hw-metabox .section:last-child{
+    border: 0;
+}
+.hw-metabox .section h3{
+    text-transform: uppercase;
+    font-size: 0.9em;
+}

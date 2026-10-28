@@ -1,0 +1,177 @@
+.cart-card{
+    &.sticky{
+        margin-top: 50px;
+    }
+}
+.cart-holder{
+    .total{
+        display: flex;
+        padding-top: 20px;
+        .label{
+            width: 70%;
+        }
+        .amount{
+            width: 30%;
+            text-align: right;
+        }
+    }
+    .cart-item{
+        display: flex;
+        flex-wrap: nowrap;
+        border-bottom: 1px solid #eee;
+        &:last-child{
+            border-bottom: 0;
+        }
+        .quantity{
+            width: 10%;
+        }
+        .title{
+            width: 60%;
+        }
+        .price{
+            text-align: right;
+            width: 30%;
+        }
+    }
+}
+.terms-box{
+    padding: 20px;
+    height: 300px;
+    overflow-y: scroll;
+    border: 1px solid #eee;
+    margin-bottom: 30px;
+}
+#packages{
+    .package{
+        .inner{
+            border: 1px solid #eee;
+            transition: all ease-in-out 0.3s;
+            .image{
+                background-position: center;
+                background-size: cover;
+                width: 30%;
+                min-height: 180px;
+            }
+            .content{
+                padding: 20px;
+                width: 70%;
+            }
+            .overview{
+                width: 70%;
+            }
+            .actions{
+                width: 30%;
+                .cta{
+                    i{
+                        font-size: 32px;
+                    }
+                }
+            }
+            .body{
+                border-top: 1px solid #eee;
+            }
+        }
+        &:hover{
+            .inner{
+                box-shadow: 0 0 15px rgba(0,0,0,0.1);
+                cursor: pointer;
+            }
+        }
+    }
+}
+#quoteForm{
+    .room-list-selector{
+        .room{
+            .inner{
+                border: 1px solid #eee;
+                border-radius: 4px;
+                position: relative;
+                overflow: hidden;
+                &::before{
+                    content: '';
+                    background-color: #eee;
+                    border: 1px solid #ddd;
+                    position: absolute;
+                    top: 6px;
+                    right: 10px;
+                    font-weight: 600;
+                    border-radius: 50%;
+                    height: 18px;
+                    width: 18px;
+                    
+                }
+                &::after{
+                    display: none;
+                    content: '\f058';
+                    font-family: 'Font Awesome 5 Free';
+                    font-size: 18px;
+                    color: #0ab707;
+                    position: absolute;
+                    top: 5px;
+                    right: 10px;
+                    font-weight: 600;
+                }
+                &:hover{
+                    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                    cursor: pointer;
+                }
+            }
+            .image-holder{
+                width: 30%;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+            .content{
+                padding: 20px;
+                width: 70%;
+                position: relative;
+            }
+            input{
+                display: none;
+            }
+            & > input[type="radio"]:checked + label{
+                border-color: #0ab707;
+                &::after{
+                    display: block;
+                }
+                &::before{
+                    display: none;
+                }
+            }
+        }
+    }
+    .package-mode{
+        .room-list-selector{
+            .room{
+                .image-holder{
+                    min-height: 200px;
+                }
+            }
+        }
+    }
+}
+#mobile-cart-summary-nav{
+    box-shadow: 0 -3px 10px rgba(0,0,0,0.1);
+    z-index: calc(999 + 1);
+}
+#mobile-cart-summary{
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.3s ease-in-out;
+    visibility: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    height: 100%;
+    width: 100%;
+    &.active{
+        opacity: 1;
+        transform: translateY(0px);
+        visibility: visible;
+    }
+    @media (min-width: 992px) {
+        display: none!important;
+    }
+}

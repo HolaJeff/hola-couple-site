@@ -1,0 +1,24 @@
+#invoices-table,
+#mobile-invoices-list{
+    td{
+        vertical-align: middle;
+    }
+    .actions{
+        a{
+            padding: 8px 12px;
+            border: 1px solid #284a70;
+            border-radius: 30px;
+            display: inline-block;
+            margin-right: 10px;
+            color: #284a70;
+            text-decoration: none!important;
+            &:hover{
+                color: #fff;
+                background-color: #284a70;
+            }
+            @media (min-width: 768px){
+                padding: 10px 20px;
+            }
+        }
+    }
+}

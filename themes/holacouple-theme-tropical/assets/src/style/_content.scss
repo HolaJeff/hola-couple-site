@@ -1,0 +1,481 @@
+@keyframes animate-revealer-element-right {
+	0% {
+        transform: scaleY(1) scaleX(0);
+        transform-origin: 0% 50%;
+        opacity: 1;
+	}
+
+	49% {
+		transform-origin: 0% 50%;
+        transform: scaleY(1) scaleX(1);
+	}
+
+    51% {
+		transform-origin: 100% 50%;
+        transform: scaleY(1) scaleX(1);
+	}
+
+	100% {
+		transform: scaleY(1) scaleX(0);
+        transform-origin: 100% 50%;
+        opacity: 1;
+	}
+}
+@keyframes animate-revealer-element-left {
+	0% {
+        transform: scaleY(1) scaleX(0);
+        transform-origin: 100% 50%;
+        opacity: 1;
+	}
+
+	49% {
+		transform-origin: 100% 50%;
+        transform: scaleY(1) scaleX(1);
+	}
+
+    51% {
+		transform-origin: 0% 50%;
+        transform: scaleY(1) scaleX(1);
+	}
+
+	100% {
+		transform: scaleY(1) scaleX(0);
+        transform-origin: 0% 50%;
+        opacity: 1;
+	}
+}
+@keyframes animate-revealer-content {
+    49%{
+        opacity: 0;
+    }
+    50% {
+		opacity: 1;
+	}
+    100% {
+		opacity: 1;
+	}
+}
+.page-template-home{
+    #main{
+        padding-bottom: 0;
+    }
+}
+.revealer{
+    position: relative;
+    --overflow: hidden;
+    .revealer-content{
+        opacity: 0;
+    }
+    .revealer-element{
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        color: rgb(255, 255, 255);
+        width: 100%;
+        height: 100.5%;
+        background-color: var(--hw-secondary-color);
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0;
+    }
+    &.animate{
+        .revealer-content{
+            animation: 1s ease-in 0s animate-revealer-content ;
+        }
+        &.animate-left{
+            .revealer-element{
+                animation: 1s ease-in 0s animate-revealer-element-left ;
+            }
+        }
+        &.animate-right{
+            .revealer-element{
+                animation: 1s ease-in 0s animate-revealer-element-right ;
+            }
+        }
+        
+    }
+    &.animation-end{
+        .revealer-content{
+            opacity: 1;
+        }
+        .revealer-element{
+            transform: scaleY(1) scaleX(0);
+        }
+        &.animate-left{
+            .revealer-element{
+                transform-origin: 0% 50%;
+            }
+        }
+        &.animate-right{
+            .revealer-element{
+                transform-origin: 100% 50%;
+            }
+        }
+    }
+}
+.decoration-left{
+    position: relative;
+    &::before {
+        content: "";
+        position: absolute;
+        left: -20px;
+        bottom: -20px;
+        border-bottom: 1px solid var(--hw-primary-color);
+        border-left: 1px solid var(--hw-primary-color);
+        height: 100%;
+        width: 100%;
+    }
+}
+.decoration-right{
+    position: relative;
+    &::before {
+        content: "";
+        position: absolute;
+        right: -20px;
+        bottom: -20px;
+        border-bottom: 1px solid var(--hw-primary-color);
+        border-right: 1px solid var(--hw-primary-color);
+        height: 100%;
+        width: 100%;
+    }
+}
+.section{
+    overflow-x: hidden;
+    overflow-y: visible;
+    .section-icon{
+        text-align: center;
+        margin-bottom: 10px;
+        svg{
+            height: 48px;
+            width: 48px;
+            color: var(--hw-primary-color);
+        }
+    }
+    .section-subtitle{
+        color: var(--hw-secondary-color);
+    }
+    .section-title{
+        text-transform: uppercase;
+        color: var(--hw-primary-color);
+        letter-spacing: 1px;
+        &::after{
+            content: '';
+            width: 1px;
+            background-color: var(--hw-primary-color);
+            height: 30px;
+            display: block;
+            margin: 0 auto;
+            margin-top: 10px;
+            @media (min-width:992px){
+                height: 70px;
+            }
+        }
+    }
+    @media (min-width: 992px) {
+        padding: 100px 0;
+        .section-icon{
+            svg{
+                height: 56px;
+                width: 56px;
+            }
+        }
+    }
+}
+#hero{
+    .content{
+        .hero-title{
+            text-transform: uppercase;
+            font-weight: 300;
+            @media (min-width: 768px) {
+                font-size: 2.5em;
+            }
+        }
+        .hero-date{
+            font-size: 1.4em;
+            .day{
+                font-weight: 600;
+                font-size: 2em;
+                line-height: 1em;
+            }
+        }
+        .hero-icon{
+            text-align: center;
+            margin-bottom: 10px;
+            svg{
+                height: 56px;
+                width: 56px;
+                color: #fff
+            }
+        }
+        .hero-countdown{
+            .simply-section{
+                background: none;
+                box-shadow: none;
+                border-bottom: 1px solid #fff;
+                border-left: 0;
+                border-radius: 0;
+                border-right: 0;
+                border-top: 0;
+                backdrop-filter: none;
+                font-weight: 300;
+                height: 75px;
+                width: 75px;
+            }
+        }
+    }
+}
+.persons-section{
+    .persons-wrapper{
+        .person{
+            display: flex;
+            flex-direction: column;
+            .content{
+                text-align: center;
+            }
+            .photo-holder{
+                width: 200px;
+                margin-bottom: 20px;
+                position: relative;
+                margin-left: auto;
+                margin-right: auto;
+                .photo{
+                    height: 200px;
+                    width: 100%;
+                    background-position: center;
+                    background-size: cover;
+                    z-index: 2;
+                    position: relative;
+                }
+                &::before{
+                    content: '';
+                    width: 100%;
+                    height: 100%;
+                    top: 10px;
+                    left: 10px;
+                    background-color: var(--hw-primary-color);
+                    position: absolute;
+                }
+            }
+            .name{
+                margin-bottom: 20px;
+                font-size: 1.2em;
+                text-transform: uppercase;
+            }
+            &:last-child{
+                .photo-holder{
+                    &::before{
+                        left: -10px;
+                    }
+                }
+            }
+            @media (min-width: 768px) {
+                flex-direction: row;
+                align-items: center;
+                .content{
+                    padding-left: 30px;
+                    text-align: left;
+                }
+                .photo-holder{
+                    margin-right: 20px;
+                    margin-left: 0;
+                    margin-bottom: 0;
+                }
+                &:first-child{
+                    flex-direction: row-reverse;
+                    .content{
+                        padding-left: 0;
+                        padding-right: 30px;
+                        text-align: right;
+                    }
+
+                }
+                &:last-child{
+                    .photo-holder{
+                        margin-left: 20px;
+                        margin-right: 0;
+                    }
+                }
+            }
+            @media (min-width: 992px) {
+                width: 50%;
+            }
+        }
+        @media (min-width: 992px) {
+            display: flex;
+        }
+    }
+}
+.story-section{
+    background-color: var(--hw-bg-color);
+    .bg-overlay{
+        background-image: url(../../images/palm-leafs-color.png);
+        opacity: 0.1;
+    }
+    .image-wrapper{
+        .image{
+            height: 300px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            @media (min-width:768px) {
+                height: 400px;
+            }
+            @media (min-width:992px) {
+                height: 600px;
+            }
+        }
+    }
+    .story-wrapper{
+        background-color: #fff;
+        padding: 50px;
+        color: #000;
+        svg{
+            height: 56px;
+            width: 56px;
+            color: var(--hw-secondary-color);
+        }
+    }
+}
+.countdown-section{
+    .simply-countdown{
+        padding-bottom: 20px;
+        @media (min-width: 992px) {
+            gap: 3.25rem;
+        }
+    }
+    .simply-section{
+        background-color: var(--hw-bg-color);
+        border-radius: 0;
+        border: 0;
+        position: relative;
+        box-shadow: none;
+        &::before{
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: -10px;
+            border-left: 1px solid var(--hw-primary-color);
+            border-bottom: 1px solid var(--hw-primary-color);
+            height: 100%;
+            width: 100%;
+        }
+    }
+}
+.love-story-timeline{
+    .main-line{
+        background-color: var(--hw-primary-color);
+    }
+    .timeline-item{
+        .inner{
+            .details{
+                .circle{
+                    background-color: var(--hw-primary-color);
+                    border-color: var(--hw-secondary-color);
+                }
+            }
+            .year{
+                opacity: 1;
+            }
+            .title{
+                text-transform: uppercase;
+                font-size: 1.2em;
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+.hotel-section{
+    background-color: var(--hw-bg-color);
+    .bg-overlay{
+        background-image: url(../../images/palm-leafs-color.png);
+        opacity: 0.1;
+    }
+    .hotel-cta-wrapper{
+        height: 300px;
+        background-position: center;
+        background-size: cover;
+        @media (min-width:768px) {
+            height: 400px;
+        }
+        @media (min-width:992px){
+            height: 600px;
+        }
+    }
+    .hotel-description{
+        font-size: 16px;
+    }
+}
+#overview{
+    .icon{
+        margin-right: 0;
+        margin-bottom: 20px;
+        svg{
+            color: var(--hw-secondary-color);
+            height: 56px;
+            width: 56px;
+        }
+    }
+    .title{
+        font-size: 18px;
+        color: var(--hw-secondary-color);
+        margin-bottom: 10px;
+    }
+}
+#quick-jump{
+    .link-wrapper{
+        a{
+            color: var(--hw-secondary-color);
+        }
+    }
+}
+.hotel-contact-section,
+.hotel-overview{
+    background-color: var(--hw-bg-color);
+    .bg-overlay{
+        background-image: url(../../images/palm-leafs-color.png);
+        opacity: 0.1;
+    }
+}
+.hotel-contact-section{
+    .contact-details-wrapper{
+        background-color: #fff;
+        padding: 30px;
+        .detail{
+            margin-bottom: 10px;
+            svg{
+                color: var(--hw-secondary-color);
+            }
+        }
+    }
+}
+#things{
+    .card-wrapper{
+        .card{
+            border: 10px solid var(--hw-bg-color);
+            box-shadow: none;
+        }
+    }
+}
+#booking-form{
+    .card{
+        h4{
+            font-size: 1em!important;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            color: var(--hw-secondary-color);
+        }
+    }
+    .login-alert{
+        button{
+            background-color: transparent;
+            color: var(--hw-secondary-color);
+            border-color: var(--hw-secondary-color);
+            padding: 8px 12px;
+            &:hover,
+            &:active,
+            &:focus{
+                color: #fff;
+            }
+        }
+    }
+}

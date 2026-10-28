@@ -1,0 +1,108 @@
+/*
+ * Footer
+ */
+ #footer{    
+    a{
+        color: var(--hw-footer-text-color);
+        line-height: 24px;
+    }
+    .upper-footer{
+        color: var(--hw-footer-text-color);
+        line-height: 24px;
+        background-color: var(--hw-footer-bg-color);
+        padding: 50px 0;
+        .column{
+            &:nth-child(2){
+                order: -1;
+                margin-bottom: 3rem;
+                @media (min-width: 768px) {
+                    order: 0;
+                    margin-bottom: 0;
+                }
+            }
+        }
+        .footer-logo{
+            font-family: var(--hw-logo-font-family), serif;
+            font-size: 3em;
+            line-height: 1em;
+            position: relative;
+            .separator{
+                font-size: 0.7em;
+                opacity: 0.5;
+            }
+            .name{
+                color: var(--hw-footer-logo-color);
+            }
+        }
+    }
+    .lower-footer{
+        background-color: var(--hw-footer-bg-color);
+        color: var(--hw-footer-text-color);
+        a{
+            color: var(--hw-footer-text-color);
+        }
+    }
+    .footer-widgets{
+        .widget_nav_menu{
+            padding: 0;
+            ul.menu{
+                flex-direction: column;
+                a{
+                    display: block;
+                    text-decoration: none;
+                    transition: all 0.3s;
+                    font-weight: 400;
+                    opacity: 0.8;
+                }
+                li:hover{
+                    a{
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+    .nav{
+        & > li:hover{
+            & > a{
+                opacity: 1;
+                text-shadow: none;
+            }
+        }
+    }
+    .footer-socials {
+        .footer-socials__heading{
+            font-weight: 700;
+            font-size: 3.5em;
+        }
+        .footer-socials__icon{
+            float: left;
+            svg{
+                width: 48px;
+            }
+        }
+        .footer-socials__icons{
+            display: block;
+            line-height: 73px;
+            height: 73px;
+            vertical-align: middle;
+            padding-left: 100px;
+            .social-item{
+                font-size: 42px;
+            }
+        }
+        .footer-socials__contact{
+            margin-top: 100px;
+            font-weight: 400;
+        }
+        .footer-credits{
+            padding-top: 30px;
+        }
+        .footer-copyright{
+            opacity: 0.5;
+            margin-bottom: 0;
+            margin-top: 20px;
+            font-size: 12px;
+        }
+    }
+} 

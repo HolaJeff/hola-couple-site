@@ -1,0 +1,88 @@
+{
+    "hw_mode": "room",
+    "hw_customer_data": {
+        "first_name": "Marco",
+        "last_name": "Cariolato-Test",
+        "email": "von@gmail.com",
+        "phone_number": "+8014481477",
+        "state": "UT",
+        "country": "Mexico"
+    },
+    "hw_first_name": "Marco",
+    "hw_last_name": "Cariolato-Test",
+    "hw_email": "mvon@gmail.com",
+    "hw_phone": "+8014481477",
+    "hw_state": "UT",
+    "hw_country": "Mexico",
+    "hw_package_id": null,
+    "hw_room_id": "1",
+    "hw_adults": "2",
+    "hw_teen": 0,
+    "hw_children": "0",
+    "hw_rate_type": {
+        "rate": {
+            "id": 8,
+            "slug": "double"
+        },
+        "configuration": {
+            "adults": "2",
+            "teen": "",
+            "children": "0",
+            "adults_multiplier": "1",
+            "teen_multiplier": "",
+            "children_multiplier": "0"
+        }
+    },
+    "hw_rates": {
+        "adult": "120",
+        "child": "0"
+    },
+    "hw_rates_per_day": {
+        "2022-10-19": {
+            "adult": "120",
+            "child": "0"
+        },
+        "2022-10-20": {
+            "adult": "120",
+            "child": "0"
+        },
+        "2022-10-21": {
+            "adult": "120",
+            "child": "0"
+        },
+        "2022-10-22": {
+            "adult": "120",
+            "child": "0"
+        },
+        "2022-10-23": {
+            "adult": "120",
+            "child": "0"
+        }
+    },
+    "hw_room_total": 2600,
+    "hw_total": 2690,
+    "hw_guests": {
+        "1": {
+            "name": "Yvonne Allen",
+            "date": "2000-1-2"
+        },
+        "2": {
+            "name": "Rohan Allen",
+            "date": "1984-2-3"
+        }
+    },
+    "hw_insurance_id": null,
+    "hw_insurance_plan_id": null,
+    "hw_insurance_total": 100,
+    "hw_insurance_rates": {},
+    "hw_toc_accepted": "2022-12-02 00:12:18",
+    "hw_nights": 5,
+    "hw_checkin": "2022-10-19",
+    "hw_checkout": "2022-10-24",
+    "hw_service_fee": "90",
+    "hw_sales_agent": "",
+    "hw_admin_agent": "",
+    "hw_quote_status": "confirmed",
+    "zoho_wedding_id": "5170711000006596124",
+    "zoho_room_block_id": "5170711000007065024"
+}

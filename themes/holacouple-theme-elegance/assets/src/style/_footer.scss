@@ -1,0 +1,54 @@
+#footer{
+    color: #fff;
+    a{
+        color: #fff;
+    }
+    .inner{
+        background-color: var(--hw-footer-bg-color);
+        padding: 50px 0 20px;
+        #footer-top{
+            background-color: var(--hw-footer-top-bg-color);
+            .footer-logo{
+                font-family: "Playfair Display", serif;
+                font-size: 2.5em;
+                line-height: 1em;
+                padding: 26px 64px;
+                position: relative;
+                display: inline-block;
+                small{
+                    font-size: 0.5em;
+                }
+                &::before,
+                &::after{
+                    content: "";
+                    width: 120px;
+                    height: 120px;
+                    position: absolute;
+                    right: -24px;
+                    top: 50%;
+                    background-position: center center;
+                    background-repeat: no-repeat;
+                    background-image: url('../../images/flower-small.svg');
+                    background-size: contain;
+                    -khtml-opacity: 0.5;
+                    -moz-opacity: 0.5;
+                    opacity: .5;
+                    -webkit-transform: translateY(-50%);
+                    -moz-transform: translateY(-50%);
+                    -ms-transform: translateY(-50%);
+                    -o-transform: translateY(-50%);
+                    transform: translateY(-50%);
+                }
+                &::after{
+                    right: auto;
+                    left: -24px;
+                    -webkit-transform: rotate(-180deg) translateY(50%);
+                    -moz-transform: rotate(-180deg) translateY(50%);
+                    -ms-transform: rotate(-180deg) translateY(50%);
+                    -o-transform: rotate(-180deg) translateY(50%);
+                    transform: rotate(-180deg) translateY(50%);
+                }
+            }
+        }
+    }
+}
