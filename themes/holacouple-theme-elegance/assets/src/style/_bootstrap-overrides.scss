@@ -1,0 +1,85 @@
+.form-control, .form-select {
+    background-color: var(--hw-bg-color);
+    border: 1px solid var(--hw-input-border-color);
+    color: var(--hw-text-color);
+    height: auto;
+    padding: 11px 20px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    -moz-transition: border-color .3s ease-out;
+    -o-transition: border-color .3s ease-out;
+    -webkit-transition: border-color .3s ease-out;
+    transition: border-color .3s ease-out;
+}
+.form-check-input[type=radio] {
+    border-color: var(--hw-primary-color);
+}
+.form-check-input[type=checkbox] {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: .25em;
+    vertical-align: top;
+    background-color: #fff;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: 1px solid var(--hw-primary-color);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+}
+.form-check-input:checked[type=checkbox] {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10l3 3l6-6'/%3e%3c/svg%3e");
+}
+.form-check-input:checked {
+    background-color: var(--hw-primary-color);
+}
+.btn{
+    border-radius: 0;
+    padding: 11px 20px;
+}
+.btn-outline-primary{
+    border-color: var(--hw-primary-color);
+    color: var(--hw-primary-color);
+}
+.btn-check:active+.btn-outline-primary, 
+.btn-check:checked+.btn-outline-primary, 
+.btn-outline-primary.active, 
+.btn-outline-primary.dropdown-toggle.show, 
+.btn-outline-primary:active{
+    background-color: var(--hw-primary-color);
+    border-color: var(--hw-primary-color);
+}
+.btn-primary,
+.btn-info{
+    background-color: var(--hw-primary-color);
+    border-color: var(--hw-primary-color);
+    &:disabled{
+        background-color: var(--hw-primary-color);
+        border-color: var(--hw-primary-color);
+    }
+    &:hover,
+    &:active{
+        background-color: var(--hw-secondary-color);
+        border-color: var(--hw-secondary-color);
+    }
+}
+.btn-link{
+    color: var(--hw-primary-color);
+    &:disabled{
+        color: var(--hw-primary-color);
+    }
+    &:hover,
+    &:active{
+        color: var(--hw-secondary-color);
+    }
+}
+.card{
+    border-radius: 0;
+}

@@ -1,0 +1,58 @@
+.elementor-hotel-contacts{
+    .detail{
+        .wrapper{
+            display: flex;
+            flex-wrap: nowrap;
+        }
+        .icon{
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            svg{
+                height: 24px;
+                width: 24px;
+            }
+        }
+    }
+}
+
+.elementor-wedding-overview{
+    .wrapper{
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+        border-radius: 10px;
+    }
+    ul{
+        li{
+            display: flex;
+            flex-wrap: nowrap;
+            margin-bottom: 20px;
+        }
+    }
+    .icon{
+        text-align: center;
+        margin-right: 20px;
+        svg{
+            height: 36px;
+            width: 36px;
+        }
+    }
+    .title{
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+}
+.elementor-hotel-gallery{
+    .elementor-hotel-gallery__wrapper{
+        .image-holder{
+            height: 250px;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            @media (min-width: 768px){
+                height: 350px;
+            }
+        }
+    }
+}

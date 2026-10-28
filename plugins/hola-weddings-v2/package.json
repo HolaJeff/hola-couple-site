@@ -1,0 +1,49 @@
+{
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/register": "^7.0.0",
+    "beepbeep": "^1.2.2",
+    "browser-sync": "^2.11.1",
+    "clean-css": "^5.3.2",
+    "eslint": "^7.12.0",
+    "eslint-config-wordpress": "^2.0.0",
+    "gulp": "^4.0.0",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.5.2",
+    "gulp-debug": "^5.0.1",
+    "gulp-filter": "^6.0.0",
+    "gulp-line-ending-corrector": "^1.0.1",
+    "gulp-notify": "^3.0.0",
+    "gulp-order": "^1.2.0",
+    "gulp-plumber": "^1.2.0",
+    "gulp-postcss": "^10.0.0",
+    "gulp-remember": "^1.0.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-terser": "^2.1.0",
+    "gulp-uglify": "^3.0.0",
+    "gulp-uglifycss": "^1.1.0",
+    "postcss-import": "^16.1.1",
+    "sass": "^1.62.1",
+    "webpack-stream": "^7.0.0"
+  },
+  "scripts": {
+    "minify-account-style": "cleancss ./assets/style/account/style.css -o ./assets/style/account/style.min.css",
+    "minify-account-icons": "cleancss ./assets/style/account/icons.css -o ./assets/style/account/icons.min.css",
+    "build-pos": "gulp posJS",
+    "dev-pos": "gulp build-pos",
+    "build-css": "gulp css",
+    "build-js": "gulp js",
+    "dev": "gulp"
+  },
+  "dependencies": {
+    "air-datepicker": "^3.6.0",
+    "clean-css-cli": "^5.6.2",
+    "signature_pad": "^4.1.7",
+    "simplycountdown.js": "^3.0.1",
+    "trim-canvas": "^0.1.2"
+  }
+}

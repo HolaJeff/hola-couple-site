@@ -1,0 +1,252 @@
+<?php
+
+namespace HW\Updater;
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Updater class for plugin
+ */
+class Updater{
+
+    protected $file;
+    protected $plugin;
+    protected $basename;
+    protected $active;
+
+    private $username = 'mrccario';
+    private $repository = 'hola-weddings-v2';
+    private $authorize_token = '';
+    private $github_response;
+
+    /**
+     * Construct
+     *
+     * @param [type] $file
+     */
+    public function __construct( $file ) {
+        // Token comes from wp-config.php (define('HW_UPDATER_GITHUB_TOKEN', '...')); never commit it.
+        $this->authorize_token = defined('HW_UPDATER_GITHUB_TOKEN') ? HW_UPDATER_GITHUB_TOKEN : '';
+
+        $this->file = $file;
+
+        // Add hooks
+        add_action( 'admin_init', [ $this, 'set_plugin_properties' ] );
+        add_filter( 'pre_set_site_transient_update_plugins', [ $this, 'modify_transient' ], 10, 1 );
+        add_filter( 'plugins_api', [ $this, 'plugin_popup' ], 10, 3);
+        add_filter( 'upgrader_post_install', [ $this, 'after_install' ], 10, 3 );
+       
+        // Load hook for adding authentication headers for download packages.
+		add_filter( 'upgrader_pre_download',
+			function() {
+				add_filter( 'http_request_args', [ $this, 'download_package' ], 15, 2 );
+				return false; // upgrader_pre_download filter default return value.
+			}
+		);
+    }
+
+    /**
+	 * Add authentication headers for download packages.
+	 * Remove authentication headers from release assets.
+	 * Hooks into 'http_request_args' filter.
+	 *
+	 * @param array  $args HTTP GET REQUEST args.
+	 * @param string $url  URL.
+	 *
+	 * @return array $args
+	 */
+	public function download_package( $args, $url ) {
+		if ( null !== $args['filename'] ) {
+			$args = array_merge( $args, $this->add_auth_header( $args, $url ) );
+		}
+		remove_filter( 'http_request_args', [ $this, 'download_package' ] );
+
+		return $args;
+	}
+
+    
+	/**
+	 * Add authentication header to wp_remote_get().
+	 *
+	 * @access public
+	 *
+	 * @param array  $args Args passed to the URL.
+	 * @param string $url  The URL.
+	 *
+	 * @return array $args
+	 */
+	public function add_auth_header( $args, $url ) {
+
+        $args['headers']['Authorization'] = 'token ' . $this->authorize_token;
+        return $args;
+    }
+
+    
+    /**
+     * Setter for plugin properties
+     *
+     * @return void
+     */
+    public function set_plugin_properties() {
+
+        $this->plugin   = get_plugin_data( $this->file );
+        $this->basename = plugin_basename( $this->file );
+        $this->active   = is_plugin_active( $this->basename );
+    }
+
+    /**
+     * SEtter for username
+     *
+     * @param [type] $username
+     * @return void
+     */
+    public function set_username( $username ) {
+        $this->username = $username;
+    }
+    
+    /**
+     * Setter for repository
+     *
+     * @param [type] $repository
+     * @return void
+     */
+    public function set_repository( $repository ) {
+        $this->repository = $repository;
+    }
+    
+    /**
+     * Setter for auth code
+     *
+     * @param [type] $token
+     * @return void
+     */
+    public function authorize( $token ) {
+        $this->authorize_token = $token;
+    }
+
+    /**
+     * Get repo info
+     *
+     * @return void
+     */
+    private function get_repository_info() {
+
+        if ( is_null( $this->github_response ) ) { // Do we have a response?
+
+            $args = [];
+            $request_uri = sprintf( 'https://api.github.com/repos/%s/%s/releases', $this->username, $this->repository ); // Build URI
+            /*if( $this->authorize_token ) { // Is there an access token?
+                $request_uri = add_query_arg( 'access_token', $this->authorize_token, $request_uri ); // Append it
+            }*/ 
+
+            if( $this->authorize_token ) {
+                $args['headers'] = 'Authorization: token ' . $this->authorize_token;
+            }
+
+            $response = json_decode( wp_remote_retrieve_body( wp_remote_get( $request_uri, $args ) ), true ); // Get JSON and parse it
+            
+            if( is_array( $response ) ) { // If it is an array
+                $response = current( $response ); // Get the first item
+            }
+
+            /*if( $this->authorize_token ) { // Is there an access token?
+                $response['zipball_url'] = add_query_arg( 'access_token', $this->authorize_token, $response['zipball_url'] ); // Update our zip url with token
+            }*/
+            
+            $this->github_response = $response; // Set it to our property  
+        }
+    }
+
+    /**
+     * modify transient
+     *
+     * @param [type] $transient
+     * @return void
+     */
+    public function modify_transient( $transient ) {
+
+        if( property_exists( $transient, 'checked') ) { // Check if transient has a checked property
+
+            if( $checked = $transient->checked ) { // Did WordPress check for updates?
+
+                $this->get_repository_info(); // Get the repo info
+                $out_of_date = version_compare( $this->github_response['tag_name'], $checked[$this->basename], 'gt' ); // Check if we're out of date
+                
+                if( $out_of_date ) {
+
+                    $new_files = $this->github_response['zipball_url']; // Get the ZIP
+                    $slug = current( explode('/', $this->basename ) ); // Create valid slug
+                    $plugin = array( // setup our plugin info
+                        'url' => $this->plugin["PluginURI"],
+                        'slug' => $slug,
+                        'package' => $new_files,
+                        'new_version' => $this->github_response['tag_name']
+                    );
+                    $transient->response[ $this->basename ] = (object) $plugin; // Return it in response
+                }
+            }
+        }
+
+        return $transient; // Return filtered transient
+    }
+
+    /**
+     * Add plugin information to update popup
+     *
+     * @param [type] $result
+     * @param [type] $action
+     * @param [type] $args
+     * @return void
+     */
+    public function plugin_popup( $result, $action, $args ) {
+
+        if( ! empty( $args->slug ) ) { // If there is a slug
+
+                if( $args->slug == current( explode( '/' , $this->basename ) ) ) { // And it's our slug
+
+                    $this->get_repository_info(); // Get our repo info
+
+                    // Set it to an array
+                    $plugin = [
+                        'name'              => $this->plugin["Name"],
+                        'slug'              => $this->basename,
+                        'version'           => $this->github_response['tag_name'],
+                        'author'            => $this->plugin["AuthorName"],
+                        'author_profile'    => $this->plugin["AuthorURI"],
+                        'last_updated'      => $this->github_response['published_at'],
+                        'homepage'          => $this->plugin["PluginURI"],
+                        'short_description' => $this->plugin["Description"],
+                        'sections'          => [
+                            'Description'   => $this->plugin["Description"],
+                            'Updates'       => $this->github_response['body'],
+                        ],
+                        'download_link'     => $this->github_response['zipball_url']
+                    ];
+
+                    return (object) $plugin; // Return the data
+                }
+        }   
+
+        return $result; // Otherwise return default
+    }
+
+    public function after_install( $response, $hook_extra, $result ) {
+
+        global $wp_filesystem; // Get global FS object
+      
+        $install_directory = plugin_dir_path( $this->file ); // Our plugin directory 
+        $wp_filesystem->move( $result['destination'], $install_directory ); // Move files to the plugin dir
+        $result['destination'] = $install_directory; // Set the destination for the rest of the stack
+      
+        if ( $this->active ) { // If it was active
+            activate_plugin( $this->basename ); // Reactivate
+        }
+
+        return $result;
+      }
+      
+      
+}

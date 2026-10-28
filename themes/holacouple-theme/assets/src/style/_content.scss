@@ -1,0 +1,58 @@
+#hero{
+    .hero-slideshow{
+        visibility: hidden;
+        &.slick-initialized{
+            visibility: visible;
+        }
+    }
+    .bg-container{
+        &::after{
+            background-color: var(--hw-hero-overlay);
+            opacity: .3;
+        }
+    }
+    .content{
+        color: var(--hw-hero-text-color)!important;
+        .hero-title{
+            line-height: 1.2;
+            color: var(--hw-hero-text-color)!important;
+            small{
+                font-size: 0.6em;
+            }
+        }
+        
+        .simply-countdown{
+            .simply-section{
+                height: 90px;
+                width: 90px;
+                .simply-word,
+                .simply-amount{
+                    color: var(--hw-hero-text-color);
+                }
+            }
+        }    
+    }
+   
+}
+.rooms-list{
+    .room{
+        .room__name{
+            color: var(--hw-primary-color);
+        }
+    }
+}
+.love-story-timeline{
+    .main-line{
+        background-color: var(--hw-secondary-color);
+    }
+    .timeline-item{
+        .inner{
+            .details{
+                .circle{
+                    background-color: var(--hw-secondary-color);
+                    border-color: var(--hw-secondary-color);
+                }
+            }
+        }
+    }
+}

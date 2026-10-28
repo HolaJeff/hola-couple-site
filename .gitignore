@@ -1,0 +1,16 @@
+wp-config.php
+.env
+.env.*
+*.bak*
+*bak
+*.step6bak
+*.sdkenvbak
+uploads/
+logs/
+*.log
+*.zip
+node_modules/
+vendor/
+*token*.txt
+plugins/hw-zoho-integration/zoho/resources/
+*.*bak*

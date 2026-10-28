@@ -1,0 +1,41 @@
+.page-template-home{
+    #header{
+        position: initial;
+    }
+}
+#header{
+    #logo{
+        a{
+            color: var(--hw-primary-color);
+        }
+    }
+    .main-nav{
+        a,
+        span{
+            color: var(--hw-text-color);
+            font-weight: 400;
+            font-size: 16px;
+        }
+        a{
+            &:hover{
+                color: var(--hw-primary-color);
+            }
+        }
+        nav{
+            & > ul{
+                & > li{
+                    &  a{
+                        text-transform: uppercase;
+                        padding-left: 20px;
+                        padding-right: 20px;
+                    }
+                }
+            }
+        }
+        .current-menu-item{
+            a{
+                color: var(--hw-primary-color);
+            }
+        }
+    }
+}

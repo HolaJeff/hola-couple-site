@@ -1,0 +1,121 @@
+.hw-template-pos{
+    .container{
+        @media (min-width: 1200px){
+            max-width: 1240px;
+        }
+    }
+}
+#pos{
+    label{
+        font-weight: 500;
+        font-size: 0.8em;
+        text-transform: uppercase;
+    }
+    .reservation-details{
+        .image{
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 200px;
+            @media (min-width: 768px) and (max-width: 991px){
+                width: 30%;
+            }
+        }
+        .meta{
+            font-size: 0.9em;
+            .label{
+                font-size: 0.8em;
+                text-transform: uppercase;
+                font-weight: 600;
+                line-height: 16px;
+            }
+        }
+    }
+}
+#help-bubble{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 999;
+    .bubble{
+        position: absolute;
+        right: 30px;
+        bottom: 30px;
+        .trigger{
+            text-align: center;
+            padding: 10px;
+            height: 70px;
+            width: 70px;
+            border-radius: 50%;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            &:hover{
+                cursor: pointer;
+            }
+            img{
+                width: 42px;
+                height: auto;
+                margin-top: 4px;
+            }
+        }
+        .popup{
+            position: absolute;
+            visibility: hidden;
+            bottom: 90px;
+            right: 0;
+            width: 230px;
+            padding: 30px;
+            border-radius: 4px;
+            background-color: #fff;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 16px rgba(0,0,0,0.4);
+            &::after{
+                content: '';
+                position: absolute;
+                right: 20px;
+                bottom: -9px;
+                width: 0px;
+                height: 0px;
+                border-style: solid;
+                border-width: 10px 10px 0 10px;
+                border-color: #FFFFFF transparent transparent transparent;
+                transform: rotate(0deg);
+            }
+        }
+        &.open{
+            .popup{
+                visibility: visible;
+                display: block;
+                transform: translateY(0px);
+                opacity: 1;
+            }
+        }
+        @media (min-width: 768px){
+            right: 50px;
+            bottom: 50px;
+        }
+    }
+}
+#payment-processing-message{
+    .view{
+        display: none;
+    }
+    img{
+        height: 120px;
+    }
+    [data-view="error"]{
+        img{
+            height: 48px;
+        }
+    }
+    .title{
+        font-size: 2em;
+    }
+    .close-icon{
+        &:hover{
+            cursor: pointer;
+        }
+    }
+}

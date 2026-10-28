@@ -1,0 +1,13 @@
+{
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true
+        }
+    },
+    "require": {
+        "web-token/jwt-framework": "2.2.11",
+        "web-token/jwt-encryption-algorithm-rsa": "2.2.11",
+        "web-token/jwt-encryption-algorithm-aesgcm": "2.2.11",
+        "web-token/jwt-encryption": "2.2.11"
+    }
+}

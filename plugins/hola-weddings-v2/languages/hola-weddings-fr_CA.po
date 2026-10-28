@@ -1,0 +1,1890 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Hola Weddings V2\n"
+"POT-Creation-Date: 2026-02-06 13:38-0500\n"
+"PO-Revision-Date: 2026-02-06 14:16-0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_CA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.6\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-SearchPath-0: templates\n"
+"X-Poedit-SearchPath-1: template-parts\n"
+"X-Poedit-SearchPath-2: endpoints\n"
+
+#: template-parts/POS/checkout/billing.php:6
+#: template-parts/pdf/partials/billing.php:4 template-parts/pdf/quote.php:93
+#: templates/admin/metaboxes/quote/customer-information.php:44
+msgid "Billing Information"
+msgstr "Informations sur la facturation"
+
+#: template-parts/POS/checkout/billing.php:11
+msgid "Use billing information saved with reservation"
+msgstr ""
+"Utilisez les informations de facturation enregistrées avec la réservation"
+
+#: template-parts/POS/checkout/billing.php:17
+msgid "Clear Fields"
+msgstr "Champs Dégagés"
+
+#: template-parts/POS/checkout/payment-switch.php:6
+#: template-parts/POS/checkout/payment.php:2
+msgid "Payment Method"
+msgstr "Mode de Paiement"
+
+#: template-parts/POS/checkout/payment-switch.php:12
+msgid "Use saved card "
+msgstr "Utiliser la carte enregistrée "
+
+#: template-parts/POS/checkout/payment-switch.php:18
+msgid "Use different card"
+msgstr "Utiliser une autre carte"
+
+#: template-parts/POS/checkout/payment-switch.php:31
+#: template-parts/POS/checkout/payment.php:10
+msgid "Clear Card Fields"
+msgstr "Effacer les champs de la carte"
+
+#: template-parts/POS/checkout/terms.php:8
+#: template-parts/booking-form/form-terms-conditions.php:7
+#: template-parts/pdf/partials/terms.php:13 template-parts/pdf/quote.php:238
+msgid "Cancellation Policy"
+msgstr "Politique d’annulation"
+
+#: template-parts/POS/checkout/terms.php:17
+#: template-parts/booking-form/form-terms-conditions.php:14
+msgid "Payment Policy"
+msgstr "Politique de Paiement"
+
+#: template-parts/POS/checkout/terms.php:27
+#: template-parts/booking-form/form-signature.php:2
+#: template-parts/modals/signature.php:31
+#: template-parts/modals/signature.php:37
+msgid "Signature"
+msgstr "Signature"
+
+#: template-parts/POS/checkout/terms.php:29
+msgid "Please add your electronic signature in order to complete the payment."
+msgstr ""
+"Veuillez ajouter votre signature électronique pour compléter le paiement."
+
+#: template-parts/POS/checkout/terms.php:35
+msgid "Add Signature"
+msgstr "Ajouter une signature"
+
+#: template-parts/POS/checkout/terms.php:41
+msgid ""
+"By submitting, you certify that you have verified that all information "
+"contained in the confirmation you received is accurate. You also certify you "
+"have read the Terms & Conditions and the appropriate Travel Protection Plan "
+"details. Cancellation penalties may apply. Insurance is not refundable."
+msgstr ""
+"En soumettant ce formulaire, vous certifiez avoir vérifié l'exactitude des "
+"informations contenues dans la confirmation reçue. Vous certifiez également "
+"avoir pris connaissance des Conditions générales et des détails de "
+"l'assurance voyage applicable. Des frais d'annulation peuvent s'appliquer. "
+"L'assurance n'est pas remboursable."
+
+#: template-parts/POS/checkout/terms.php:47
+msgid ""
+"I Accept the <a href=\"#\" data-toggle=\"modal\" data-"
+"target=\"#termsConditionsModal\">Terms & Conditions</a>, <a "
+"href=\"#cancellation-policy\">Cancellation Policy</a> and <a href=\"#payment-"
+"policy\">Payment Policy</a>"
+msgstr ""
+"J'accepte les <a href=\"#\" data-toggle=\"modal\" data-"
+"target=\"#termsConditionsModal\">Conditions générales</a>, la <a "
+"href=\"#cancellation-policy\">Politique d'annulation</a> et la <a "
+"href=\"#payment-policy\">Politique de paiement</a>"
+
+#: template-parts/POS/checkout/test.php:2
+msgid "Test Options"
+msgstr ""
+
+#: template-parts/POS/checkout/test.php:3
+msgid "Visible only to admins"
+msgstr ""
+
+#: template-parts/POS/checkout/test.php:6
+msgid "Simulate Payment?"
+msgstr ""
+
+#: template-parts/POS/checkout/test.php:10
+#: template-parts/POS/checkout/test.php:19
+#: template-parts/POS/checkout/test.php:40
+msgid "Yes"
+msgstr ""
+
+#: template-parts/POS/checkout/test.php:15
+#, fuzzy
+#| msgid "Disabled"
+msgid "Disable Redirect?"
+msgstr "Désactivé"
+
+#: template-parts/POS/checkout/test.php:25
+msgid "Response Type"
+msgstr ""
+
+#: template-parts/POS/checkout/test.php:27
+msgid "Success"
+msgstr ""
+
+#: template-parts/POS/checkout/test.php:28
+msgid "Pending"
+msgstr ""
+
+#: template-parts/POS/checkout/test.php:29
+msgid "Failed"
+msgstr ""
+
+#: template-parts/POS/checkout/test.php:36
+msgid "Skip form validation?"
+msgstr ""
+
+#: template-parts/POS/default.php:13
+msgid "This invoice is fully paid."
+msgstr "Cette facture est entièrement payée."
+
+#: template-parts/POS/default.php:15
+msgid ""
+"This invoice has a pending payment, please allow us to review it and we'll "
+"get back to you soon. "
+msgstr ""
+"Cette facture présente un paiement en attente. Veuillez nous permettre de "
+"l'examiner et nous vous recontacterons prochainement. "
+
+#: template-parts/POS/default.php:20
+msgid "Payment Failed"
+msgstr "Paiement échoué"
+
+#: template-parts/POS/default.php:48
+msgid ""
+"This form requires Javascript to work. Please, enable Javascript and reload "
+"the page."
+msgstr ""
+"Ce formulaire nécessite JavaScript pour fonctionner. Veuillez activer "
+"JavaScript et recharger la page."
+
+#: template-parts/POS/default.php:56
+msgid "Secured Payment"
+msgstr "Paiement Sécurisé"
+
+#: template-parts/POS/default.php:59
+msgid "Pay Now"
+msgstr "Payer Maintenant"
+
+#: template-parts/POS/default.php:88
+msgid "Processing Payment"
+msgstr "Traitement du Paiement"
+
+#: template-parts/POS/default.php:89
+msgid "Please wait. Don't close this window."
+msgstr "Veuillez patienter. Ne fermez pas cette fenêtre."
+
+#: template-parts/POS/email-auth.php:4
+msgid "View Invoice"
+msgstr "Voir la facture"
+
+#: template-parts/POS/email-auth.php:7
+msgid ""
+"In order to access the invoice insert the email used during the reservation."
+msgstr ""
+"Pour accéder à la facture, veuillez saisir l'adresse courriel utilisée lors "
+"de la réservation."
+
+#: template-parts/POS/email-auth.php:11
+msgid "Insert Reservation E-mail"
+msgstr "Insérer l'adresse courriel de réservation"
+
+#: template-parts/POS/email-auth.php:14
+msgid "Access Invoice"
+msgstr "Accéder à la facture"
+
+#: template-parts/POS/header.php:5
+#, php-format
+msgid "Invoice #%d - %s"
+msgstr "Facture #%d - %s"
+
+#: template-parts/POS/header.php:14
+#: template-parts/booking/confirmation/default.php:96
+msgid "View Reservation"
+msgstr "Voir la réservation"
+
+#: template-parts/POS/sidebar/reservation-details.php:13
+#, php-format
+msgid "at %s"
+msgstr "à %s"
+
+#: template-parts/POS/sidebar/reservation-details.php:15
+#, php-format
+msgid "%s Wedding"
+msgstr "%s Mariage"
+
+#: template-parts/POS/sidebar/reservation-details.php:20
+#: template-parts/account/views/reservations.php:70
+msgid "Main Guest"
+msgstr "Invité principal"
+
+#: template-parts/POS/sidebar/reservation-details.php:24
+#: template-parts/account/views/reservation/guests.php:6
+#: template-parts/account/views/reservations.php:74
+#: template-parts/pdf/partials/guests.php:1 template-parts/pdf/quote.php:82
+msgid "Guests"
+msgstr "Les invités"
+
+#: template-parts/POS/sidebar/reservation-details.php:30
+msgid "Check-In"
+msgstr "Enregistrement"
+
+#: template-parts/POS/sidebar/reservation-details.php:34
+msgid "Check-Out"
+msgstr "Départ"
+
+#: template-parts/POS/sidebar/summary.php:2
+msgid "summary"
+msgstr ""
+
+#: template-parts/POS/sidebar/summary.php:6
+msgid "Total Amount"
+msgstr "Montant total"
+
+#: template-parts/POS/sidebar/summary.php:10
+#: template-parts/account/views/reservation/payment.php:47
+#: template-parts/pdf/admin-transaction-ucc/invoice.php:26
+#: template-parts/pdf/partials/payment.php:46
+msgid "Paid Amount"
+msgstr "Montant du paiement"
+
+#: template-parts/POS/sidebar/summary.php:14
+#: template-parts/account/views/reservation/invoices.php:43
+#: template-parts/account/views/reservation/payment.php:55
+#: template-parts/pdf/admin-transaction-ucc/invoice.php:34
+#: template-parts/pdf/partials/payment.php:54 template-parts/pdf/quote.php:194
+msgid "Due Amount"
+msgstr "Montant dû"
+
+#: template-parts/account/navbar.php:30
+#, php-format
+msgid "Hello <strong>%s</strong>"
+msgstr "Salut <strong>%s</strong>"
+
+#: template-parts/account/navbar.php:38
+#: template-parts/account/views/profile.php:4
+msgid "My Profile"
+msgstr "Mon Profil"
+
+#: template-parts/account/navbar.php:50
+msgid "Logout"
+msgstr "Déconnexion"
+
+#: template-parts/account/sidebar.php:22
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+#: template-parts/account/sidebar.php:30
+msgid "Reservations"
+msgstr "Réservations"
+
+#: template-parts/account/views/dashboard.php:1
+#, php-format
+msgid "Welcome %s"
+msgstr "Bienvenue %s"
+
+#: template-parts/account/views/dashboard.php:7
+msgid "My Reservations"
+msgstr "Mes réservations"
+
+#: template-parts/account/views/profile.php:7
+msgid "Profile Details"
+msgstr "Détails du profil"
+
+#: template-parts/account/views/profile.php:10
+#: template-parts/account/views/reservation/customer.php:16
+#: template-parts/admin/partials/forms/billing-form.php:7
+#: template-parts/admin/partials/forms/billing-form.php:8
+#: template-parts/booking-form/form-billing.php:10
+#: template-parts/booking-form/form-billing.php:11
+#: template-parts/booking-form/form-guests.php:99
+#: template-parts/booking-form/form-guests.php:101
+#: template-parts/partials/forms/billing-form.php:7
+#: template-parts/partials/forms/billing-form.php:8
+#: templates/admin/metaboxes/quote/customer-information.php:14
+#: templates/admin/metaboxes/quote/guests.php:5
+msgid "First Name"
+msgstr "Prénom"
+
+#: template-parts/account/views/profile.php:14
+msgid "Last  Name"
+msgstr "Nom"
+
+#: template-parts/account/views/profile.php:20
+msgid "Username"
+msgstr ""
+
+#: template-parts/account/views/profile.php:26
+#: template-parts/account/views/profile.php:50
+msgid "Change Password"
+msgstr "Changer le mot de passe"
+
+#: template-parts/account/views/profile.php:31
+msgid "Old Password"
+msgstr "Ancien mot de passe"
+
+#: template-parts/account/views/profile.php:39
+msgid "New Password"
+msgstr "Nouveau mot de passe"
+
+#: template-parts/account/views/profile.php:45
+msgid "Confirm New Passord"
+msgstr "Confirmer le nouveau mot de passe"
+
+#: template-parts/account/views/reservation.php:28
+#: template-parts/account/views/reservations.php:52
+#, php-format
+msgid "Owner: %s"
+msgstr "Propriétaire : %s"
+
+#: template-parts/account/views/reservation.php:33
+msgid "View PDF"
+msgstr "Voir le PDF"
+
+#: template-parts/account/views/reservation.php:69
+#, php-format
+msgid "Ref. ID #%s"
+msgstr "Ref. ID #%s"
+
+#: template-parts/account/views/reservation/customer.php:10
+msgid "Customer Information"
+msgstr "Renseignements sur le client"
+
+#: template-parts/account/views/reservation/customer.php:20
+#: template-parts/admin/partials/forms/billing-form.php:11
+#: template-parts/admin/partials/forms/billing-form.php:12
+#: template-parts/booking-form/form-billing.php:19
+#: template-parts/booking-form/form-billing.php:20
+#: template-parts/booking-form/form-guests.php:105
+#: template-parts/booking-form/form-guests.php:107
+#: template-parts/partials/forms/billing-form.php:11
+#: template-parts/partials/forms/billing-form.php:12
+#: templates/admin/metaboxes/quote/customer-information.php:20
+#: templates/admin/metaboxes/quote/guests.php:6
+msgid "Last Name"
+msgstr "Nom de famille"
+
+#: template-parts/account/views/reservation/customer.php:27
+#: template-parts/admin/partials/forms/billing-form.php:17
+#: template-parts/admin/partials/forms/billing-form.php:18
+#: template-parts/booking-form/form-billing.php:30
+#: template-parts/booking-form/form-billing.php:31
+#: template-parts/modals/login.php:17
+#: template-parts/partials/forms/billing-form.php:17
+#: template-parts/partials/forms/billing-form.php:18
+#: templates/admin/metaboxes/quote/customer-information.php:26
+msgid "Email"
+msgstr "Courriel"
+
+#: template-parts/account/views/reservation/customer.php:32
+#: templates/admin/metaboxes/quote/customer-information.php:36
+msgid "Phone"
+msgstr "Téléphone"
+
+#: template-parts/account/views/reservation/customer.php:38
+#: template-parts/admin/partials/forms/billing-form.php:23
+#: template-parts/admin/partials/forms/billing-form.php:24
+#: template-parts/booking-form/form-billing.php:53
+#: template-parts/partials/forms/billing-form.php:23
+#: template-parts/partials/forms/billing-form.php:24
+#: template-parts/pdf/partials/billing.php:26 template-parts/pdf/quote.php:115
+#: templates/admin/metaboxes/quote/customer-information.php:46
+msgid "Address"
+msgstr "Adresse"
+
+#: template-parts/account/views/reservation/customer.php:42
+#: template-parts/admin/partials/forms/billing-form.php:53
+#: template-parts/admin/partials/forms/billing-form.php:54
+#: template-parts/booking-form/form-billing.php:63
+#: template-parts/booking-form/form-billing.php:64
+#: template-parts/partials/forms/billing-form.php:53
+#: template-parts/partials/forms/billing-form.php:54
+#: templates/admin/metaboxes/quote/customer-information.php:52
+msgid "City"
+msgstr "Ville"
+
+#: template-parts/account/views/reservation/customer.php:46
+msgid "ZIP code"
+msgstr "Code postal"
+
+#: template-parts/account/views/reservation/customer.php:52
+#: template-parts/admin/partials/forms/billing-form.php:57
+#: template-parts/admin/partials/forms/billing-form.php:58
+#: template-parts/partials/forms/billing-form.php:57
+#: template-parts/partials/forms/billing-form.php:58
+msgid "State"
+msgstr "État"
+
+#: template-parts/account/views/reservation/customer.php:56
+#: template-parts/admin/partials/forms/billing-form.php:33
+#: template-parts/admin/partials/forms/billing-form.php:34
+#: template-parts/booking-form/form-billing.php:102
+#: template-parts/booking-form/form-billing.php:103
+#: template-parts/booking-form/form-billing.php:118
+#: template-parts/partials/forms/billing-form.php:33
+#: template-parts/partials/forms/billing-form.php:34
+#: templates/admin/metaboxes/quote/customer-information.php:64
+#: templates/admin/metaboxes/quote/customer-information.php:66
+msgid "Country"
+msgstr "Pays"
+
+#: template-parts/account/views/reservation/details.php:5
+#: templates/admin/metaboxes/quote/customer-information.php:12
+msgid "Details"
+msgstr "Détails"
+
+#: template-parts/account/views/reservation/details.php:11
+msgid "Booked Room"
+msgstr "Chambre réservée"
+
+#: template-parts/account/views/reservation/details.php:15
+#: template-parts/account/views/reservations.php:89
+#: template-parts/booking-form/form-search.php:15
+#: templates/admin/metaboxes/quote/reservation-details.php:19
+msgid "Check-in"
+msgstr "Arrivée"
+
+#: template-parts/account/views/reservation/details.php:19
+#: template-parts/account/views/reservations.php:93
+#: template-parts/booking-form/form-search.php:20
+#: templates/admin/metaboxes/quote/reservation-details.php:35
+msgid "Check-out"
+msgstr "Départ"
+
+#: template-parts/account/views/reservation/details.php:25
+#: template-parts/booking-form/form-search.php:36
+#: templates/admin/metaboxes/quote/reservation-details.php:52
+msgid "Adults"
+msgstr "Adultes"
+
+#: template-parts/account/views/reservation/details.php:30
+#: templates/admin/metaboxes/quote/reservation-details.php:58
+msgid "Teen"
+msgstr "Adolescent"
+
+#: template-parts/account/views/reservation/details.php:35
+#: template-parts/booking-form/form-search.php:56
+#: templates/admin/metaboxes/quote/reservation-details.php:66
+msgid "Children"
+msgstr "Enfants"
+
+#: template-parts/account/views/reservation/details.php:39
+#: template-parts/booking-form/form-search.php:65
+#: templates/admin/metaboxes/quote/reservation-details.php:72
+msgid "Infants"
+msgstr "Bébés"
+
+#: template-parts/account/views/reservation/insurance.php:5
+#: template-parts/account/views/reservations.php:132
+#: template-parts/booking-form/form-insurance.php:9
+#: template-parts/pdf/partials/insurance.php:6 template-parts/pdf/quote.php:120
+#: templates/admin/metaboxes/quote/reservation-details.php:121
+msgid "Insurance"
+msgstr "Assurance"
+
+#: template-parts/account/views/reservation/insurance.php:17
+msgid "No insurance"
+msgstr "Sans Assurance"
+
+#: template-parts/account/views/reservation/invoices.php:7
+msgid "Upcoming Payments"
+msgstr "Paiements à venir"
+
+#: template-parts/account/views/reservation/invoices.php:39
+#: template-parts/account/views/reservations.php:111
+msgid "Due Date"
+msgstr "Date d'échéance"
+
+#: template-parts/account/views/reservation/invoices.php:54
+msgid "No invoices found"
+msgstr "Aucune facture trouvée"
+
+#: template-parts/account/views/reservation/payment.php:6
+msgid "Summary"
+msgstr "Résumé"
+
+#: template-parts/account/views/reservation/payment.php:12
+#: template-parts/pdf/partials/payment.php:12
+#: template-parts/pdf/partials/room.php:19 template-parts/pdf/quote.php:151
+msgid "Room Total"
+msgstr "Total de la chambre"
+
+#: template-parts/account/views/reservation/payment.php:20
+#: template-parts/pdf/partials/insurance.php:18
+#: template-parts/pdf/partials/payment.php:20 template-parts/pdf/quote.php:132
+#: template-parts/pdf/quote.php:159
+#: templates/admin/metaboxes/quote/reservation-details.php:161
+msgid "Insurance Total"
+msgstr "Total de l'assurance"
+
+#: template-parts/account/views/reservation/payment.php:29
+#: template-parts/pdf/partials/payment.php:29 template-parts/pdf/quote.php:168
+msgid "Transfer Fee"
+msgstr "Frais de transfert"
+
+#: template-parts/account/views/reservation/payment.php:38
+#: template-parts/booking-form/mobile-summary.php:4
+#: template-parts/pdf/partials/payment.php:38 template-parts/pdf/quote.php:177
+msgid "Total"
+msgstr "Total"
+
+#: template-parts/account/views/reservations.php:10
+msgid "Your Reservations"
+msgstr "Vos réservations"
+
+#: template-parts/account/views/reservations.php:57
+#: template-parts/booking-form/mobile-summary.php:10
+#: template-parts/hotel/packages.php:47
+msgid "View Details"
+msgstr "Voir les détails"
+
+#: template-parts/account/views/reservations.php:66
+#: templates/admin/metaboxes/roomblock/settings.php:1
+msgid "Room"
+msgstr "Chambre"
+
+#: template-parts/account/views/reservations.php:103
+msgid "Upcoming Payment"
+msgstr "Paiement à venir"
+
+#: template-parts/account/views/reservations.php:115
+#: template-parts/invoice-payment-confirmation/details.php:21
+#: templates/admin/metaboxes/quote/reservation-details.php:209
+#: templates/emails/pos/canceled-transaction.php:25
+#: templates/emails/pos/pending-transaction.php:19
+msgid "Amount"
+msgstr "Montant"
+
+#: template-parts/account/views/reservations.php:120
+msgid "Pay Invoice"
+msgstr "Payer la facture"
+
+#: template-parts/account/views/reservations.php:124
+msgid "No Payment found"
+msgstr "Aucun paiement trouvé"
+
+#: template-parts/account/views/reservations.php:138
+msgid "No Insurance"
+msgstr "Sans Assurance"
+
+#: template-parts/account/views/reservations.php:149
+msgid "You don't have any reservation yet."
+msgstr "Vous n'avez pas encore de réservation."
+
+#: template-parts/admin/partials/forms/billing-form.php:27
+#: template-parts/admin/partials/forms/billing-form.php:28
+#: template-parts/partials/forms/billing-form.php:27
+#: template-parts/partials/forms/billing-form.php:28
+#: templates/admin/metaboxes/quote/customer-information.php:58
+msgid "Postal Code"
+msgstr "Code postal"
+
+#: template-parts/admin/partials/forms/billing-form.php:35
+#: template-parts/booking-form/form-billing.php:104
+#: template-parts/partials/forms/billing-form.php:35
+#: templates/admin/metaboxes/quote/customer-information.php:67
+msgid "Most Used"
+msgstr "Les plus utilisés"
+
+#: template-parts/admin/partials/forms/billing-form.php:38
+#: template-parts/booking-form/form-billing.php:107
+#: template-parts/partials/forms/billing-form.php:38
+#: templates/admin/metaboxes/quote/customer-information.php:70
+msgid "All Countries"
+msgstr "Tous les pays"
+
+#: template-parts/admin/partials/forms/card-form.php:12
+#: templates/admin/metaboxes/quote/payment.php:11
+msgid "Card Holder"
+msgstr "Titulaire de la carte"
+
+#: template-parts/admin/partials/forms/card-form.php:14
+#: templates/admin/metaboxes/quote/payment.php:13
+msgid "Insert Card Holder Name"
+msgstr "Nom du titulaire de la carte"
+
+#: template-parts/admin/partials/forms/card-form.php:18
+#: template-parts/booking-form/form-payment.php:68
+#: template-parts/partials/forms/card-form.php:60
+#: templates/admin/metaboxes/quote/payment.php:17
+msgid "Expiration Date"
+msgstr "Date d’expiration"
+
+#: template-parts/admin/partials/forms/card-form.php:21
+#: template-parts/booking-form/form-payment.php:71
+#: template-parts/partials/forms/card-form.php:63
+#: templates/admin/metaboxes/quote/payment.php:20
+msgid "MM"
+msgstr "MM"
+
+#: template-parts/admin/partials/forms/card-form.php:22
+#: templates/admin/metaboxes/quote/payment.php:21
+msgid "Month"
+msgstr "Mois"
+
+#: template-parts/admin/partials/forms/card-form.php:26
+#: template-parts/booking-form/form-payment.php:80
+#: template-parts/partials/forms/card-form.php:67
+#: templates/admin/metaboxes/quote/payment.php:25
+msgid "YYYY"
+msgstr "AAAA"
+
+#: template-parts/admin/partials/forms/card-form.php:27
+#: templates/admin/metaboxes/quote/payment.php:26
+msgid "Year"
+msgstr "Année"
+
+#: template-parts/admin/partials/forms/card-form.php:32
+#: template-parts/booking-form/form-payment.php:23
+#: template-parts/partials/forms/card-form.php:5
+#: template-parts/pdf/admin-transaction-ucc/card.php:13
+#: templates/admin/metaboxes/quote/payment.php:31
+msgid "Card Type"
+msgstr "Type de carte"
+
+#: template-parts/admin/partials/forms/card-form.php:44
+#: template-parts/booking-form/form-payment.php:56
+#: template-parts/booking-form/form-payment.php:57
+#: template-parts/partials/forms/card-form.php:53
+#: template-parts/partials/forms/card-form.php:54
+#: template-parts/pdf/admin-transaction-ucc/card.php:18
+#: templates/admin/metaboxes/quote/payment.php:43
+msgid "Card Number"
+msgstr "Numéro de carte"
+
+#: template-parts/admin/partials/forms/card-form.php:46
+#: templates/admin/metaboxes/quote/payment.php:45
+msgid "Insert Card Number"
+msgstr "Insérer Numéro de carte"
+
+#: template-parts/admin/partials/forms/card-form.php:50
+#: template-parts/booking-form/form-payment.php:90
+#: template-parts/booking-form/form-payment.php:91
+#: template-parts/partials/forms/card-form.php:72
+#: template-parts/partials/forms/card-form.php:80
+#: templates/admin/metaboxes/quote/payment.php:49
+msgid "CCV"
+msgstr "CCV"
+
+#: template-parts/admin/partials/forms/card-form.php:52
+msgid "123"
+msgstr "123"
+
+#: template-parts/booking-form/form-billing.php:39
+#: template-parts/booking-form/form-billing.php:40
+#: template-parts/pdf/partials/billing.php:20 template-parts/pdf/quote.php:109
+msgid "Phone Number"
+msgstr "Numéro de téléphone"
+
+#: template-parts/booking-form/form-billing.php:54
+msgid "Street address"
+msgstr "Adresse civique"
+
+#: template-parts/booking-form/form-billing.php:73
+#: template-parts/booking-form/form-billing.php:74
+msgid "ZIP Code"
+msgstr "Code postal"
+
+#: template-parts/booking-form/form-billing.php:86
+#: template-parts/booking-form/form-billing.php:93
+#: templates/admin/metaboxes/quote/customer-information.php:92
+msgid "State / Province"
+msgstr "État / Province"
+
+#: template-parts/booking-form/form-billing.php:88
+#: templates/admin/metaboxes/quote/customer-information.php:87
+msgid "- Select State -"
+msgstr "- Sélectionner l’état -"
+
+#: template-parts/booking-form/form-billing.php:129
+msgid "Don't have an account?"
+msgstr "Vous n'avez pas de compte?"
+
+#: template-parts/booking-form/form-billing.php:130
+msgid "Create a new account by inserting a password below."
+msgstr "Créez un nouveau compte en entrant un mot de passe ci-dessous."
+
+#: template-parts/booking-form/form-billing.php:133
+#: template-parts/modals/login.php:22
+msgid "Password"
+msgstr "Mot de passe"
+
+#: template-parts/booking-form/form-billing.php:141
+msgid "Confirm Password"
+msgstr "Confirmez le mot de passe"
+
+#: template-parts/booking-form/form-billing.php:149
+msgid ""
+"Already have an account? <a href=\"#\" class=\"ml-2 text-primary\" "
+"type=\"button\" data-toggle=\"modal\" data-target=\"#loginModal\">Log In</a>"
+msgstr ""
+"Avez-vous déjà un compte ? <a href=\"#\" class=\"ml-2 text-primary\" "
+"type=\"button\" data-toggle=\"modal\" data-target=\"#loginModal\">Se "
+"connecter</a>"
+
+#: template-parts/booking-form/form-guests.php:53
+#, php-format
+msgid "%s #%s"
+msgstr "%s #%s"
+
+#: template-parts/booking-form/form-guests.php:58
+#, php-format
+msgid "( min. %d yrs old )"
+msgstr "( min. %d ans )"
+
+#: template-parts/booking-form/form-guests.php:60
+#, php-format
+msgid "( %d - %d yrs old )"
+msgstr "( %d - %d ans )"
+
+#: template-parts/booking-form/form-guests.php:68
+#: templates/admin/metaboxes/quote/guests.php:4
+#: templates/admin/metaboxes/roomblock/dynamicprices.php:6
+msgid "Title"
+msgstr "Titre"
+
+#: template-parts/booking-form/form-guests.php:74
+#: templates/admin/metaboxes/quote/guests.php:17
+msgid "Mr"
+msgstr "M"
+
+#: template-parts/booking-form/form-guests.php:79
+#: templates/admin/metaboxes/quote/guests.php:18
+msgid "Mrs"
+msgstr "Mme"
+
+#: template-parts/booking-form/form-guests.php:84
+#: templates/admin/metaboxes/quote/guests.php:19
+msgid "Miss"
+msgstr "Mlle"
+
+#: template-parts/booking-form/form-guests.php:89
+#: templates/admin/metaboxes/quote/guests.php:20
+msgid "Mstr"
+msgstr "Maître"
+
+#: template-parts/booking-form/form-guests.php:110
+msgid "Please enter your name as it appears on the passport."
+msgstr "Veuillez entrer votre nom tel qu'il apparaît sur votre passeport."
+
+#: template-parts/booking-form/form-guests.php:119
+#: templates/admin/metaboxes/quote/guests.php:7
+msgid "Date of birth"
+msgstr "Date de naissance"
+
+#: template-parts/booking-form/form-guests.php:138
+#: templates/admin/metaboxes/quote/guests.php:8
+msgid "Age"
+msgstr "Âge"
+
+#: template-parts/booking-form/form-insurance.php:16
+msgid "Choose Plan"
+msgstr "Choisir un plan"
+
+#: template-parts/booking-form/form-insurance.php:18
+msgid "No, I do not need an insurance plan."
+msgstr "Non, je n’ai pas besoin d’un plan d’assurance."
+
+#: template-parts/booking-form/form-insurance.php:30
+msgid ""
+"NOTE: Without insurance the trip is 100% non refundable after a certain date."
+msgstr ""
+"REMARQUE : Sans assurance, le voyage est 100 % non remboursable après une "
+"certaine date."
+
+#: template-parts/booking-form/form-insurance.php:37
+msgid "Please note that the cost of the insurance policy is non-refundable."
+msgstr ""
+"Veuillez noter que les frais de la police d'assurance ne sont pas "
+"remboursables."
+
+#: template-parts/booking-form/form-packages.php:33
+msgid "From:"
+msgstr "Du :"
+
+#: template-parts/booking-form/form-packages.php:36
+msgid "To:"
+msgstr "Au :"
+
+#: template-parts/booking-form/form-packages.php:46
+#: template-parts/hotel/packages.php:36
+msgid "Flight Included"
+msgstr "Vol inclus"
+
+#: template-parts/booking-form/form-packages.php:50
+#: template-parts/hotel/packages.php:40
+msgid "Airport Transportation Included"
+msgstr "Transport aéroport inclus"
+
+#: template-parts/booking-form/form-packages.php:55
+#: templates/admin/metaboxes/quote/reservation-details.php:83
+msgid "Room Details"
+msgstr "Détails de la chambre"
+
+#: template-parts/booking-form/form-packages.php:56
+msgid "Package Details"
+msgstr "Détails du forfait"
+
+#: template-parts/booking-form/form-payment.php:7
+msgid "Payment"
+msgstr "Paiement"
+
+#: template-parts/booking-form/form-payment.php:12
+#: template-parts/booking-form/form-payment.php:13
+msgid "Card Owner"
+msgstr "Titulaire de la carte"
+
+#: template-parts/booking-form/form-payment.php:102
+msgid "Payment Amount"
+msgstr "Montant du paiement"
+
+#: template-parts/booking-form/form-payment.php:103
+#, php-format
+msgid ""
+"Choose the amount you wish to pay in order to confirm your reservation. "
+"Minimum deposit amount is %s"
+msgstr ""
+"Choisissez le montant que vous souhaitez payer afin de confirmer votre "
+"réservation. Le dépôt minimum requis est de %s"
+
+#: template-parts/booking-form/form-payment.php:110
+#, php-format
+msgid "Deposit (<span class=\"price\">%s</span>)"
+msgstr "Acompte (<span class=\"price\">%s</span>)"
+
+#: template-parts/booking-form/form-payment.php:113
+msgid "Full Amount"
+msgstr "Montant total"
+
+#: template-parts/booking-form/form-payment.php:116
+msgid "Custom Amount"
+msgstr "Montant personnalisé"
+
+#: template-parts/booking-form/form-payment.php:140
+#, php-format
+msgid "A minimum deposit amount of %s plus insurance (if selected) is required"
+msgstr "Un dépôt minimum de %s plus l'assurance (si souscrite) est requis"
+
+#: template-parts/booking-form/form-payment.php:145
+msgid ""
+"By submitting, you certify that you are the cardholder and are authorizing "
+"the travel agency or its chosen Tour Operator/Supplier to charge the listed "
+"amount to the credit card. You certify that you have verified that all "
+"information contained in the confirmation you received is accurate. You also "
+"certify you have read the Terms & Conditions and the appropriate Travel "
+"Protection Plan details. Cancellation penalties may apply. Insurance is not "
+"refundable.\n"
+"                <br><br>This charge will be manually applied by the agency "
+"to your reservation.  If there are any issues, an agent will get back to "
+"you. Please note that you may not see a charge from the travel agency on "
+"your credit card statement; the charge will come from our supplier directly. "
+"Payment may take 3-5 business days to fully process and be reflected on your "
+"statement.\n"
+"                <br><br>I authorize Hola Weddings to use the above "
+"information to charge my credit card the stated amount. Completion of this "
+"form and the initialing of this box signifies acceptance in lieu of my "
+"signature. By checking the box below and adding your signature, you indicate "
+"that the above amount is correct, you authorize the travel agency to charge "
+"your credit card for the specified amount, and you agree to the terms and "
+"conditions."
+msgstr ""
+"En soumettant ce formulaire, vous certifiez être le titulaire de la carte et "
+"autorisez l'agence de voyages ou son voyagiste/fournisseur désigné à débiter "
+"votre carte du montant indiqué. Vous certifiez avoir vérifié l'exactitude "
+"des renseignements contenus dans la confirmation reçue. Vous certifiez "
+"également avoir pris connaissance des Conditions générales et des détails de "
+"l'assurance voyage applicable. Des frais d'annulation peuvent s'appliquer. "
+"L'assurance n'est pas remboursable.\n"
+"\n"
+"<br><br>Ce débit sera appliqué manuellement à votre réservation par "
+"l'agence. En cas de problème, un agent vous contactera. Veuillez noter que "
+"le débit de l'agence de voyages n'apparaîtra peut-être pas sur votre relevé "
+"de carte de crédit ; il sera effectué directement par notre fournisseur. Le "
+"traitement du paiement peut prendre de 3 à 5 jours ouvrables avant qu'il ne "
+"figure sur votre relevé.\n"
+"\n"
+"<br><br>J'autorise Hola Weddings à utiliser les informations ci-dessus pour "
+"débiter ma carte de crédit du montant indiqué. Le fait de remplir ce "
+"formulaire et d'apposer mes initiales dans cette case vaut acceptation et "
+"non signature. En cochant la case ci-dessous et en ajoutant votre signature, "
+"vous indiquez que le montant ci-dessus est correct, vous autorisez l'agence "
+"de voyages à débiter votre carte de crédit du montant spécifié et vous "
+"acceptez les modalités et conditions."
+
+#: template-parts/booking-form/form-payment.php:153
+msgid "I authorize Hola Weddings to charge my card for the amount of "
+msgstr "J’autorise Hola Weddings à débiter ma carte du montant de "
+
+#: template-parts/booking-form/form-rooms.php:17
+msgid "Room Details & Rates"
+msgstr "Détails et tarifs des chambres"
+
+#: template-parts/booking-form/form-search.php:7
+msgid "Search Rooms"
+msgstr "Salles de recherche"
+
+#: template-parts/booking-form/form-search.php:16
+msgid "Check-in Date"
+msgstr "Date d’arrivée"
+
+#: template-parts/booking-form/form-search.php:21
+msgid "Check-out Date"
+msgstr "Date de départ"
+
+#: template-parts/booking-form/form-search.php:45
+msgid "Teens"
+msgstr "Adolescents"
+
+#: template-parts/booking-form/form-search.php:75
+#: template-parts/booking-form/form.php:112
+msgid "Submit"
+msgstr "Soumettre"
+
+#: template-parts/booking-form/form-search.php:82
+#, php-format
+msgid "A minimum of %s nights is required."
+msgstr "Un minimum de %s nuits est requis."
+
+#: template-parts/booking-form/form-signature.php:3
+msgid ""
+"Please add your electronic signature in order to complete your reservation."
+msgstr ""
+"Veuillez ajouter votre signature électronique pour finaliser votre "
+"réservation."
+
+#: template-parts/booking-form/form-signature.php:7
+msgid "Sign now!"
+msgstr "Signez maintenant !"
+
+#: template-parts/booking-form/form-terms-conditions.php:22
+msgid ""
+"By submitting, you certify that you have verified that all information "
+"contained in the confirmation you received is accurate. You also certify you "
+"have read the Terms & Conditions and the appropriate Travel Protection Plan "
+"details. Cancellation penalties may apply. <span class=\"insurance-"
+"sentence\">Insurance is not refundable.</span>"
+msgstr ""
+"En soumettant ce formulaire, vous certifiez avoir vérifié l'exactitude des "
+"informations contenues dans la confirmation reçue. Vous certifiez également "
+"avoir pris connaissance des Conditions générales et des détails de "
+"l'assurance voyage applicable. Des frais d'annulation peuvent s'appliquer. "
+"<span class=\"insurance-sentence\">L'assurance n'est pas remboursable.</span>"
+
+#: template-parts/booking-form/form-terms-conditions.php:28
+msgid ""
+"I Accept the <a href=\"#\" data-toggle=\"modal\" data-"
+"target=\"#termsConditionsModal\"><u>Terms & Conditions</u></a>"
+msgstr ""
+"J'accepte les <a href=\"#\" data-toggle=\"modal\" data-"
+"target=\"#termsConditionsModal\"><u>Conditions générales</u></a>"
+
+#: template-parts/booking-form/form-terms-conditions.php:31
+msgid "Please, read and accept the terms and conditions."
+msgstr "Veuillez lire et accepter les conditions générales."
+
+#: template-parts/booking-form/form.php:27
+#: template-parts/booking-form/form.php:31
+msgid ""
+"Thanks for submitting your reservation. Please allow 48 hours for "
+"processing, Monday through Saturday. You will receive an email confirmation "
+"once it has been approved."
+msgstr ""
+"Merci d’avoir soumis votre réservation. Veuillez prévoir un délai de "
+"traitement de 48 heures, du lundi au samedi. Vous recevrez un courriel de "
+"confirmation une fois celle-ci approuvée."
+
+#: template-parts/booking-form/form.php:50
+msgid "Do you already have an account?"
+msgstr "Avez-vous déjà un compte ?"
+
+#: template-parts/booking-form/form.php:51 template-parts/modals/login.php:31
+msgid "Log In"
+msgstr "Se connecter"
+
+#: template-parts/booking-form/form.php:62
+msgid "Ops! There are no rates available for your selection"
+msgstr "Oups! Aucun tarif n’est disponible pour votre sélection"
+
+#: template-parts/booking-form/form.php:68
+msgid "Select Room"
+msgstr "Sélectionner une chambre"
+
+#: template-parts/booking-form/form.php:68
+msgid "Select Package"
+msgstr "Sélectionner un forfait"
+
+#: template-parts/booking-form/form.php:78
+msgid "Guest Information"
+msgstr "Renseignements aux visiteurs"
+
+#: template-parts/booking-form/form.php:87
+msgid "Required"
+msgstr "Requis"
+
+#: template-parts/booking-form/form.php:94
+msgid "Card Holder Information"
+msgstr "Informations sur le titulaire de la carte"
+
+#: template-parts/booking-form/form.php:94
+msgid "Main Contact Information"
+msgstr "Informations du contact principal"
+
+#: template-parts/booking-form/form.php:146
+#: template-parts/booking-form/mobile-summary.php:17
+#: template-parts/booking/confirmation/default.php:52
+msgid "Your Reservation"
+msgstr "Votre réservation"
+
+#: template-parts/booking-form/form.php:148
+#: template-parts/booking-form/mobile-summary.php:22
+msgid "No rooms selected"
+msgstr "Aucune chambre sélectionnée"
+
+#: template-parts/booking/confirmation/default.php:14
+#, php-format
+msgid "Thanks %s, Your reservation is Confirmed!"
+msgstr "Merci %s, votre réservation est confirmée !"
+
+#: template-parts/booking/confirmation/default.php:17
+msgid "Your reservation is Pending!"
+msgstr "Votre réservation est en attente !"
+
+#: template-parts/booking/confirmation/default.php:26
+msgid ""
+"Your reservation has been received and is being processed.<br> You will "
+"receive your confirmation within 24-48 hours."
+msgstr ""
+"Votre réservation a bien été reçue et est en cours de traitement.<br> Vous "
+"recevrez votre confirmation dans un délai de 24 à 48 heures."
+
+#: template-parts/booking/confirmation/default.php:29
+msgid ""
+"Your reservation has been received but needs a little extra work.<br> You "
+"will receive an email with the next steps within 48-hours."
+msgstr ""
+"Votre réservation a bien été reçue, mais elle nécessite quelques précisions. "
+"Vous recevrez un courriel contenant les prochaines étapes dans les 48 heures."
+
+#: template-parts/booking/confirmation/default.php:58
+msgid "Confirmed"
+msgstr "Confirmé"
+
+#: template-parts/booking/confirmation/default.php:61
+msgid "Pending Approval"
+msgstr "En attente d'approbation"
+
+#: template-parts/booking/confirmation/default.php:72
+#, php-format
+msgid "Adults: %s"
+msgstr "Adultes: %s"
+
+#: template-parts/booking/confirmation/default.php:76
+#, php-format
+msgid "Teen: %s"
+msgstr "Adolescents: %s"
+
+#: template-parts/booking/confirmation/default.php:81
+#, php-format
+msgid "Children: %s"
+msgstr "Enfants: %s"
+
+#: template-parts/booking/confirmation/default.php:87
+#, php-format
+msgid "From %s<br>to %s"
+msgstr "De %s<br>à %s"
+
+#: template-parts/booking/confirmation/error.php:4
+msgid "Ops! Something went wrong."
+msgstr "Oups ! Une erreur s'est produite."
+
+#: template-parts/booking/confirmation/error.php:11
+msgid "Please contact us at"
+msgstr "Veuillez nous contacter au"
+
+#: template-parts/booking/confirmation/error.php:14
+msgid "OR"
+msgstr "OU"
+
+#: template-parts/booking/confirmation/error.php:16
+msgid "Go to My Reservations"
+msgstr "Accédez à Mes réservations"
+
+#: template-parts/common/flights.php:3
+msgid "Arrival Flight"
+msgstr "Vol d’arrivée"
+
+#: template-parts/common/flights.php:18
+msgid "Return Flight"
+msgstr "Vol de retour"
+
+#: template-parts/common/session-expired.php:4
+msgid "Ops! Your session has expired."
+msgstr "Oups ! Votre session a expiré."
+
+#: template-parts/home/gallery.php:5
+msgid "Gallery"
+msgstr "Galerie"
+
+#: template-parts/home/love_story_timeline.php:3
+msgid "Our Love Story"
+msgstr "Notre histoire d'amour"
+
+#: template-parts/home/overview.php:7
+msgid "Wedding Details"
+msgstr "Détails du mariage"
+
+#: template-parts/home/overview/wedding-details.php:12
+msgid "Ceremony"
+msgstr "Cérémonie"
+
+#: template-parts/home/overview/wedding-details.php:34
+msgid "Cocktail Hour"
+msgstr "Heure du cocktail"
+
+#: template-parts/home/overview/wedding-details.php:56
+msgid "Reception"
+msgstr "Réception"
+
+#: template-parts/home/overview/wedding-details.php:78
+msgid "Dress Code"
+msgstr "Code vestimentaire"
+
+#: template-parts/home/story.php:5
+msgid "Our Story"
+msgstr "Notre histoire"
+
+#: template-parts/hotel/amenities.php:7
+msgid "Amenities & Services"
+msgstr "Commodités et services"
+
+#: template-parts/hotel/overview.php:12
+msgid "Rooms"
+msgstr "Chambres"
+
+#: template-parts/hotel/overview.php:19
+msgid "Restaurants"
+msgstr "Restaurants"
+
+#: template-parts/hotel/overview.php:26
+msgid "Bars"
+msgstr "Bars"
+
+#: template-parts/hotel/overview.php:33
+msgid "Swimming Pools"
+msgstr "Piscines"
+
+#: template-parts/hotel/overview.php:40
+msgid "Airport Distance"
+msgstr "Distance de l’aéroport"
+
+#: template-parts/hotel/packages.php:7
+msgid "Packages"
+msgstr "Forfaits"
+
+#: template-parts/hotel/packages.php:26
+#: templates/admin/metaboxes/roomblock/dynamicprices.php:7
+msgid "From"
+msgstr "Du"
+
+#: template-parts/hotel/packages.php:29
+#: templates/admin/metaboxes/roomblock/dynamicprices.php:8
+msgid "To"
+msgstr "Au"
+
+#: template-parts/hotel/packages.php:57
+msgid "About the room"
+msgstr "À propos de la chambre"
+
+#: template-parts/hotel/packages.php:73
+msgid "Sorry, there are no packages available."
+msgstr "Désolé, aucun forfait n’est disponible."
+
+#: template-parts/hotel/rooms.php:67
+msgid "Free"
+msgstr "Gratuit"
+
+#: template-parts/hotel/ttk.php:8
+msgid "ALL INCLUSIVE RATES INCLUDE"
+msgstr "LES TARIFS TOUT INCLUS COMPRENNENT"
+
+#: template-parts/hotel/ttk.php:10
+msgid "Hotel Stay"
+msgstr "Séjour à l’hôtel"
+
+#: template-parts/hotel/ttk.php:11
+msgid "All meals as well as unlimited alcoholic and non-alcoholic drinks"
+msgstr ""
+"Tous les repas ainsi que les boissons alcoolisées et non alcoolisées à "
+"volonté"
+
+#: template-parts/hotel/ttk.php:12
+msgid "Shows and entertainment on the property"
+msgstr "Spectacles et divertissements sur place"
+
+#: template-parts/hotel/ttk.php:13
+msgid "Non-motorized water sports"
+msgstr "Sports nautiques non motorisés"
+
+#: template-parts/hotel/ttk.php:15
+msgid "Useful Travel Information"
+msgstr "Informations utiles pour le voyage"
+
+#: template-parts/invoice-payment-confirmation/canceled.php:4
+msgid "Transaction Canceled"
+msgstr "Transaction annulée"
+
+#: template-parts/invoice-payment-confirmation/canceled.php:5
+msgid ""
+"The transaction has been canceled. Please, contact our support team at <a "
+"href=\"mailto:hola@holaweddings.com\">hola@holaweddings.com</a>"
+msgstr ""
+"La transaction a été annulée. Veuillez contacter notre équipe de soutien à "
+"<a href=\"mailto:hola@holaweddings.com\">hola@holaweddings.com</a>"
+
+#: template-parts/invoice-payment-confirmation/confirmed.php:2
+msgid "Payment Successful"
+msgstr "Paiement réussi"
+
+#: template-parts/invoice-payment-confirmation/details.php:5
+msgid "Invoice"
+msgstr "Facture"
+
+#: template-parts/invoice-payment-confirmation/details.php:9
+#: templates/emails/pos/canceled-transaction.php:17
+#: templates/emails/pos/pending-transaction.php:11
+msgid "Transaction Reference"
+msgstr "Référence de la transaction"
+
+#: template-parts/invoice-payment-confirmation/details.php:13
+msgid "Transaction Status"
+msgstr ""
+
+#: template-parts/invoice-payment-confirmation/details.php:17
+#: templates/emails/pos/canceled-transaction.php:21
+#: templates/emails/pos/pending-transaction.php:15
+msgid "Card"
+msgstr "Type de carte"
+
+#: template-parts/invoice-payment-confirmation/failed.php:4
+msgid "Transaction Failed"
+msgstr "La transaction a échoué"
+
+#: template-parts/invoice-payment-confirmation/failed.php:5
+msgid ""
+"Your payment has failed. Please, try again or contact our support team at <a "
+"href=\"mailto:hola@holaweddings.com\">hola@holaweddings.com</a>"
+msgstr ""
+"Votre paiement a échoué. Veuillez réessayer ou contacter notre équipe de "
+"soutien à <a href=\"mailto:hola@holaweddings.com\">hola@holaweddings.com</a>"
+
+#: template-parts/invoice-payment-confirmation/footer.php:3
+msgid "Go back to the reservation"
+msgstr "Retourner à la réservation"
+
+#: template-parts/invoice-payment-confirmation/pending.php:2
+msgid "Awaiting Confirmation"
+msgstr "En attente de confirmation"
+
+#: template-parts/invoice-payment-confirmation/pending.php:3
+msgid ""
+"Your payment is currently under reviewed and may take up to 5 minutes to "
+"update. Please <span class=\"font-weight-bold\">DO NOT</span> submit another "
+"payment."
+msgstr ""
+"Votre paiement est en cours de vérification et la mise à jour peut prendre "
+"jusqu'à 5 minutes. Veuillez <span class=\"font-weight-bold\">NE</span> pas "
+"faire un autre paiement."
+
+#: template-parts/modals/login.php:8
+msgid "Sign-in"
+msgstr "Se connecter"
+
+#: template-parts/modals/login.php:28
+msgid "Forgot your password?"
+msgstr "Mot de passe oublié ?"
+
+#: template-parts/modals/login.php:35
+#: template-parts/pdf/partials/billing.php:14 template-parts/pdf/quote.php:103
+msgid "Email Address"
+msgstr "Adresse courriel"
+
+#: template-parts/modals/login.php:41
+msgid "Go to Sign-in"
+msgstr "Se connecter"
+
+#: template-parts/modals/login.php:44
+msgid "Reset Password"
+msgstr ""
+
+#: template-parts/modals/signature.php:6
+msgid "Create New Signature"
+msgstr "Créer une nouvelle signature"
+
+#: template-parts/modals/signature.php:16
+msgid "Draw"
+msgstr "Dessiner"
+
+#: template-parts/modals/signature.php:19
+msgid "Sign here"
+msgstr "Signez ici"
+
+#: template-parts/modals/signature.php:24
+#: templates/admin/metaboxes/quote/reservation-details.php:194
+msgid "Type"
+msgstr "Type"
+
+#: template-parts/modals/signature.php:44
+msgid "Clear"
+msgstr "Effacer"
+
+#: template-parts/modals/signature.php:45
+#: template-parts/modals/terms-conditions.php:22
+msgid "Accept"
+msgstr "Accepter"
+
+#: template-parts/modals/terms-conditions.php:9
+msgid "Terms & Conditions"
+msgstr "Conditions générales"
+
+#: template-parts/modals/terms-conditions.php:20
+msgid "Go to bottom"
+msgstr "Descendre"
+
+#: template-parts/partials/forms/card-form.php:44
+#: template-parts/partials/forms/card-form.php:45
+msgid "Holder Name"
+msgstr "Nom du titulaire"
+
+#: template-parts/pdf/admin-quote.php:17
+#: template-parts/pdf/admin-transaction-ucc.php:13
+#: template-parts/pdf/quote.php:60
+#, php-format
+msgid "%s and %s Wedding UCC Form"
+msgstr ""
+
+#: template-parts/pdf/admin-quote.php:18
+#: template-parts/pdf/admin-transaction-ucc.php:14
+#: template-parts/pdf/quote.php:61
+#, php-format
+msgid "Reservation: <strong>%s %s</strong> for 1 Room"
+msgstr ""
+
+#: template-parts/pdf/admin-transaction-ucc/card.php:9
+#: template-parts/pdf/partials/card.php:6 template-parts/pdf/quote.php:203
+msgid "Card Information"
+msgstr "Informations de la carte"
+
+#: template-parts/pdf/admin-transaction-ucc/card.php:23
+msgid "Exp. Month / Year"
+msgstr "Exp. Mois / Année"
+
+#: template-parts/pdf/admin-transaction-ucc/card.php:30
+#: template-parts/pdf/partials/card.php:15 template-parts/pdf/quote.php:212
+msgid "Card Holder Name"
+msgstr "Titulaire de la carte"
+
+#: template-parts/pdf/admin-transaction-ucc/card.php:37
+msgid ""
+"By checking the box below and adding your signature, you certify that you "
+"are the cardholder and are authorizing the travel agency or its chosen Tour "
+"Operator/Supplier to charge the listed amount to the credit card. You "
+"certify that you have verified that all information contained in the "
+"confirmation you received is accurate. You also certify you have read the "
+"Terms & Conditions and the appropriate Travel Protection Plan details, "
+"including suppliers’ and agency’s cancellation and refund policies, which "
+"may limit your\n"
+"            right to a refund if you cancel or change your plans. "
+"Cancellation penalties may apply. Insurance is not refundable.\n"
+"            <br><br>This charge will be manually applied by the agency to "
+"your reservation.  If there are any issues, an agent will get back to you. "
+"Please note that you may not see a charge from the travel agency on your "
+"credit card statement; the charge will come from our supplier directly. "
+"Payment may take 3-5 business days to fully process and be reflected on your "
+"statement.\n"
+"            <br><br>I authorize Hola Weddings to use the above information "
+"to charge my credit card the stated amount. Completion of this form and the "
+"initialing of this box signifies acceptance in lieu of my signature."
+msgstr ""
+"En cochant la case ci-dessous et en apposant votre signature, vous certifiez "
+"être le titulaire de la carte et autorisez l'agence de voyages ou son "
+"voyagiste/fournisseur désigné à débiter votre carte de crédit du montant "
+"indiqué. Vous certifiez avoir vérifié l'exactitude des renseignements "
+"contenus dans la confirmation reçue. Vous certifiez également avoir pris "
+"connaissance des Conditions générales et des détails de l'assurance voyage "
+"applicable, y compris les politiques d'annulation et de remboursement des "
+"fournisseurs et de l'agence, qui peuvent limiter votre\n"
+"\n"
+"droit à un remboursement en cas d'annulation ou de modification de votre "
+"réservation. Des frais d'annulation peuvent s'appliquer. L'assurance n'est "
+"pas remboursable.\n"
+"\n"
+"<br><br>Ce débit sera appliqué manuellement à votre réservation par "
+"l'agence. En cas de problème, un agent vous contactera. Veuillez noter que "
+"le débit de l'agence de voyages pourrait ne pas apparaître sur votre relevé "
+"de carte de crédit ; il sera effectué directement par notre fournisseur. Le "
+"traitement du paiement peut prendre de 3 à 5 jours ouvrables avant qu'il ne "
+"figure sur votre relevé.\n"
+"\n"
+"<br><br>J'autorise Hola Weddings à utiliser les informations ci-dessus pour "
+"débiter ma carte de crédit du montant indiqué. Le fait de remplir ce "
+"formulaire et d'apposer mes initiales dans cette case vaut acceptation et "
+"non signature."
+
+#: template-parts/pdf/admin-transaction-ucc/card.php:48
+#: template-parts/pdf/partials/card.php:32
+#, php-format
+msgid "Signature: %s %s"
+msgstr "Signature: %s %s"
+
+#: template-parts/pdf/admin-transaction-ucc/card.php:49
+#, php-format
+msgid "Authorization Date: %s"
+msgstr ""
+
+#: template-parts/pdf/admin-transaction-ucc/card.php:50
+#, php-format
+msgid "Signer IP: %s"
+msgstr ""
+
+#: template-parts/pdf/admin-transaction-ucc/invoice.php:10
+#, fuzzy
+#| msgid "View Details"
+msgid "Invoice Details"
+msgstr "Voir les détails"
+
+#: template-parts/pdf/admin-transaction-ucc/invoice.php:13
+#: template-parts/pdf/partials/payment.php:7 template-parts/pdf/quote.php:146
+msgid "Balance"
+msgstr ""
+
+#: template-parts/pdf/admin-transaction-ucc/invoice.php:18
+msgid "Invoice Amount"
+msgstr ""
+
+#: template-parts/pdf/admin-transaction-ucc/reservation.php:10
+#: template-parts/pdf/partials/room.php:1 template-parts/pdf/quote.php:63
+#, fuzzy
+#| msgid "Wedding Details"
+msgid "Reservation Details"
+msgstr "Détails du mariage"
+
+#: template-parts/pdf/admin-transaction-ucc/reservation.php:14
+msgid "Hotel"
+msgstr "Hôtel"
+
+#: template-parts/pdf/admin-transaction-ucc/reservation.php:18
+#: template-parts/pdf/partials/room.php:15 template-parts/pdf/quote.php:77
+msgid "Room Type"
+msgstr ""
+
+#: template-parts/pdf/admin-transaction-ucc/reservation.php:24
+#: template-parts/pdf/partials/room.php:5 template-parts/pdf/quote.php:67
+#, fuzzy
+#| msgid "Check-in"
+msgid "Check In"
+msgstr "Arrivée"
+
+#: template-parts/pdf/admin-transaction-ucc/reservation.php:28
+#: template-parts/pdf/partials/room.php:9 template-parts/pdf/quote.php:71
+#, fuzzy
+#| msgid "Check-out"
+msgid "Check Out"
+msgstr "Départ"
+
+#: template-parts/pdf/admin-transaction-ucc/reservation.php:34
+#: templates/admin/metaboxes/quote/reservation-details.php:48
+msgid "Occupancy"
+msgstr ""
+
+#: template-parts/pdf/admin-transaction-ucc/transaction.php:11
+msgid "Transaction Details"
+msgstr ""
+
+#: template-parts/pdf/admin-transaction-ucc/transaction.php:15
+msgid "Authorized Amount"
+msgstr "Montant permis"
+
+#: template-parts/pdf/admin-transaction-ucc/transaction.php:19
+msgid "Status"
+msgstr ""
+
+#: template-parts/pdf/admin-transaction-ucc/transaction.php:23
+msgid "Merchant of Record"
+msgstr ""
+
+#: template-parts/pdf/admin-transaction-ucc/transaction.php:29
+msgid "Transaction ID"
+msgstr ""
+
+#: template-parts/pdf/partials/billing.php:8 template-parts/pdf/quote.php:97
+msgid "Full Name"
+msgstr "Nom complet"
+
+#: template-parts/pdf/partials/card.php:22
+msgid ""
+"You certify that you are the cardholder and are authorizing the travel "
+"agency or its chosen Tour Operator/Supplier to charge the listed amount to "
+"the credit card. You certify that you have verified that all information "
+"contained in the confirmation you received is accurate. You also certify you "
+"have read the Terms & Conditions and the appropriate Travel Protection Plan "
+"details. Cancellation penalties may apply. Insurance is not refundable.\n"
+"            <br><br>This charge will be manually applied by the agency to "
+"your reservation.  If there are any issues, an agent will get back to you. "
+"Please note that you may not see a charge from the travel agency on your "
+"credit card statement; the charge will come from our supplier directly. "
+"Payment may take 3-5 business days to fully process and be reflected on your "
+"statement.\n"
+"            <br><br>I authorize Hola Weddings to use the above information "
+"to charge my credit card the stated amount. Completion of this form and the "
+"initialing of this box signifies acceptance in lieu of my signature. By "
+"checking the box below and adding your signature, you indicate that the "
+"above amount is correct, you authorize the travel agency to charge your "
+"credit card for the specified amount, and you agree to the terms and "
+"conditions."
+msgstr ""
+"Vous certifiez être le titulaire de la carte et autorisez l'agence de "
+"voyages ou son voyagiste/fournisseur désigné à débiter votre carte de crédit "
+"du montant indiqué. Vous certifiez avoir vérifié l'exactitude des "
+"renseignements contenus dans la confirmation reçue. Vous certifiez également "
+"avoir pris connaissance des Conditions générales et des détails de "
+"l'assurance voyage applicable. Des frais d'annulation peuvent s'appliquer. "
+"L'assurance n'est pas remboursable.\n"
+"\n"
+"<br><br>Ce débit sera appliqué manuellement à votre réservation par "
+"l'agence. En cas de problème, un agent vous contactera. Veuillez noter que "
+"le débit de l'agence de voyages n'apparaîtra peut-être pas sur votre relevé "
+"de carte de crédit ; il sera effectué directement par notre fournisseur. Le "
+"traitement du paiement peut prendre de 3 à 5 jours ouvrables avant qu'il ne "
+"figure sur votre relevé.\n"
+"\n"
+"<br><br>J'autorise Hola Weddings à utiliser les informations ci-dessus pour "
+"débiter ma carte de crédit du montant indiqué. Le fait de remplir ce "
+"formulaire et d'apposer mes initiales dans cette case vaut acceptation et "
+"non signature. En cochant la case ci-dessous et en ajoutant votre signature, "
+"vous indiquez que le montant ci-dessus est correct, vous autorisez l'agence "
+"de voyages à débiter votre carte de crédit du montant spécifié et vous "
+"acceptez les modalités et conditions."
+
+#: template-parts/pdf/partials/guests.php:7 template-parts/pdf/quote.php:88
+#, php-format
+msgid "Date of birth: %s"
+msgstr "Date de naissance : %s"
+
+#: template-parts/pdf/partials/guests.php:8 template-parts/pdf/quote.php:89
+#, php-format
+msgid "Age: %s"
+msgstr "Âge : %s"
+
+#: template-parts/pdf/partials/insurance.php:14
+#: template-parts/pdf/quote.php:128
+msgid "Insurance Plan"
+msgstr "Régime d'assurance"
+
+#: template-parts/pdf/partials/insurance.php:24
+#: template-parts/pdf/quote.php:138
+msgid "Insurance Declined"
+msgstr "AssuranceL'assurance a été refusée"
+
+#: template-parts/pdf/partials/log.php:4
+msgid "Log"
+msgstr ""
+
+#: template-parts/pdf/partials/log.php:8
+msgid "Charge accepted on"
+msgstr ""
+
+#: template-parts/pdf/partials/log.php:14
+#: templates/admin/metaboxes/quote/reservation-details.php:233
+#, fuzzy
+#| msgid "Address"
+msgid "IP Address"
+msgstr "Adresse"
+
+#: template-parts/pdf/partials/payment.php:6 template-parts/pdf/quote.php:145
+#, fuzzy
+#| msgid "Guests Information"
+msgid "Payment Information"
+msgstr "Informations sur les invités"
+
+#: template-parts/pdf/partials/terms.php:8 template-parts/pdf/quote.php:233
+#, fuzzy
+#| msgid "I Accept the Terms and Conditions"
+msgid "Terms and conditions"
+msgstr "J’accepte les conditions générales"
+
+#: template-parts/pdf/quote.php:186
+#: templates/admin/metaboxes/quote/reservation-details.php:190
+#, fuzzy
+#| msgid "Deposit (%s)"
+msgid "Deposit"
+msgstr "Dépôt (%s)"
+
+#: template-parts/pdf/quote.php:221
+#, php-format
+msgid ""
+"I authorize the %s ending in %s to be charged up to %s for the purposes of: "
+"Final Payment Due for 1 room."
+msgstr ""
+
+#: template-parts/shortcodes/love-story-timeline.php:24
+msgid "No items in the timeline."
+msgstr ""
+
+#: template-parts/travel-info/hotel-contact.php:4
+msgid "Address & Map"
+msgstr "Adresse et carte"
+
+#: template-parts/travel-info/hotel-overview.php:4
+#, php-format
+msgid "About %s"
+msgstr "À propos de %s"
+
+#: template-parts/travel-info/hotel-rooms.php:3
+#: template-parts/travel-info/quick-links.php:17
+msgid "Accommodations"
+msgstr "Hébergement"
+
+#: template-parts/travel-info/quick-links.php:9
+msgid "Resort"
+msgstr "Complexe hôtelier"
+
+#: template-parts/travel-info/quick-links.php:25
+msgid "Things to know"
+msgstr "À savoir"
+
+#: template-parts/travel-info/things-to-know.php:7
+msgid "Things to Know"
+msgstr "À savoir"
+
+#: templates/admin/metaboxes/quote/customer-information.php:31
+msgid "Send Email"
+msgstr "Envoyer un courriel"
+
+#: templates/admin/metaboxes/quote/customer-information.php:68
+msgid "United States"
+msgstr "États-Unis"
+
+#: templates/admin/metaboxes/quote/customer-information.php:84
+msgid "State/Province"
+msgstr "État / Province"
+
+#: templates/admin/metaboxes/quote/guests.php:55
+msgid "Add Guest"
+msgstr "Ajouter un invité"
+
+#: templates/admin/metaboxes/quote/invoices-table.php:24
+msgid "There are no invoices for this post."
+msgstr ""
+
+#: templates/admin/metaboxes/quote/payment.php:52
+msgid "Insert Card CCV"
+msgstr ""
+
+#: templates/admin/metaboxes/quote/payment.php:55
+msgid "Remove CCV"
+msgstr ""
+
+#: templates/admin/metaboxes/quote/rates.php:8
+msgid "Date"
+msgstr ""
+
+#: templates/admin/metaboxes/quote/reservation-details.php:15
+msgid "Dates"
+msgstr ""
+
+#: templates/admin/metaboxes/quote/reservation-details.php:27
+msgid "Nights"
+msgstr ""
+
+#: templates/admin/metaboxes/quote/reservation-details.php:87
+msgid "Room Block"
+msgstr ""
+
+#: templates/admin/metaboxes/quote/reservation-details.php:99
+msgid "Recalculate Totals?"
+msgstr ""
+
+#: templates/admin/metaboxes/quote/reservation-details.php:109
+#, fuzzy
+#| msgid "Room Details"
+msgid "Room total"
+msgstr "Détails de la chambre"
+
+#: templates/admin/metaboxes/quote/reservation-details.php:125
+msgid "Plan"
+msgstr ""
+
+#: templates/admin/metaboxes/quote/reservation-details.php:128
+#, fuzzy
+#| msgid "Insurance"
+msgid "-- No Insurance --"
+msgstr "Assurance"
+
+#: templates/admin/metaboxes/quote/reservation-details.php:139
+msgid "Rates"
+msgstr ""
+
+#: templates/admin/metaboxes/quote/reservation-details.php:144
+msgid "Adult"
+msgstr "Adulte"
+
+#: templates/admin/metaboxes/quote/reservation-details.php:145
+msgid "Child"
+msgstr "Enfant"
+
+#: templates/admin/metaboxes/quote/reservation-details.php:173
+msgid "Fees"
+msgstr ""
+
+#: templates/admin/metaboxes/quote/reservation-details.php:177
+msgid "Service Fee"
+msgstr ""
+
+#: templates/admin/metaboxes/quote/reservation-details.php:197
+#, fuzzy
+#| msgid "- Select State -"
+msgid "- Select Deposit Type -"
+msgstr "- Sélectionner l’état -"
+
+#: templates/admin/metaboxes/quote/reservation-details.php:221
+#, fuzzy
+#| msgid "Guests Information"
+msgid "Other Information"
+msgstr "Informations sur les invités"
+
+#: templates/admin/metaboxes/quote/reservation-details.php:225
+msgid "T&C Acceptance"
+msgstr ""
+
+#: templates/admin/metaboxes/roomblock/dynamicprices.php:5
+#: templates/admin/settings/common/rooms.php:18
+msgid "ID"
+msgstr ""
+
+#: templates/admin/metaboxes/roomblock/dynamicprices.php:41
+msgid "No prices found."
+msgstr ""
+
+#: templates/admin/metaboxes/roomblock/dynamicprices.php:44
+#, fuzzy
+#| msgid "Dynamic Prices"
+msgid "All Room Dynamic Prices"
+msgstr "Prix dynamiques"
+
+#: templates/admin/metaboxes/roomblock/occupancyrules.php:11
+msgid "Disabled"
+msgstr "Désactivé"
+
+#: templates/admin/metaboxes/roomblock/occupancyrules.php:34
+msgid "No occupancy rules found for this room."
+msgstr ""
+
+#: templates/admin/settings/booking-tab.php:10
+msgid "Separated by comma"
+msgstr "Séparé par des virgules"
+
+#: templates/admin/settings/bridegroom-tab.php:4
+msgid "Bride"
+msgstr ""
+
+#: templates/admin/settings/bridegroom-tab.php:15
+msgid "Groom"
+msgstr ""
+
+#: templates/admin/settings/common/rooms.php:12
+msgid "No rooms available"
+msgstr "Aucune chambre disponible"
+
+#: templates/admin/settings/common/rooms.php:19
+#, fuzzy
+#| msgid "Last Name"
+msgid "Name"
+msgstr "Nom de famille"
+
+#: templates/admin/settings/common/rooms.php:20
+#, fuzzy
+#| msgid "Reception"
+msgid "Options"
+msgstr "Réception"
+
+#: templates/admin/settings/common/rooms.php:32
+msgid "Edit Room Block"
+msgstr ""
+
+#: templates/admin/settings/common/rooms.php:35
+msgid "Import"
+msgstr ""
+
+#: templates/admin/settings/hotel-tab.php:16
+msgid "Refresh"
+msgstr ""
+
+#: templates/admin/settings/payment-tab.php:9
+msgid "Fixed"
+msgstr ""
+
+#: templates/admin/settings/payment-tab.php:10
+#, fuzzy
+#| msgid "Dynamic Prices"
+msgid "Dynamic"
+msgstr "Prix dynamiques"
+
+#: templates/admin/settings/payment-tab.php:20
+msgid "Enable Payment Form"
+msgstr ""
+
+#: templates/admin/settings/payment-tab.php:27
+#, fuzzy
+#| msgid "Deposit (%s)"
+msgid "Deposit Type"
+msgstr "Dépôt (%s)"
+
+#: templates/admin/settings/payment-tab.php:30
+msgid "Minimum Deposit Amount"
+msgstr ""
+
+#: templates/admin/settings/payment-tab.php:33
+msgid "Nights Multiplier"
+msgstr ""
+
+#: templates/admin/settings/payment-tab.php:36
+msgid "Increase Date"
+msgstr "Date d'augmentation"
+
+#: templates/admin/settings/payment-tab.php:39
+msgid "Increase Amount"
+msgstr "Augmenter le montant"
+
+#: templates/booking-confirmation.php:27
+#, php-format
+msgid "<a class=\"btn btn-primary\" href=\"%s\">Go to My Reservations</a>"
+msgstr ""
+"<a class=\"btn btn-primary\" href=\"%s\">Accéder à Mes réservations</a>"
+
+#, php-format
+#~ msgid "%s and %s"
+#~ msgstr "%s et %s"
+
+#~ msgid "Infant"
+#~ msgstr "Bébé"
+
+#~ msgid "* Rates are per person per night and include all taxes"
+#~ msgstr "* Les tarifs sont par personne et par nuit, taxes incluses"
+
+#~ msgid "Enable"
+#~ msgstr "Activer"
+
+#~ msgid "Default Price"
+#~ msgstr "Prix par défaut"

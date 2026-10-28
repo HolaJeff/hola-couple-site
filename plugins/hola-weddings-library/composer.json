@@ -1,0 +1,7 @@
+{
+    "require": {
+        "spipu/html2pdf": "^5.2",
+        "formr/formr": "^1.4",
+        "mpclarkson/freshdesk-php-sdk": "^0.3.1"
+    }
+}

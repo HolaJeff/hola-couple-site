@@ -1,0 +1,76 @@
+
+:root{
+    --primary-color: #54C7DC;
+}
+body{
+    background-color: #f0f0f1;
+}
+.form-check{
+    padding-left: 0;
+}
+#product_images_container ul.image_list li{
+    padding: 5px;
+}
+#room-list .handler{
+    z-index: 9;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 15px;
+}
+.settingswrapper .panel-wrapper .body .nav-tabs{
+    width: 20%;
+}
+.settingswrapper .panel-wrapper .header > div,
+.settingswrapper .panel-wrapper .footer > div{
+    margin-bottom: 0!important;
+}
+.settingswrapper .panel-wrapper .tab-content{
+    width: 80%;
+}
+.settingswrapper .panel-wrapper .tab-content .tab-pane{
+    padding: 50px 30px;
+}
+.settingswrapper .panel-wrapper .body .nav-tabs .nav-link{
+    color: #999;
+    border: 0;
+    border-bottom: 1px solid #eee;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+.settingswrapper .panel-wrapper .body .nav-tabs .nav-link:hover{
+    border-radius: 0;
+    background-color: #eee;
+    color: #333;
+}
+.settingswrapper .panel-wrapper .body .nav-tabs .nav-link.active{
+    border-radius: 0;
+    background-color: var(--primary-color);
+    color: #000;
+}
+.settingswrapper .panel-wrapper .body .nav-tabs .nav-link i{
+    margin-right: 10px;
+}
+button .spinner-border{
+    display: none;
+}
+button.loading .spinner-border{
+    display: inline-block;
+}
+
+/* Repeater */
+.hw-repeater__handle {
+    cursor: grab;
+    user-select: none;
+}
+.hw-repeater__handle:active {
+    cursor: grabbing;
+}
+.hw-repeater__ghost {
+    opacity: 0.4;
+}
+.wp-core-ui select{
+    max-width: 100%;
+}
+.hw-section .inner{
+    max-width: initial!important;
+}
