@@ -26,6 +26,7 @@ add_filter('hw_on_before_create_quote', function ($post_data, $room_block) {
 function hw_cv_autocharge_invoice($invoice_id, $force = false) {
     $log = function ($msg) { error_log('[CV-AUTOCHARGE] ' . $msg); };
     try {
+        if (function_exists('hw_is_staging') && hw_is_staging()) { $log("STAGING: charge of invoice #$invoice_id blocked"); return 'staging: charges disabled'; }
         if (!get_option('hw_cv_autocharge') && !get_site_option('hw_cv_autocharge_default') && !$force) return 'site not opted in';
         foreach (['\HW\Payment\Utilities\Charge',
                   '\HW\Integrations\ClassicVacations\Payment\ClassicVacationGateway',

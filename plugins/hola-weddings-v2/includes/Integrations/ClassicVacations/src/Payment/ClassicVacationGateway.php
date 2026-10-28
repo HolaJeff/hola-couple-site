@@ -54,6 +54,12 @@ class ClassicVacationGateway extends PaymentGateway{
      */
     public function process( Charge $charge, Transaction $transaction){
 
+        // Staging guard (mu-plugins/hw-staging-guard.php): never charge a card on staging.
+        if ( ( defined( 'HW_STAGING_MODE' ) && HW_STAGING_MODE ) || ( function_exists( 'hw_is_staging' ) && hw_is_staging() ) ) {
+            error_log( '[STAGING] ClassicVacationGateway::process blocked' );
+            return false;
+        }
+
         $logger = PoS::getInstance()->getLogger();
 
         try{
